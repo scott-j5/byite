@@ -1,0 +1,19 @@
+/* colors */
+/* Typography */
+/* Spacing */
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,300,500,700");
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+#wrapper {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #ca4949;
+}
+
+/*# sourceMappingURL=style.css.map */
