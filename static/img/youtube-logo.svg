@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1024 1024" style="enable-background:new 0 0 1024 1024;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#383A42;}
+</style>
+<g>
+	<path class="st0" d="M512,0C229.23,0,0,229.23,0,512s229.23,512,512,512s512-229.23,512-512S794.77,0,512,0z M825.45,668.05
+		c-7.55,28.24-29.79,50.48-58.03,58.03C716.24,739.79,511,739.79,511,739.79s-205.24,0-256.42-13.71
+		c-28.24-7.55-50.48-29.79-58.03-58.03c-13.71-51.18-13.71-157.97-13.71-157.97s0-106.79,13.71-157.97
+		c7.55-28.24,29.79-50.48,58.03-58.03C305.77,280.36,511,280.36,511,280.36s205.24,0,256.42,13.71
+		c28.24,7.55,50.48,29.79,58.03,58.03c13.71,51.18,13.71,157.97,13.71,157.97S839.17,616.86,825.45,668.05z"/>
+	<polygon class="st0" points="445.37,608.52 615.88,510.08 445.37,411.62 	"/>
+</g>
+</svg>

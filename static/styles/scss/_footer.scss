@@ -1,0 +1,37 @@
+#footer-wrapper{
+    z-index:10;
+    width:$page-width;
+    padding-top:30px;
+    padding-bottom:60px;
+    padding-left:$page-padding;
+    padding-right:$page-padding;
+    min-height:$header-min-height;
+    color:$dark-grey;
+    background-color:$white;
+    grid-column-gap: 4%;
+ }
+
+#footer-contact{
+  order: +1;
+  @media (min-width: $screen-md){
+    order: 0;
+  }
+}
+
+ #footer-wrapper p{
+    font-size:100%;
+    @media (min-width: $screen-md){
+      font-size: 70%;
+    }
+    @media (min-width: $screen-mdlg){
+      font-size: 90%;
+    }
+    @media (min-width: $screen-lg){
+      font-size: 100%;
+    }
+ }
+
+ .footer-icon{
+   width:2.4em;
+   height:2.4em;
+ }

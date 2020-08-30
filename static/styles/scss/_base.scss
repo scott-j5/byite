@@ -1,12 +1,203 @@
+%primary-gradient{
+   //background-image: linear-gradient( to top, rgba(237, 47, 139, 1), rgba(255, 207, 123, 1));
+   background-image: linear-gradient( to top, rgba(237, 24, 127, 93), rgba(255, 207, 123, 1));
+}
+
 body{
    margin:0px;
    padding:0px;
+   font-family:'raleway', 'roboto', sans-serif;
+   background-color:$white;
 }
 
 #wrapper{
    margin:0px;
    padding:0px;
    width:100%;
-   height:100%;
-   background-color:$base;
+   min-height:100%;
+}
+
+//General page setup classes
+.page{
+   position:relative;
+   display:flex;
+   z-index:1;
+   width:$page-width;
+   padding-left:$page-padding;
+   padding-right:$page-padding;
+   align-items:center;
+   justify-content:space-around;
+}
+
+.full-height{
+   min-height:100vh;
+}
+
+.col-2{
+   display:grid;
+   grid-template-columns: repeat(1, 1fr);
+   grid-template-rows: repeat(2, .5fr);
+
+   @media (min-width: $screen-md){
+       grid-template-columns: repeat(2, 1fr);
+       grid-template-rows: repeat(1, 1fr);
+       grid-column-gap: 13%;
+   }
+}
+
+.col-3{
+   display:grid;
+   grid-template-columns: repeat(1, 1fr);
+   grid-template-rows: repeat(3, .3333fr);
+
+   @media (min-width: $screen-md){
+       grid-template-columns: repeat(3, 1fr);
+       grid-template-rows: repeat(1, 1fr);
+       grid-column-gap: 13%;
+   }
+}
+
+.col-3-sm{
+   display:grid;
+   grid-template-columns: repeat(3, 1fr);
+   grid-template-rows: repeat(1, 1fr);
+   grid-column-gap: 13%;
+}
+
+.center-content-x{
+   display:flex;
+   justify-items:center;
+   justify-content:center;
+}
+
+.center-content-x-sm{
+   @media (max-width: $screen-md){
+      display:flex;
+      justify-items:center;
+      justify-content:center;
+  }
+}
+
+.center-content-y{
+   display:flex;
+   align-items:center;
+}
+
+.center-content-y-sm{
+   @media (max-width: $screen-md){
+      display:flex;
+      align-items:center;
+  }
+}
+
+.center-content-xy-sm{
+   @media (max-width: $screen-md){
+      display:flex;
+      justify-items:center;
+      justify-content:center;
+      align-items:center;
+  }
+}
+
+.center-content-xy{
+   display:flex;
+   justify-items:center;
+   justify-content:center;
+   align-items:center;
+}
+
+.center-self-x{
+   justify-self:center;
+}
+
+.center-self-y{
+   align-self:center;
+}
+
+.center-self-xy{
+   align-self:center;
+   justify-self:center;
+}
+
+.w-50{
+   width: calc(50% - (#{$col-spacing} * 2));
+   padding-left:$col-spacing;
+   padding-right:$col-spacing;
+}
+
+.w-70{
+   width: calc(70% - (#{$col-spacing} * 2));
+   padding-left:$col-spacing;
+   padding-right:$col-spacing;
+}
+
+.w-100{
+   width:100%;
+}
+
+.no-padding{
+   padding:0px;
+}
+
+.no-m{
+   margin: 0px;
+}
+
+.no-m-t{
+   margin-top:0px;
+}
+
+.m-t-md{
+   margin-top:$space-md;
+}
+
+.m-t-lg{
+   margin-top:$space-lg;
+}
+
+.m-b-lg{
+   margin-bottom:$space-lg;
+}
+
+.m-b-xl{
+   margin-bottom:$space-xl;
+}
+
+.white-bg{
+   background-color: $white;
+}
+
+.page-transition{
+   position:relative;
+   z-index:10;
+   left:0px;
+   top:-1px;
+   width:100%;
+   overflow:hidden;
+}
+
+//Classes for responsive circle images
+.img-circle-container{
+   position: relative;
+   width: 100%;
+   padding-top: 100%;
+   min-width:20px;
+   overflow:hidden;
+}
+
+.img-circle{
+   border-radius:50%
+}
+
+.img-circle-img{
+   position:absolute;
+   top:0px;
+   left:0px;
+   width: 100%;
+   height: 100%;
+   object-fit:cover;
+}
+
+img{
+   font-size: 16px;
 }

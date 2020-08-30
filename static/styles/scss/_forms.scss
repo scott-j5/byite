@@ -1,0 +1,35 @@
+.input-container{
+    display:flex;
+ }
+ 
+ .input-field{
+    width:100%;
+    padding: 0.7em;
+    font-size: 1em;
+    margin: 0px;
+    outline:none;
+    box-sizing: border-box;
+    border-radius: 0px;
+    border-right:0px;
+    border:1px $dark-grey solid;
+ }
+
+ .fa-input-icon{
+    color:$white;
+    background-color: $dark-grey;
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+    padding: 0.7em;
+    border:2px $dark-grey solid;
+    transition: padding 100ms ease-out, font-size 100ms ease-out;
+}
+
+.fa-input-icon:hover{
+    color:$white;
+    background-color: $dark-grey;
+    font-size: 1.2em;
+    width: 1em;
+    height: 1em;
+    padding: 0.5em;
+}

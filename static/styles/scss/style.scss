@@ -4,10 +4,14 @@
 @import 'mixins';
 
 // Import fonts
+@import url("https://fonts.googleapis.com/css?family=Raleway:400,300,500,700");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
 @import url("https://fonts.googleapis.com/css?family=Roboto:400,300,500,700");
 
 // Import styles
 @import 'base';
-@import 'landing';
+@import 'typography';
+@import 'forms';
+@import 'pages';
 @import 'navigation';
+@import 'footer';

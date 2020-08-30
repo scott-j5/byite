@@ -1,12 +1,31 @@
 /* colors */
 $base: rgb(202, 73, 73);
+$white: #fcfcfc;
+$pink: #ed2f8b;
+$yellow: #ffcf7b;
 $accent: #111;
+$light-grey: #aeb2bf;
+$dark-grey: #383a42;
+$very-dark-grey: #1d1e21;
 
 /* Typography */
 
+/* breakpoints */
+$screen-sm:576px;
+$screen-md:699px;
+$screen-mdlg:918px;
+$screen-lg:1920px;
+$screen-xl:2400px;
+$screen-xxl:3000px;
+
 
 /* Spacing */
+$page-width:85%;
+$page-padding: 7.5%;
 $space-sm: 5px;
 $space-md: 10px;
 $space-lg: 15px;
 $space-xl: 20px;
+$col-spacing: 2.5%;
+
+$header-min-height:50px;

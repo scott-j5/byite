@@ -1,0 +1,73 @@
+html{
+    font-size: 11px;
+
+    @media (min-width:$screen-md){
+        font-size: 16px;
+    }
+    @media (min-width:$screen-lg){
+        font-size: 20px;
+    }
+    @media (min-width:$screen-xl){
+        font-size: 29px;
+    }
+    @media (min-width:$screen-xxl){
+        font-size: 34px;
+    }
+}
+
+h1, h2, h3, h4, h5, h6, body {
+    font-weight: 100;
+  }
+
+h1{
+    font-size:3.4rem;
+    font-weight:200;
+    margin-block-start: .8em;
+    margin-block-end: .8em;
+}
+
+h2{
+    font-size:2.8rem;
+    margin-block-start: .8em;
+    margin-block-end: .8em;
+}
+
+h3{
+    font-size:2.2rem;
+    margin-block-start: .8em;
+    margin-block-end: .8em;
+}
+  
+h4 {
+    font-size: 1.5rem;
+    margin-block-start: .8em;
+    margin-block-end: .8em;
+}
+
+h5 {
+    font-size: 1rem;
+    margin-block-start: .8em;
+    margin-block-end: .8em;
+}
+
+strong{
+    font-weight:430;
+}
+
+hr{
+    height: 1px;
+    background-color: $light-grey;
+    border: none;
+}
+
+.fa-circle{
+    display: inline-block;
+    width:1em;
+    height:1em;
+    border-radius: 1.7em;
+    background-color:$dark-grey;
+    color:$white;
+    padding: 0.7em 0.7em;
+    text-align:center;
+    margin-right:6px;
+ }
