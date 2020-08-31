@@ -143,21 +143,39 @@
                     <div class="w-50">
                         <h1>Contact</h1>
                     </div>
-                    <div class="w-50">
-                        <h1>Contact form</h1>
-                        <h3>Contact form will go here</h3>
+                    <div class="w-70 center-self-x">
+                        <form>
+                            <h1>Contact form</h1>
+                            <div class="input-container">
+                                <input class="input-field" type="text" placeholder="Name" name="name"/>
+                                <i class="fa fa-user-o fa-input-icon"></i>
+                            </div>
+                            <div class="input-container">
+                                <input class="input-field" type="text" placeholder="Email" name="email"/>
+                                <i class="fa fa-envelope-o fa-input-icon"></i>
+                            </div>
+                            <div class="input-container">
+                                <input class="input-field" type="text" placeholder="Phone" name="phone"/>
+                                <i class="fa fa-mobile fa-input-icon"></i>
+                            </div>
+                            <div class="input-container">
+                                <textarea class="input-field" placeholder="Message" name="message" rows="5"></textarea>
+                                <!--<input class="input-field" type="text" placeholder="Message" name="message"/>-->
+                                <i class="fa fa-comments-o fa-input-icon center-self-y"></i>
+                            </div>
+                            <div class="input-container">
+                                <input class="btn w-100" type="submit" title="Submit" name="contact-submit"/>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
-            <div class="center-content-x white-bg">
-                <hr class="w-70">
-            </div>
             <div class="col-3" id="footer-wrapper">
                 <div class="center-content-xy-sm m-t-md m-b-xl">
                     <div>
-                        <img class="w-50" src="static/img/byite-logo-color.svg"/>
+                        <img class="w-50" id="footer-logo" src="static/img/byite-logo-color.svg"/>
                     </div>
-                    <div class="w-50 col-3-sm m-t-lg">
+                    <div class="w-50 space-evenly m-t-lg">
                         <a class="center-self-x footer-icon" href="https://github.com/scott-j5"><img src="static/img/github-logo.svg"/></a>
                         <a class="center-self-x footer-icon" href="https://www.linkedin.com/in/scottjames5"><img src="static/img/linkedin-logo.svg"/></a>
                         <a class="center-self-x footer-icon" href="https://www.youtube.com/channel/UC84gV5HcQWphJ7lD7X0bXlA"><img src="static/img/youtube-logo.svg"/></a>
@@ -184,12 +202,10 @@
                     <p>
                         Sign up if you would like to be notified about new blog posts or other events.
                     </p>
-                    <p>
-                        <div class="input-container">
-                            <input class="input-field" type="text" placeholder="Email" name="email"/>
-                            <i class="fa fa-paper-plane-o fa-input-icon"></i>
-                        </div>
-                    </p>
+                    <div class="input-container">
+                        <input class="input-field" type="text" placeholder="Email" name="email"/>
+                        <i class="fa fa-paper-plane-o fa-input-icon fa-input-icon-hover"></i>
+                    </div>
                 </div>
             </div>
         </div>

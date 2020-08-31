@@ -1,5 +1,23 @@
+textarea{
+    resize:vertical;
+    font-family:inherit;
+    font-weight:inherit;
+    color:$dark-grey;
+    min-height:2.6em;
+    max-height:250px;
+}
+
+input{
+    font-family:inherit;
+    font-weight:inherit;
+    color:$dark-grey;
+}
+
 .input-container{
     display:flex;
+    margin-top:$space-lg;
+    margin-bottom:$space-lg;
+    background-color:$dark-grey;
  }
  
  .input-field{
@@ -12,24 +30,34 @@
     border-radius: 0px;
     border-right:0px;
     border:1px $dark-grey solid;
+    border-top:0px;
+    border-left:0px;
  }
+
+.input-field:focus{
+    border-image-slice: 1;
+    border-width: 1px;
+    border-bottom:1px solid;
+    border-image-source: linear-gradient(to left, $yellow, $pink);
+}
 
  .fa-input-icon{
     color:$white;
     background-color: $dark-grey;
     font-size: 1em;
-    width: 1em;
+    width: 1.2em;
     height: 1em;
     padding: 0.7em;
     border:2px $dark-grey solid;
+    text-align: center;
     transition: padding 100ms ease-out, font-size 100ms ease-out;
 }
 
-.fa-input-icon:hover{
+.fa-input-icon-hover:hover{
     color:$white;
     background-color: $dark-grey;
     font-size: 1.2em;
-    width: 1em;
+    width: 1.2em;
     height: 1em;
     padding: 0.5em;
 }

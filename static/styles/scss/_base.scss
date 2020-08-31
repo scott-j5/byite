@@ -6,7 +6,6 @@
 body{
    margin:0px;
    padding:0px;
-   font-family:'raleway', 'roboto', sans-serif;
    background-color:$white;
 }
 
@@ -64,6 +63,11 @@ body{
    grid-column-gap: 13%;
 }
 
+.space-evenly{
+   display:flex;
+   justify-content:space-between;
+}
+
 .center-content-x{
    display:flex;
    justify-items:center;
@@ -117,6 +121,11 @@ body{
 .center-self-xy{
    align-self:center;
    justify-self:center;
+}
+
+.align-self-end{
+   align-self:flex-end;
+   justify-self:flex-end;
 }
 
 .w-50{
@@ -174,6 +183,21 @@ body{
    top:-1px;
    width:100%;
    overflow:hidden;
+}
+
+.btn{
+   color:$white;
+   background-color: $dark-grey;
+   font-size: 1em;
+   padding: 0.7em;
+   border:1px $dark-grey solid;
+   text-align: center;
+}
+
+.btn:hover{
+   border-image-slice: 1;
+   border-width: 1px;
+   border-image-source: conic-gradient(from -62deg, $yellow, $pink);
 }
 
 //Classes for responsive circle images

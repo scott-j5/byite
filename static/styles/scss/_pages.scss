@@ -233,15 +233,22 @@
     display:grid;
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(2, .5fr);
+    background-image: url('../img/contact-us.svg');
+    background-size: auto 100%;
+    background-position: 55% 0%;
     height: 100%;
 
     @media (min-width: $screen-md){
+        grid-column-gap: 13%;
+        background-position: 56% 0%;
+    }
+    @media (min-width: $screen-mdlg){
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(1, 1fr);
         grid-column-gap: 13%;
-        background-position: 47% 0%;
+        background-position: 56% 0%;
     }
     @media (min-width: $screen-lg){
-        background-position: 47% 0%;
+        background-position: 50% 0%;
     }
 }
