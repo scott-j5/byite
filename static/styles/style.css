@@ -17,6 +17,7 @@ body {
   padding: 0px;
   width: 100%;
   min-height: 100%;
+  overflow: hidden;
 }
 
 .page {
@@ -28,6 +29,10 @@ body {
   padding-right: 7.5%;
   align-items: center;
   justify-content: space-around;
+}
+
+.page-padded {
+  padding-top: 65px;
 }
 
 .full-height {
@@ -72,6 +77,14 @@ body {
   justify-content: space-between;
 }
 
+.flex-y {
+  flex-direction: column;
+}
+
+.flex-x {
+  flex-direction: row;
+}
+
 .center-content-x {
   display: flex;
   justify-items: center;
@@ -104,6 +117,18 @@ body {
     justify-items: center;
     justify-content: center;
     align-items: center;
+  }
+}
+
+@media (max-width: 699px) {
+  .hidden-sm {
+    display: none;
+  }
+}
+
+@media (max-width: 918px) {
+  .hidden-md {
+    display: none;
   }
 }
 
@@ -148,6 +173,12 @@ body {
   width: 100%;
 }
 
+@media (max-width: 699px) {
+  .w-100-sm {
+    width: 100%;
+  }
+}
+
 .no-padding {
   padding: 0px;
 }
@@ -166,6 +197,10 @@ body {
 
 .m-t-lg {
   margin-top: 15px;
+}
+
+.m-t-xl {
+  margin-top: 20px;
 }
 
 .m-b-lg {
@@ -237,6 +272,11 @@ html {
   font-size: 11px;
 }
 @media (min-width: 699px) {
+  html {
+    font-size: 12px;
+  }
+}
+@media (min-width: 918px) {
   html {
     font-size: 16px;
   }
@@ -523,34 +563,29 @@ input {
 
 #page3 {
   top: -2px;
-  color: black;
-  background-color: white;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-template-rows: 200px repeat(2, 1fr);
-  height: 100%;
+  color: #383a42;
+  background-color: #fcfcfc;
   width: calc(100% - 7.5%);
   padding-right: 0px;
-  background-image: url("../img/potential-backdrop.svg");
-  background-size: 100% auto;
-  overflow: hidden;
+  background-image: url("../img/projects1.svg");
+  background-size: auto 100%;
+  background-position: 55% 0%;
+  grid-gap: 0px;
+  background-repeat: no-repeat;
 }
 @media (min-width: 699px) {
   #page3 {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 150px repeat(1, 1fr);
-    background-size: 150% auto;
+    background-position: 50% 0%;
   }
 }
-
-#projects-title {
-  position: relative;
-  align-self: flex-end;
-  grid-column: 1/1;
+@media (min-width: 918px) {
+  #page3 {
+    background-position: 50% 0%;
+  }
 }
-@media (min-width: 699px) {
-  #projects-title {
-    grid-column: 1/span 2;
+@media (min-width: 1920px) {
+  #page3 {
+    background-position: 50% 0%;
   }
 }
 
@@ -570,15 +605,38 @@ input {
 
 #project-text-container {
   position: relative;
-  width: 100%;
   height: 100%;
+  text-align: right;
+  padding-right: 7.5%;
+}
+
+#projects-title {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-325%);
+  width: calc(100% - (7.5% * 3));
+  right: 7.5%;
+}
+@media (min-width: 699px) {
+  #projects-title {
+    width: calc(100% - (7.5% * 3));
+    right: calc(7.5% * 3);
+  }
 }
 
 .project-text {
   position: absolute;
   top: 50%;
+  width: calc(100% - (7.5% * 3));
+  right: 7.5%;
   transform: translateY(-50%);
   opacity: 0;
+}
+@media (min-width: 699px) {
+  .project-text {
+    width: calc(100% - (7.5% * 3));
+    right: calc(7.5% * 3);
+  }
 }
 
 .project-text-active {
@@ -598,7 +656,7 @@ input {
   position: absolute;
   top: 50%;
   transform: rotate(95deg) translateY(-50%);
-  transform-origin: 150% 150%;
+  transform-origin: 135% 50%;
 }
 
 .project-image-active {
@@ -613,13 +671,29 @@ input {
   transition-timing-function: cubic-bezier(var(--cubic-buzier));
 }
 
+#project-gears {
+  position: absolute;
+  top: 15%;
+  height: 70%;
+  left: calc(100% - 65px);
+  transition: transform 1550ms;
+  transition-timing-function: cubic-bezier(var(--cubic-buzier));
+}
+@media (min-width: 699px) {
+  #project-gears {
+    top: 20%;
+    height: 60%;
+    left: calc(100% - 90px);
+  }
+}
+
 #page4 {
-  top: -1px;
-  color: white;
+  top: -3px;
+  color: #383a42;
   background-color: #fcfcfc;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-template-rows: repeat(2, 0.5fr);
+  grid-template-rows: repeat(1, 1fr);
   background-image: url("../img/contact-us.svg");
   background-size: auto 100%;
   background-position: 55% 0%;
@@ -628,7 +702,7 @@ input {
 @media (min-width: 699px) {
   #page4 {
     grid-column-gap: 13%;
-    background-position: 56% 0%;
+    background-position: 50% 0%;
   }
 }
 @media (min-width: 918px) {
@@ -636,7 +710,7 @@ input {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(1, 1fr);
     grid-column-gap: 13%;
-    background-position: 56% 0%;
+    background-position: 50% 0%;
   }
 }
 @media (min-width: 1920px) {
@@ -653,13 +727,14 @@ input {
 #header-wrapper {
   position: fixed;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 0.5fr);
   z-index: 50;
-  width: 85%;
+  width: calc(100% - (7.5% * 2));
+  height: 1.5rem;
+  min-height: 50px;
   padding-top: 15px;
   padding-left: 7.5%;
   padding-right: 7.5%;
-  min-height: 50px;
   color: #383a42;
 }
 
@@ -680,6 +755,8 @@ input {
 }
 
 #header-logo-wrapper {
+  position: relative;
+  height: 2.9rem;
   min-height: 50px;
 }
 
@@ -778,8 +855,8 @@ input {
     display: block;
     padding-left: 0px;
     padding-right: 0px;
-    padding-top: 13px;
-    padding-bottom: 13px;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
   }
 }
 @media (min-width: 1920px) {
@@ -787,8 +864,8 @@ input {
     display: block;
     padding-left: 0px;
     padding-right: 0px;
-    padding-top: 18px;
-    padding-bottom: 18px;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
   }
 }
 
@@ -899,7 +976,7 @@ svg .path-a {
 }
 @media (min-width: 699px) {
   #footer-wrapper p, #footer-wrapper div {
-    font-size: 82%;
+    font-size: 90%;
   }
 }
 @media (min-width: 918px) {

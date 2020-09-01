@@ -139,32 +139,24 @@
 //page 3
 #page3{
     top:-2px;
-    color:black;
-    background-color:white;
-    display:grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: 200px repeat(2, 1fr);
-    height: 100%;
+    color:$dark-grey;
+    background-color:$white;
     width:calc(100% - #{$page-padding});
     padding-right:0px;
-    background-image: url('../img/potential-backdrop.svg');
-    background-size: 100% auto;
-    overflow: hidden;
+    background-image: url('../img/projects1.svg');
+    background-size: auto 100%;
+    background-position: 55% 0%;
+    grid-gap:0px;
+    background-repeat: no-repeat;
 
     @media (min-width: $screen-md){
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: 150px repeat(1, 1fr);
-        background-size: 150% auto;
+        background-position: 50% 0%;
     }
-}
-
-#projects-title{
-    position:relative;
-    align-self:flex-end;
-    grid-column: 1/ 1;
-
-    @media (min-width: $screen-md){
-        grid-column:1/ span 2;
+    @media (min-width: $screen-mdlg){
+        background-position: 50% 0%;
+    }
+    @media (min-width: $screen-lg){
+        background-position: 50% 0%;
     }
 }
 
@@ -184,16 +176,36 @@
 
 #project-text-container{
     position:relative;
-    width:100%;
     height:100%;
+    text-align:right;
+    padding-right:$page-padding;
+}
+
+#projects-title{
+    position:absolute;
+    top:50%;
+    transform: translateY(-325%);
+    width:calc(100% - (#{$page-padding} * 3));
+    right:$page-padding;
+    @media (min-width: $screen-md){
+        width:calc(100% - (#{$page-padding} * 3));
+        right:calc(#{$page-padding} * 3);
+    }
 }
 
 .project-text{
     position:absolute;
     top:50%;
+    width:calc(100% - (#{$page-padding} * 3));
+    right:$page-padding;
     transform: translateY(-50%);
     opacity:0;
+    @media (min-width: $screen-md){
+        width:calc(100% - (#{$page-padding} * 3));
+        right:calc(#{$page-padding} * 3);
+    }
 }
+
 .project-text-active{
     opacity:1;
     transition: opacity 1500ms;
@@ -210,7 +222,7 @@
     position:absolute;
     top:50%;
     transform: rotate(95deg) translateY(-50%);
-    transform-origin: 150% 150%;
+    transform-origin: 135% 50%;
 }
 .project-image-active{
     transform: rotate(0deg) translateY(-50%);
@@ -223,16 +235,29 @@
     transition-timing-function: cubic-bezier(var(--cubic-buzier));
 }
 
-
+#project-gears{
+    position:absolute;
+    top:15%;
+    height:70%;
+    left:calc(100% - 65px);
+    transition: transform 1550ms;
+    transition-timing-function: cubic-bezier(var(--cubic-buzier));
+    
+    @media (min-width: $screen-md){
+        top:20%;
+        height:60%;
+        left:calc(100% - 90px);
+    }
+}
 
 //page 4
 #page4{
-    top:-1px;
-    color:white;
+    top:-3px;
+    color:$dark-grey;
     background-color:$white;
     display:grid;
     grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(2, .5fr);
+    grid-template-rows: repeat(1, 1fr);
     background-image: url('../img/contact-us.svg');
     background-size: auto 100%;
     background-position: 55% 0%;
@@ -240,13 +265,13 @@
 
     @media (min-width: $screen-md){
         grid-column-gap: 13%;
-        background-position: 56% 0%;
+        background-position: 50% 0%;
     }
     @media (min-width: $screen-mdlg){
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(1, 1fr);
         grid-column-gap: 13%;
-        background-position: 56% 0%;
+        background-position: 50% 0%;
     }
     @media (min-width: $screen-lg){
         background-position: 50% 0%;

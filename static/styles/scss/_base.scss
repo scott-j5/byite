@@ -14,6 +14,7 @@ body{
    padding:0px;
    width:100%;
    min-height:100%;
+   overflow:hidden;
 }
 
 //General page setup classes
@@ -26,6 +27,10 @@ body{
    padding-right:$page-padding;
    align-items:center;
    justify-content:space-around;
+}
+
+.page-padded{
+   padding-top:65px;
 }
 
 .full-height{
@@ -68,6 +73,14 @@ body{
    justify-content:space-between;
 }
 
+.flex-y{
+   flex-direction: column;
+}
+
+.flex-x{
+   flex-direction: row;
+}
+
 .center-content-x{
    display:flex;
    justify-items:center;
@@ -101,6 +114,18 @@ body{
       justify-content:center;
       align-items:center;
   }
+}
+
+.hidden-sm{
+   @media (max-width: $screen-md){
+      display:none;
+   }
+}
+
+.hidden-md{
+   @media (max-width: $screen-mdlg){
+      display:none;
+   }
 }
 
 .center-content-xy{
@@ -144,6 +169,12 @@ body{
    width:100%;
 }
 
+.w-100-sm{
+   @media(max-width: $screen-md){
+      width:100%;
+   }
+}
+
 .no-padding{
    padding:0px;
 }
@@ -162,6 +193,10 @@ body{
 
 .m-t-lg{
    margin-top:$space-lg;
+}
+
+.m-t-xl{
+   margin-top:$space-xl;
 }
 
 .m-b-lg{

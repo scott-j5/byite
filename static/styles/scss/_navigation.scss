@@ -6,13 +6,14 @@
 #header-wrapper{
     position:fixed;
     display:grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, .5fr);
     z-index:50;
-    width:$page-width;
-    padding-top:15px;
+    width:calc(100% - (#{$page-padding} * 2));
+    height:1.5rem;
+    min-height:$header-min-height;
+    padding-top:$space-lg;
     padding-left:$page-padding;
     padding-right:$page-padding;
-    min-height:$header-min-height;
     color:$dark-grey;
  }
 
@@ -31,8 +32,10 @@
     height:7rem;
 }
 
- #header-logo-wrapper{
-    min-height:$header-min-height;
+#header-logo-wrapper{
+   position:relative;
+   height:2.9rem;
+   min-height:$header-min-height;
 }
 
  .header-logo{
@@ -125,15 +128,15 @@
         display:block;
         padding-left:0px;
         padding-right:0px;
-        padding-top:13px;
-        padding-bottom:13px;
+        padding-top:.7rem;
+        padding-bottom:.7rem;
     }
     @media (min-width: $screen-lg){
         display:block;
         padding-left:0px;
         padding-right:0px;
-        padding-top:18px;
-        padding-bottom:18px;
+        padding-top:.7rem;
+        padding-bottom:.7rem;
     }
  }
 

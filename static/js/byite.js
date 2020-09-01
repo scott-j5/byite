@@ -52,6 +52,7 @@ SLIDER = {
         }, i);
     },
     render: function(){
+        document.querySelector("#project-gears").style.transform = "rotate("+ (-this.i*90) + "deg)";
         if(this.initial == 1){
             this.initial = 0;
             $("#project-" + (this.i) + "-text").toggleClass("project-text-active");
