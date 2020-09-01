@@ -1,5 +1,6 @@
 body{
     font-family:'raleway', 'roboto', sans-serif;
+    color: $dark-grey;
  }
 
 html{
@@ -77,4 +78,14 @@ hr{
     padding: 0.7em 0.7em;
     text-align:center;
     margin-right:6px;
+ }
+
+ .text-center{
+     text-align: center;
+ }
+
+ .text-center-sm{
+     @media(max-width: $screen-md){
+         text-align:center;
+     }
  }
