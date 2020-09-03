@@ -30,7 +30,7 @@ body{
 }
 
 .page-padded{
-   padding-top:65px;
+   padding-top:calc((2.9rem * 1.6) + #{$space-lg});
 }
 
 .full-height{
@@ -318,6 +318,14 @@ body{
 
 .m-t-xxl{
    margin-top:$space-xxl;
+}
+
+.m-b-sm{
+   margin-bottom:$space-sm;
+}
+
+.m-b-md{
+   margin-bottom:$space-md;
 }
 
 .m-b-lg{
