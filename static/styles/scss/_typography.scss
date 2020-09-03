@@ -68,6 +68,20 @@ hr{
     border: none;
 }
 
+a{
+    color:#1e83d6;
+    text-decoration:none;
+}
+
+.text-muted{
+    text-decoration:none;
+    color:inherit;
+}
+
+.text-right{
+    text-align: right;
+}
+
 .fa-circle{
     display: inline-block;
     width:1em;

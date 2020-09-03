@@ -20,7 +20,7 @@ body{
 //General page setup classes
 .page{
    position:relative;
-   display:flex;
+   //display:flex;
    z-index:1;
    width:$page-width;
    padding-left:$page-padding;
@@ -37,85 +37,110 @@ body{
    min-height:100vh;
 }
 
+
+//GRID COMPONENTS
 .col-1{
    display:grid;
    grid-template-columns: repeat(1, 1fr);
-   grid-template-rows: repeat(1, 1fr);
-}
-
-.col-1-sm{
-   display:grid;
-   @media (min-width: 0px){
-      grid-template-columns: repeat(1, 1fr);
-      grid-template-rows: repeat(1, 1fr);
-   }
+   grid-template-rows: auto;
 }
 
 .col-2{
    display:grid;
-   grid-template-columns: repeat(1, 1fr);
-   grid-template-rows: repeat(2, 1fr);
-
-   @media (min-width: $screen-md){
-       grid-template-columns: repeat(2, 1fr);
-       grid-template-rows: repeat(1, 1fr);
-       grid-column-gap: 13%;
-   }
+   grid-template-columns: repeat(2, 1fr);
+   grid-template-rows: auto;
+   grid-column-gap: $grid-column-spacing;
 }
 
-.col-2-sm{
-   display:grid;
-   @media (min-width: 0px){
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(1, 1fr);
-      grid-column-gap: 13%;
-  }
+.col-3{
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   grid-template-rows: auto;
+   grid-column-gap: $grid-column-spacing;
 }
 
-.col-2-md{
+.col-1-mdlg{
    display:grid;
-   @media (min-width: $screen-sm){
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(1, 1fr);
-      grid-column-gap: 13%;
+   @media (max-width: $screen-mdlg){
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: auto;
+      grid-column-gap: $grid-column-spacing;
   }
 }
 
 .col-2-mdlg{
    display:grid;
-   @media (min-width: $screen-md){
+   @media (max-width: $screen-mdlg){
       grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(1, 1fr);
-      grid-column-gap: 13%;
+      grid-template-rows: auto;
+      grid-column-gap: $grid-column-spacing;
   }
 }
 
-.col-3{
-   display: grid;
-   grid-template-columns: repeat(1, 1fr);
-   grid-template-rows: repeat(3, 1fr);
+.col-3-mdlg{
+   display:grid;
+   @media (max-width: $screen-mdlg){
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      grid-column-gap: $grid-column-spacing;
+  }
+}
 
-   @media (min-width: $screen-md){
-       grid-template-columns: repeat(3, 1fr);
-       grid-template-rows: repeat(1, 1fr);
-       grid-column-gap: 13%;
+.col-1-md{
+   display:grid;
+   @media (max-width: $screen-md){
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: auto;
    }
+}
+
+.col-2-md{
+   display:grid;
+   @media (max-width: $screen-md){
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+      grid-column-gap: $grid-column-spacing;
+  }
+}
+
+.col-3-md{
+   display:grid;
+   @media(max-width: $screen-md){
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
+      grid-column-gap: $grid-column-spacing;
+   }
+}
+
+.col-1-sm{
+   display:grid;
+   @media (max-width: $screen-sm){
+      grid-template-columns: 1fr;
+      grid-auto-rows: max-content;
+   }
+}
+
+.col-2-sm{
+   display:grid;
+   @media (max-width: $screen-sm){
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+      grid-column-gap: $grid-column-spacing;
+  }
 }
 
 .col-3-sm{
    display:grid;
-   @media(min-width: 0px){
+   @media(max-width: $screen-sm){
       grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(1, 1fr);
-      grid-column-gap: 13%;
+      grid-template-rows: auto;
+      grid-column-gap: $grid-column-spacing;
    }
 }
 
-.space-evenly{
-   display:flex;
-   justify-content:space-between;
-}
 
+
+//FLEX COMPONENTS
 .flex-y{
    display:flex;
    flex-direction: column;
@@ -126,18 +151,15 @@ body{
    flex-direction: row;
 }
 
+.space-evenly{
+   display:flex;
+   justify-content:space-between;
+}
+
 .center-content-x{
    display:flex;
    justify-items:center;
    justify-content:center;
-}
-
-.center-content-x-sm{
-   @media (max-width: $screen-md){
-      display:flex;
-      justify-items:center;
-      justify-content:center;
-  }
 }
 
 .center-content-y{
@@ -145,15 +167,47 @@ body{
    align-items:center;
 }
 
-.center-content-y-sm{
+.center-content-x-md{
+   @media (max-width: $screen-md){
+      display:flex;
+      justify-items:center;
+      justify-content:center;
+  }
+}
+
+.center-content-y-md{
    @media (max-width: $screen-md){
       display:flex;
       align-items:center;
   }
 }
 
-.center-content-xy-sm{
+.center-content-xy-md{
    @media (max-width: $screen-md){
+      display:flex;
+      justify-items:center;
+      justify-content:center;
+      align-items:center;
+  }
+}
+
+.center-content-x-sm{
+   @media (max-width: $screen-sm){
+      display:flex;
+      justify-items:center;
+      justify-content:center;
+  }
+}
+
+.center-content-y-sm{
+   @media (max-width: $screen-sm){
+      display:flex;
+      align-items:center;
+  }
+}
+
+.center-content-xy-sm{
+   @media (max-width: $screen-sm){
       display:flex;
       justify-items:center;
       justify-content:center;
@@ -162,13 +216,13 @@ body{
 }
 
 .hidden-sm{
-   @media (max-width: $screen-md){
+   @media (max-width: $screen-sm){
       display:none;
    }
 }
 
 .hidden-md{
-   @media (max-width: $screen-mdlg){
+   @media (max-width: $screen-md){
       display:none;
    }
 }
@@ -243,7 +297,7 @@ body{
 }
 
 .no-m{
-   margin: 0px;
+   margin: 0px !important;
 }
 
 .no-m-t{
@@ -274,8 +328,16 @@ body{
    margin-bottom:$space-xl;
 }
 
+.m-b-xxl{
+   margin-bottom:$space-xxl;
+}
+
 .p-t-xxl{
    padding-top:$space-xxl;
+}
+
+.no-p{
+   padding:0px !important;
 }
 
 .white-bg{
@@ -334,5 +396,25 @@ img{
 
 .img-full-width{
    width:100%;
+}
+
+.tag-list{
+   list-style:none;
+   margin:0px;
+   padding:0px;
+}
+
+.tag-list li{
+   color:$white;
+   background: linear-gradient(-62deg, $yellow, $pink);
+   display: inline-block;
+   margin: .4rem;
+   padding: .5rem;
+   padding-left:1rem;
+   padding-right:1rem;
+   width: auto;
+   border-radius:3rem;
+   background-color:$grey;
+
 }
 

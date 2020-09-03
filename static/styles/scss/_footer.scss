@@ -25,7 +25,7 @@
 
 #footer-contact{
   order: +1;
-  @media (min-width: $screen-md){
+  @media (min-width: $screen-sm){
     order: 0;
   }
 }
