@@ -9,7 +9,7 @@
     grid-template-columns: repeat(2, .5fr);
     z-index:50;
     width:calc(100% - (#{$page-padding} * 2));
-    height:1.5rem;
+    height:2.9rem;
     min-height:$header-min-height;
     padding-top:$space-lg;
     padding-left:$page-padding;
@@ -27,6 +27,15 @@
         min-width: 100%;
      }
  }
+
+ .header-logo-blob{
+   height:calc((2.9rem * 1.6) + #{$space-lg});
+   margin-left:calc(#{$page-padding} - 5rem);
+
+   @media (min-width: $screen-lg){
+      margin-left:calc(#{$page-padding} - 4.6rem);
+   }
+}
 
  #header-bg-img{
     height:7rem;
@@ -67,6 +76,7 @@
         justify-content: space-between;
         width:auto;
         height:auto;
+        min-height:$header-min-height;
         top:0px;
         background-image: none;
         clip-path: none;
@@ -79,10 +89,12 @@
 
  #site-nav{
     width: 70%;
+    margin-top:$space-xxl;
 
     @media (min-width: $screen-md){
         position:relative;
         display:flex;
+        margin-top:0px;
         flex-direction: row;
         align-items:center;
         justify-content: space-between;
@@ -120,12 +132,12 @@
     color: $dark-grey;
     text-decoration: none;
     font-size: 1.5rem;
-    height:100%;
     padding:6%;
     padding-left:12%;
 
     @media (min-width: $screen-md){
         display:block;
+        height:100%;
         padding-left:0px;
         padding-right:0px;
         padding-top:.7rem;
@@ -133,6 +145,7 @@
     }
     @media (min-width: $screen-lg){
         display:block;
+        height:100%;
         padding-left:0px;
         padding-right:0px;
         padding-top:.7rem;

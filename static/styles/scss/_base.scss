@@ -37,10 +37,24 @@ body{
    min-height:100vh;
 }
 
+.col-1{
+   display:grid;
+   grid-template-columns: repeat(1, 1fr);
+   grid-template-rows: repeat(1, 1fr);
+}
+
+.col-1-sm{
+   display:grid;
+   @media (min-width: 0px){
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+   }
+}
+
 .col-2{
    display:grid;
    grid-template-columns: repeat(1, 1fr);
-   grid-template-rows: repeat(2, .5fr);
+   grid-template-rows: repeat(2, 1fr);
 
    @media (min-width: $screen-md){
        grid-template-columns: repeat(2, 1fr);
@@ -49,10 +63,37 @@ body{
    }
 }
 
-.col-3{
+.col-2-sm{
    display:grid;
+   @media (min-width: 0px){
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+      grid-column-gap: 13%;
+  }
+}
+
+.col-2-md{
+   display:grid;
+   @media (min-width: $screen-sm){
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+      grid-column-gap: 13%;
+  }
+}
+
+.col-2-mdlg{
+   display:grid;
+   @media (min-width: $screen-md){
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+      grid-column-gap: 13%;
+  }
+}
+
+.col-3{
+   display: grid;
    grid-template-columns: repeat(1, 1fr);
-   grid-template-rows: repeat(3, .3333fr);
+   grid-template-rows: repeat(3, 1fr);
 
    @media (min-width: $screen-md){
        grid-template-columns: repeat(3, 1fr);
@@ -63,9 +104,11 @@ body{
 
 .col-3-sm{
    display:grid;
-   grid-template-columns: repeat(3, 1fr);
-   grid-template-rows: repeat(1, 1fr);
-   grid-column-gap: 13%;
+   @media(min-width: 0px){
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+      grid-column-gap: 13%;
+   }
 }
 
 .space-evenly{
@@ -74,10 +117,12 @@ body{
 }
 
 .flex-y{
+   display:flex;
    flex-direction: column;
 }
 
 .flex-x{
+   display:flex;
    flex-direction: row;
 }
 
@@ -291,29 +336,3 @@ img{
    width:100%;
 }
 
-.blog-author{
-   @media(max-width: $screen-md){
-      order:+1;
-      margin-top:$space-xxl;
-   }
-}
-
-.blog-header{
-   grid-column-gap:7%;
-}
-
-.blog-img{
-   position:relative;
-}
-
-.blog-img-frame{
-   position:absolute;
-   left:0px;
-}
-
-.blog-img-frame-bottom{
-   position:absolute;
-   left:0px;
-   bottom:0px;
-   transform: rotate(180deg);
-}
