@@ -1,0 +1,133 @@
+{% extends "app/base.html" %}
+
+{% block content %}
+<!-- START PAGE 1 -->
+<div class="page full-height col-2 col-1-sm" id="page1">
+    <div id="landing-text-wrapper">
+        <div>
+            <h1>Take a byite out of something new.</h1>
+        </div>
+        <div>
+            <h4>From web development to data analysis and more! We leverage the latest technology to help your business stand out and perform.</h3>
+        </div>
+    </div>
+    <div id="landing-logo-container">
+        <img id="landing-logo" src="static/img/byite-logo-color.svg"/>
+    </div>
+</div>
+<!-- END PAGE 1 -->
+
+<!-- START PAGE 2 -->
+<div class="page full-height col-2 col-1-sm" id=page2>
+    <div id="capabilities-logos">
+        <div class="capability">
+            <div class="capability-text"><strong>AWS cloud</strong></div>
+            <div class="capability-logo-container"><img class="capability-logo" src="static/img/aws-logo.svg"/></div>
+        </div>
+        <div class="capability">
+            <div class="capability-text"><strong>Python</strong></div>
+            <div class="capability-logo-container"><img class="capability-logo" src="static/img/python-logo.svg"/></div>
+        </div>
+        <div class="capability">
+            <div class="capability-text"><strong>Django framework</strong></div>
+            <div class="capability-logo-container"><img class="capability-logo" src="static/img/django_logo.svg"/></div>
+        </div>
+        <div class="capability">
+            <div class="capability-text"><strong>Postgres</strong></div>
+            <div class="capability-logo-container"><img class="capability-logo" src="static/img/postgres-logo.svg"/></div>
+        </div>
+        <div class="capability">
+            <div class="capability-text"><strong>Github</strong></div>
+            <div class="capability-logo-container"><img class="capability-logo" src="static/img/github-logo.svg"/></div>
+        </div>
+        <div class="capability">
+            <div class="capability-text"><strong>Javascript</strong></div>
+            <div class="capability-logo-container"><img class="capability-logo" src="static/img/js-logo.svg"/></div>
+        </div>
+        <div class="capability">
+            <div class="capability-text"><strong>SQL server and BI stack</strong></div>
+            <div class="capability-logo-container"><img class="capability-logo" src="static/img/sql-server-logo.svg"/></div>
+        </div>
+        <div class="capability">
+            <div class="capability-text"><strong>Adobe cc</strong></div>
+            <div class="capability-logo-container"><img class="capability-logo" src="static/img/cc-logo.svg"/></div>
+        </div>
+        <div class="capability">
+            <div class="capability-text"><strong>Ubuntu</strong></div>
+            <div class="capability-logo-container"><img class="capability-logo" src="static/img/ubuntu-logo.svg"/></div>
+        </div>
+    </div>
+    <div id="capabilities-content">
+        <h1>Technologies</h1>
+        <h4>We specialise in technology. It is our goal to come up with the most creative solutions to your problems, no matter the technical approach!</h4>
+    </div>
+</div>
+<!-- END PAGE 2 -->
+
+<!-- START PAGE 3 -->
+<div class="page col-2 col-1-sm full-height" id="page3">
+    <div id="project-text-container">
+        <h1 id="projects-title">Our work</h1>
+        <div class="project-text" id="project-0-text">
+            <h4 class="no-m-t">Kirkron</h4>
+            Complete end-to-end business solution. From domain and hosting mangement using AWS to Website development & Office 365 configuration.
+        </div>
+        <div class="project-text" id="project-1-text">
+            <h4 class="no-m-t">Tyler Place family resort</h4>
+            End-to-end development of a custom web app for staff to simplify internal processes and improve reliability of resource assignment.
+        </div>
+        <div class="project-text" id="project-2-text">
+            <h4 class="no-m-t">Want to know more?</h4>
+            Contact us <a href=""><u>here</u></a> to see how we can help you!
+        </div>
+    </div>
+    <div id="project-images-container">
+        <div class="project-image" id="project-0-image">
+            <img class="project-img" src="static/img/kirkron-logo.svg"/>
+        </div>
+        <div class="project-image" id="project-1-image">
+            <img class="project-img" src="static/img/tpPortal-laptop.png"/>
+        </div>
+        <div class="project-image" id="project-2-image">
+            <img class="project-img" src="static/img/tpPortal-phone.png"/>
+        </div>
+        <div>
+            <img id="project-gears" src="static/img/gear-1.svg"/>
+        </div>
+    </div>
+</div>
+<!-- END PAGE 3 -->
+
+<!-- START PAGE 4 -->
+<div class="page col-2 col-1-sm full-height" id="page4">
+    <div class="hidden-md">
+        
+    </div>
+    <div class="w-70 w-100-sm center-self-x">
+        <form>
+            <h1>Contact us</h1>
+            <div class="input-container">
+                <input class="input-field" type="text" placeholder="Name" name="name"/>
+                <i class="fa fa-user-o fa-input-icon"></i>
+            </div>
+            <div class="input-container">
+                <input class="input-field" type="text" placeholder="Email" name="email"/>
+                <i class="fa fa-envelope-o fa-input-icon"></i>
+            </div>
+            <div class="input-container">
+                <input class="input-field" type="text" placeholder="Phone" name="phone"/>
+                <i class="fa fa-mobile fa-input-icon"></i>
+            </div>
+            <div class="input-container">
+                <textarea class="input-field" placeholder="Message" name="message" rows="5"></textarea>
+                <!--<input class="input-field" type="text" placeholder="Message" name="message"/>-->
+                <i class="fa fa-comments-o fa-input-icon center-self-y"></i>
+            </div>
+            <div class="input-container">
+                <input class="btn w-100" type="submit" title="Submit" name="contact-submit"/>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- END PAGE 4 -->
+{% endblock content %}

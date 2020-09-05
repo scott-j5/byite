@@ -1,0 +1,8 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.autoComplete.extraPaths": [
+        "../lib/Python3.8/site-packages/",
+    ],
+    "python.autoComplete.addBrackets": true,
+}
