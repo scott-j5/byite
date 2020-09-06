@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import home_view
+from .views import contact_us, home_view, subscribe, unsubscribe
 
 urlpatterns = [
-    path('', home_view),
+    path('contact-us/', contact_us, name='contact-us'),
+    path('', home_view, name='home'),
+    path('subscribe/', subscribe, name='subscribe'),
+    path('unsubscribe/', unsubscribe, name='unsubscribe'),
 ]

@@ -1,5 +1,5 @@
 {% extends "app/base.html" %}
-
+{% load static %}
 {% block content %}
 <div class="blog-header-container page page-padded flex-y">
     <div class="blog-header w-100 m-t-xxl m-b-xxl">
@@ -9,44 +9,78 @@
             </div>
         </div>
         <div class="col-2 col-1-sm m-t-xl">
-            <a href="blog.html">
+            <a href="{% url 'blog-detail' blogs.0.slug %}">
                 <div class="blog-highlight color-white w-100 no-p m-b-xl">
-                    <h3 class="no-m">Blog 1</h3>
-                    <p class="m-b-md">Subheading</p>
+                    <h3 class="no-m">{{ blogs.0.title }}</h3>
+                    <p class="m-b-md">{{ blogs.0.description|truncatechars:100 }}</p>
                     <div class="space-evenly">
-                        <small><i class="fa fa-user"></i> Scott James</small>
-                        <small><i class="fa fa-calendar"></i> Date</small>
-                        <small><i class="fa fa-clock"></i> 4 min. read</small>
-                    </div>
-                </div>
-                <div class="w-100 no-p m-b-xl">
-                    <div>
-                        <div class="input-container no-m m-b-lg">
-                            <input class="input-field" type="text" placeholder="Search blogs" name="search"/>
-                            <i class="fa fa-search fa-input-icon fa-input-icon-hover center-self-y"></i>
-                        </div>
-                        <div>
-                            <p class="color-white m-b-md">Topics:</p>
-                            <ul class="tag-list">
-                                <a href=""><li><small class="color-white">topic 1 sdf</small></li></a>
-                                <a href=""><li><small class="color-white">topic svd1 sdf</small></li></a>
-                                <a href=""><li><small class="color-white">topic 1 sdf</small></li></a>
-                                <a href=""><li><small class="color-white">topic v xcv1 sdf</small></li></a>
-                                <a href=""><li><small class="color-white">topic 1dfvfsfvvsd sdf</small></li></a>
-                            </ul>
-                        </div>
+                        {% if not blogs.0.author.first_name %}
+                            <small><i class="fa fa-user"></i> {{ blogs.0.author }}</small>
+                        {% else %}
+                            <small><i class="fa fa-user"></i> {{ blogs.0.author.first_name }} {{ blogs.0.author.last_name }}</small>
+                        {% endif %}
+                        {% if blogs.0.published %}
+                            <small><i class="fa fa-calendar"></i> {{ blogs.0.published_on }}</small>
+                        {% else %}
+                            <small><i class="fa fa-pencil-ruler"></i> Draft. updated: {{ blogs.0.updated }}</small>
+                        {% endif %}
+                        <small><i class="fa fa-clock"></i> {{ blogs.0.read_time }} min. read</small>
                     </div>
                 </div>
             </a>
+            <div class="w-100 no-p m-b-xl">
+                <div>
+                    <div class="input-container no-m m-b-lg">
+                        <input class="input-field" type="text" placeholder="Search blogs" name="search"/>
+                        <i class="fa fa-search fa-input-icon fa-input-icon-hover center-self-y"></i>
+                    </div>
+                    <div>
+                        <p class="color-white m-b-md">Topics:</p>
+                        <ul class="tag-list">
+                            {% for tag in tags %}
+                                <a href="{% url 'blog-list' %}?tag={{tag.name}}"><li><small class="color-white">{{ tag.name }}</small></li></a>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <div class="page blog-list col-3 col-2-mdlg col-1-sm m-t-xxl">
-    <a class="text-muted" href="blog.html">
+    {% for blog in blogs %}
+        <a class="text-muted" href="{% url 'blog-detail' blog.slug %}">
+            <div class="blog-card flex-x">
+                <div class="blog-card-img-container center-content-xy">
+                    <div class="blog-card-img-overlay"></div>
+                    <img class="blog-card-img" src="{{ blog.thumbnail.url }}"/>
+                </div>
+                <div class="blog-card-text-container">
+                    <h3>{{ blog.title }}</h3>
+                    <p><small>{{ blog.description|truncatechars:100 }} </small></p>
+                    <div class="space-evenly">
+                        {% if not blogs.0.author.first_name %}
+                            <small><i class="fa fa-user"></i> {{ blogs.0.author|truncatechars:13 }}</small>
+                        {% else %}
+                            <small><i class="fa fa-user"></i> {{ blogs.0.author.first_name }} {{ blogs.0.author.last_name }}</small>
+                        {% endif %}
+                        {% if blogs.0.published %}
+                            <small><i class="fa fa-calendar"></i> {{ blogs.0.published_on }}</small>
+                        {% else %}
+                            <small><i class="fa fa-pencil-ruler"></i> Draft.</small>
+                        {% endif %}
+                        <small><i class="fa fa-clock"></i> {{ blogs.0.read_time }} min. read</small>
+                    </div>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+
+    <a class="text-muted" href="{% url 'blog-detail' blogs.0.slug %}">
         <div class="blog-card flex-x">
             <div class="blog-card-img-container center-content-xy">
                 <div class="blog-card-img-overlay"></div>
-                <img class="blog-card-img" src="static/img/kirkron-logo.svg"/>
+                <img class="blog-card-img" src="{% static 'img/kirkron-logo.svg' %}"/>
             </div>
             <div class="blog-card-text-container">
                 <h3>Blog 1</h3>
@@ -63,7 +97,7 @@
     <div class="blog-card flex-x">
         <div class="blog-card-img-container center-content-xy">
             <div class="blog-card-img-overlay"></div>
-            <img class="blog-card-img" src="static/img/postgres-logo.svg"/>
+            <img class="blog-card-img" src="{% static 'img/postgres-logo.svg' %}"/>
         </div>
         <div class="blog-card-text-container">
             <h3>Blog 1</h3>

@@ -41,6 +41,12 @@ input{
     border-image-source: linear-gradient(to left, $yellow, $pink);
 }
 
+.button-muted{
+    border:none;
+    padding:0px;
+    margin:0px;
+}
+
  .fa-input-icon{
     color:$white;
     background-color: $dark-grey;

@@ -3,11 +3,6 @@ function setMenu(e) {
     document.querySelector(".nav-wrapper").classList.toggle('nav-wrapper--open');
   };
 
-//const hamburger = document.querySelector('.hamburger');
-
-//hamburger.addEventListener('click', function(e){
-//    document.querySelector(".nav-wrapper").classList.toggle('nav-wrapper--open');
-//});
 
 SLIDER = {
     i: 0,
@@ -72,7 +67,61 @@ SLIDER = {
     }
 }
 
+FORMSUBMIT = {
+    init: function(selector = null){
+        if(selector == null){
+            selector = 'form';
+        }
+        document.querySelectorAll(selector).forEach(item => {
+            item.addEventListener("submit", this.submit);
+        });
+    },
+    submit: function(e){
+        var result = e.target.querySelector('.form-alert') || document.createElement("div");
+        var loader = document.createElement("div");
+        loader.classList.add("loader");
+        var xhr = new XMLHttpRequest();
+
+        e.preventDefault();
+        result.className = ''
+        e.target.classList.toggle('loading');
+        e.target.append(loader);
+
+        // Send the form data via an AJAX call using the form’s defined action and method
+        $.ajax({
+            url: e.target.action,
+            type: e.target.method,
+            data: new FormData(e.target),
+            dataType: 'JSON',
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function() {
+                return xhr;
+            },
+            success: function(ajaxOptions, thrownError) {
+                result.classList.add('form-alert', 'form-success');
+                result.innerHTML = JSON.parse(xhr.response).message;
+                e.target.append(result);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                result.classList.add('form-alert', 'form-error');
+                result.innerHTML = xhr.status + ': ' + xhr.statusText;
+                e.target.append(result);
+            },
+            complete: function() {
+                e.target.classList.toggle('loading');
+                e.target.removeChild(loader);
+            }
+        });  
+    },
+}
+
+
 $(document).ready(function(){
     var slider = SLIDER;
     slider.timer(10000);
+
+    var formSubmit = FORMSUBMIT;
+    formSubmit.init();
 });
