@@ -4,15 +4,15 @@
 {% block content %}
 <div class="page p-t-xxl flex-y">
     <div class="blog-header col-2 col-1-sm w-70 w-100-sm m-t-xxl">
-        <div class="blog-author center-self-x-sm align-self-end w-35">
-            <div class="img-circle img-circle-container"><img class="img-circle-img" alt="image" src="static/img/profile-img.jpg" /></div>
-            {% if not object.author.first_name %}
-                <h5 class="m-t-lg text-center">{{ object.author }}</h5>
-            {% else %}
-                <h5 class="m-t-lg text-center">{{ object.author.first_name }} {{ object.author.last_name }}</h5>
-            {% endif %}
+        <div class="blog-author center-self-x-sm align-self-end">
+            <div class="center-content-y flex-y">
+                <div class="w-35 blog-author-img-container">
+                    <div class="img-circle img-circle-container"><img class="img-circle-img" alt="image" src="{{ object.author.profile.image.url }}" /></div>
+                </div>
+                <h5 class="m-t-lg text-center">{{ object.author_name }}</h5>
+            </div>
         </div>
-        <div class="center-content-y center-content-xy-sm">
+        <div class="flex-end-content-y center-content-xy-sm">
             <div class="text-center-sm">
                 <h1 class="no-m">{{ object.title }}</h1>
                 <h5>{{ object.description }}</h5>
@@ -21,7 +21,7 @@
     </div>
     <div class="page flex-x m-t-xxl">
         {% if object.published %}
-            <div><i class="fa fa-calendar"></i> {{ object.published_on }}</div>
+            <div><i class="fa fa-calendar"></i> {{ blog.published_on|date:"M. j, Y" }}</div>
         {% else %}
             <small><i class="fa fa-pencil-ruler"></i> Draft. updated: {{ object.updated }}</small>
         {% endif %}
@@ -36,10 +36,12 @@
         </ul>
     </div>
 </div>
-<div class="blog-img w-100 m-t-xxl">
-    <img class="img-full-width blog-img-frame" src="{% static 'img/blog-img-frame.svg' %}"/>
-    <img class="img-full-width blog-title-img" src="{{ object.banner.url }}"/>
-    <img class="img-full-width blog-img-frame-bottom" src="{% static 'img/blog-img-frame.svg' %}"/>
+<div class="blog-banner w-100 m-t-xxl">
+    <img class="img-full-width blog-banner-frame" src="{% static 'img/blog-img-frame.svg' %}"/>
+    <div class="blog-banner-img">
+        <img class="img-full-width" src="{{ object.banner.url }}"/>
+    </div>
+    <img class="img-full-width blog-banner-frame-bottom" src="{% static 'img/blog-img-frame.svg' %}"/>
 </div>
 <div class="page m-t-xxl">
     <div class="blog-content">

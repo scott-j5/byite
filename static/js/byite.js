@@ -83,11 +83,91 @@ FORMSUBMIT = {
         var xhr = new XMLHttpRequest();
 
         e.preventDefault();
-        result.className = ''
+        result.className = '';
+        result.innerHTML = '';
         e.target.classList.toggle('loading');
         e.target.append(loader);
 
         // Send the form data via an AJAX call using the form’s defined action and method
+        $.ajax({
+            url: e.target.action,
+            type: e.target.method,
+            data: new FormData(e.target),
+            dataType: 'JSON',
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function() {
+                return xhr;
+            },
+            success: function(ajaxOptions, thrownError) {
+                result.classList.add('form-alert', 'form-success');
+                result.innerHTML = JSON.parse(xhr.response).message;
+                e.target.append(result);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                result.classList.add('form-alert', 'form-error');
+                result.innerHTML = 'Error ' + xhr.status + ': ' + xhr.statusText;
+                e.target.append(result);
+            },
+            complete: function() {
+                e.target.classList.toggle('loading');
+                e.target.removeChild(loader);
+            }
+        });  
+    },
+}
+
+LOAD = {
+    loadToElement: function(element, url){
+        var loader = document.createElement("div");
+        loader.classList.add("loader");
+
+        element.classList.toggle('loading');
+        element.append(loader);
+        
+        content = this.loadUrl(url, function(e){LOAD.updateContent(e, element)});
+
+        element.classList.toggle('loading');
+        element.innerHTML = content;
+    },
+    loadUrl: function(url, onComplete){
+        var result = {}
+        var xhr = new XMLHttpRequest();
+
+        // Make an AJAX call using the specified url
+        $.ajax({
+            url: url,
+            type: 'GET',
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function() {
+                return xhr;
+            },
+            success: function(ajaxOptions, thrownError) {
+                return xhr.response;
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                return xhr.status + ': ' + xhr.statusText;
+            },
+            complete: function() {
+                onComplete(xhr);
+            }
+        });
+    },
+    updateContent: function(e, element){
+        if (e.status == 200 ){
+            element.innerHTML = e.response;
+        }else{
+            element.innerHTML = '<div class="form-alert form-error"> Error ' + e.status + ': ' + e.statusText + '</div>';
+        }
+    },
+    loadJson: function(url){
+        var result = {}
+        var xhr = new XMLHttpRequest();
+
+        // Make an AJAX call using the specified url
         $.ajax({
             url: e.target.action,
             type: e.target.method,
@@ -117,11 +197,7 @@ FORMSUBMIT = {
     },
 }
 
-
 $(document).ready(function(){
-    var slider = SLIDER;
-    slider.timer(10000);
-
     var formSubmit = FORMSUBMIT;
     formSubmit.init();
 });

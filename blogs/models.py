@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 import math
 
@@ -14,7 +15,7 @@ class Tag(models.Model):
 class Blog(models.Model):
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     published = models.BooleanField(default=False)
-    pubished_on = models.DateTimeField(default=None, null=True, blank=True)
+    published_on = models.DateTimeField(default=None, null=True, blank=True)
     updated = models.DateTimeField(default=timezone.now())
     title = models.CharField(max_length=150)
     slug = models.SlugField(max_length=150, unique=True)
@@ -23,24 +24,46 @@ class Blog(models.Model):
     banner = models.ImageField(default='blogs/banners/default.jpg', upload_to='blogs/banners')
     content = models.TextField()
     views = models.IntegerField(default=0)
-    tags = models.ManyToManyField(Tag)
-
-    def __str__(self):
-        return self.title
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
 
     @property
     def read_time(self):
         return math.ceil(len(str(self.content).split()) / 225)
+
+    @property
+    def author_name(self):
+        return f'{self.author.first_name} {self.author.last_name}' if self.author.first_name else self.author.username
+
+    def __str__(self):
+        return self.title
+
+    def get_filter(filter_dict):
+        filters = {}
+        print(filter_dict)
+        if filter_dict.get('id'):
+            filters['id'] = filter_dict['id']
+        if filter_dict.get('search'):
+            filters['title__icontains'] = filter_dict['search']
+        if filter_dict.get('tags'):
+            filters['tags__in'] = filter_dict['tags']
+        return filters
 
     def increment_views(self):
         self.views = self.views + 1
         self.save(updated=False)
 
     def save(self, *args, **kwargs):
+        is_published = Blog.objects.only("published").filter(id=self.id).first()
+
         if(kwargs.pop("updated", None)):
             self.updated = timezone.now()
+        
+        if is_published and not is_published.published and self.published:
+            self.published_on = timezone.now()
         super().save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['-published_on', 'title']
 
 class Series(models.Model):
     name = models.CharField(max_length=150)

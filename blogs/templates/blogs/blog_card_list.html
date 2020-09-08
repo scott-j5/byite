@@ -1,0 +1,30 @@
+{% if blogs|length <= 0 %}
+    <div class="span3 text-center">
+        <h1><i class="fa fa-3x fa-sad-cry"></i></h1>
+        <p>No blogs matching your search</p>
+    </div>
+{% else %}
+    {% for blog in blogs %}
+        <a class="text-muted" href="{% url 'blog-detail' blog.slug %}">
+            <div class="blog-card flex-x">
+                <div class="blog-card-img-container center-content-xy">
+                    <div class="blog-card-img-overlay"></div>
+                    <img class="blog-card-img" src="{{ blog.thumbnail.url }}"/>
+                </div>
+                <div class="blog-card-text-container">
+                    <h4>{{ blog.title }}</h4>
+                    <p><small>{{ blog.description|truncatechars:100 }} </small></p>
+                    <div class="space-evenly">
+                        <small><i class="fa fa-user"></i> {{ blog.author_name|truncatechars:13 }}</small>
+                        {% if blog.published %}
+                            <small><i class="fa fa-calendar"></i> {{ blog.published_on|date:"M. j, Y" }}</small>
+                        {% else %}
+                            <small><i class="fa fa-pencil-ruler"></i> Draft.</small>
+                        {% endif %}
+                        <small><i class="fa fa-clock"></i> {{ blog.read_time }} min. read</small>
+                    </div>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+{% endif %}

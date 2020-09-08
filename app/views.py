@@ -15,14 +15,14 @@ def contact_us(request):
     # Send mail and handle errors here
     data = {}
     data["message"] = "Success!"
-    time.sleep(5);
+    time.sleep(5)
     return JsonResponse(data)
 
 
 def subscribe(request):
     data = {}
     data["message"] = "Success!"
-    time.sleep(5);
+    time.sleep(5)
     return JsonResponse(data)
 
 
