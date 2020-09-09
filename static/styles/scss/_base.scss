@@ -116,7 +116,7 @@ body{
    display:grid;
    @media (max-width: $screen-sm){
       grid-template-columns: 1fr;
-      grid-auto-rows: max-content;
+      grid-template-rows: auto;
    }
 }
 

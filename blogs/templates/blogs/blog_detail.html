@@ -31,7 +31,7 @@
     <div class="page flex-x m-t-xxl">
         <ul class="tag-list">
             {% for tag in object.tags.all %}
-                <a href="{% url 'blog-list' %}?tag={{tag.name}}"><li><small class="color-white">{{ tag.name }}</small></li></a>
+                <a href="{% url 'blog-list' %}?tags={{tag.id}}"><li><small class="color-white">{{ tag.name }}</small></li></a>
             {% endfor %}
         </ul>
     </div>

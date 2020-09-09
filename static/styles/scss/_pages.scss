@@ -282,6 +282,7 @@
 
 .blog-list{
     grid-column-gap:$page-padding;
+    transition: opacity 500ms ease-out;
 }
 
 .blog-highlight{
@@ -298,6 +299,7 @@
 .blog-card{
     margin-bottom:7%;
     overflow:hidden;
+    min-height:150px;
 }
 
 .blog-card:hover .blog-card-img-overlay{
@@ -308,11 +310,13 @@
     position:relative;
     overflow:hidden;
     width:30%;
+    min-height:150px;
 }
 
 .blog-card-img{
     position:absolute;
     object-fit:cover;
+    height:50px;
     min-width: 100%;
     min-height: 100%;
 }

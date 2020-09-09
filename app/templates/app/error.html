@@ -1,0 +1,22 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block scripts %}
+    {{ block.super }}
+{% endblock scripts %}
+
+{% block content %}
+<div class="page full-height col-2 col-1-sm" id="page1">
+    <div id="landing-text-wrapper">
+        <div>
+            <h1 class="large-error">{{ error_code }}</h1>
+        </div>
+        <div>
+            <h4>{{ error_text }}</h4>
+        </div>
+    </div>
+    <div id="landing-logo-container">
+        <img id="landing-logo" src="{% static 'img/byite-logo-color.svg' %}"/>
+    </div>
+</div>
+{% endblock content %}

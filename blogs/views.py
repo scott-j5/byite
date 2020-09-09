@@ -18,28 +18,39 @@ class BlogDetail(DetailView):
 
 def blog_list(request):
     context = {}
+    params = request.GET.dict()
+    if request.GET.get('tags'):
+        params['tags'] = [x for x in params['tags'].split(',') if len(x) >= 1]
+    context["blogs"] = Blog.dict_filter(params)
     if not request.user.is_anonymous:
-        context["blogs"] = Blog.objects.filter(Q(published=True) | Q(author=request.user))
+        context["blogs"] = context["blogs"].filter(Q(published=True) | Q(author=request.user))
     else:
-        context["blogs"] = Blog.objects.filter(published=True)
+        context["blogs"] = context["blogs"].filter(published=True)
     context["tags"] = Tag.objects.all()
     return render(request, 'blogs/blog_list.html', context)
 
 
 def get_blogs_json(request):
     params = request.GET.dict()
-    params['tags'] = [x for x in params['tags'].split(',') if len(x) >= 1]
-    response = serializers.serialize('json', Blog.objects.filter(**Blog.get_filter(params)))
+    if request.GET.get('tags'):
+        params['tags'] = [x for x in params['tags'].split(',') if len(x) >= 1]
+    blogs = Blog.dict_filter(params)
+    if not request.user.is_anonymous:
+        blogs = blogs.filter(Q(published=True) | Q(author=request.user)).distinct()
+    else:
+        blogs = blogs.filter(published=True).distinct()
+    response = serializers.serialize('json', blogs)
     return JsonResponse(response, safe=False)
+
 
 def get_blogs(request):
     context = {}
     params = request.GET.dict()
-    params['tags'] = [x for x in params['tags'].split(',') if len(x) >= 1]
-    
+    if request.GET.get('tags'):
+        params['tags'] = [x for x in params['tags'].split(',') if len(x) >= 1]
+    context["blogs"] = Blog.dict_filter(params)
     if not request.user.is_anonymous:
-        context["blogs"] = Blog.objects.filter(Q(published=True) | Q(author=request.user))
+        context["blogs"] = context["blogs"].filter(Q(published=True) | Q(author=request.user)).distinct()
     else:
-        context["blogs"] = Blog.objects.filter(published=True)
-    context["blogs"] = context["blogs"].filter(**Blog.get_filter(params)).distinct()
+        context["blogs"] = context["blogs"].filter(published=True).distinct()
     return render(request, 'blogs/blog_card_list.html', context)

@@ -1,8 +1,11 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from functools import reduce
 import math
+from operator import and_
 
 
 # Create your models here.
@@ -37,16 +40,17 @@ class Blog(models.Model):
     def __str__(self):
         return self.title
 
-    def get_filter(filter_dict):
+    def dict_filter(filter_dict):
         filters = {}
-        print(filter_dict)
         if filter_dict.get('id'):
             filters['id'] = filter_dict['id']
         if filter_dict.get('search'):
             filters['title__icontains'] = filter_dict['search']
+        result = Blog.objects.filter(**filters);
         if filter_dict.get('tags'):
-            filters['tags__in'] = filter_dict['tags']
-        return filters
+            for tag in filter_dict.get('tags'):
+                result = result.filter(tags__id=tag)
+        return result
 
     def increment_views(self):
         self.views = self.views + 1

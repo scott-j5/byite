@@ -1,8 +1,16 @@
-function setMenu(e) {
-    e.classList.toggle('on');
-    document.querySelector(".nav-wrapper").classList.toggle('nav-wrapper--open');
-  };
 
+MENU = {
+    init: function(){
+        document.querySelector('#hamburger').addEventListener('click', this.toggleMenu);
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', this.toggleMenu);
+        })
+    },
+    toggleMenu: function(e){
+        document.querySelector('#hamburger').classList.toggle('on');
+        document.querySelector(".nav-wrapper").classList.toggle('nav-wrapper--open');
+    },
+}
 
 SLIDER = {
     i: 0,
@@ -119,24 +127,24 @@ FORMSUBMIT = {
 }
 
 LOAD = {
+    request : null,
     loadToElement: function(element, url){
-        var loader = document.createElement("div");
-        loader.classList.add("loader");
-
-        element.classList.toggle('loading');
-        element.append(loader);
+        var loader = element.querySelector('.loader') || document.createElement("div");
+        if(! loader.classList.contains('loader')){
+            element.append(loader);
+            loader.classList.add("loader");
+        }
+        element.classList.add('loading');
         
-        content = this.loadUrl(url, function(e){LOAD.updateContent(e, element)});
-
-        element.classList.toggle('loading');
-        element.innerHTML = content;
+        this.loadUrl(url, function(e){LOAD.updateContent(e, element)});
     },
     loadUrl: function(url, onComplete){
-        var result = {}
         var xhr = new XMLHttpRequest();
-
+        if(LOAD.request){
+            LOAD.request.abort();
+        }
         // Make an AJAX call using the specified url
-        $.ajax({
+        LOAD.request = $.ajax({
             url: url,
             type: 'GET',
             cache: false,
@@ -152,8 +160,13 @@ LOAD = {
                 return xhr.status + ': ' + xhr.statusText;
             },
             complete: function() {
+                if(! xhr.getAllResponseHeaders()){
+                    return
+                }
                 onComplete(xhr);
             }
+        }).done(function(){
+            LOAD.request = null;
         });
     },
     updateContent: function(e, element){
@@ -162,6 +175,7 @@ LOAD = {
         }else{
             element.innerHTML = '<div class="form-alert form-error"> Error ' + e.status + ': ' + e.statusText + '</div>';
         }
+        element.classList.remove('loading');
     },
     loadJson: function(url){
         var result = {}
@@ -199,5 +213,7 @@ LOAD = {
 
 $(document).ready(function(){
     var formSubmit = FORMSUBMIT;
+    var menu = MENU;
     formSubmit.init();
+    menu.init();
 });
