@@ -1,4 +1,5 @@
 from django.contrib import admin
+from app.admin import site
 
 from .models import Blog, Series, SeriesAssignment, Tag
 

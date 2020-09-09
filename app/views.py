@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LoginView
 from django.http import JsonResponse
 from django.shortcuts import render
 import time
@@ -5,6 +6,10 @@ from projects.models import Project
 from .models import Subscriber
 
 # Create your views here.
+class Login(LoginView):
+    template_name = 'app/login.html'
+
+
 def home_view(request):
     context = {
         "projects": Project.objects.all()

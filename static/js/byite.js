@@ -12,68 +12,6 @@ MENU = {
     },
 }
 
-SLIDER = {
-    i: 0,
-    maxNum: 2,
-    iPrev: this.maxNum,
-    initial: 1,
-    next: function(){
-        this.iPrev = this.i;
-        if (this.i == this.maxNum){
-            this.i = 0;
-        }else{
-            this.i += 1;
-        };
-        this.render();
-    },
-    previous: function(){
-        if (this.i == 0){
-            this.i = this.maxNum;
-        }else{
-            this.i -= 1;
-        };
-        if (this.i == 0){
-            this.iPrev = this.maxNum;
-        }else{
-            this.iPrev = this.i -1;
-        };
-        this.render();
-    },
-    toIndex: function(i){
-        this.i = i;
-        if (i == 0){
-            this.iPrev = maxNum;
-        }else{
-            this.iPrev = i - 1;
-        }
-        this.render();
-    },
-    timer: function(i){
-        this.render();
-        setInterval(() => {
-            this.next();
-        }, i);
-    },
-    render: function(){
-        document.querySelector("#project-gears").style.transform = "rotate("+ (-this.i*90) + "deg)";
-        if(this.initial == 1){
-            this.initial = 0;
-            $("#project-" + (this.i) + "-text").toggleClass("project-text-active");
-            $("#project-" + (this.i) + "-image").toggleClass("project-image-active");
-        }else{
-            $("#project-" + (this.i) + "-text").toggleClass("project-text-active");
-            $("#project-" + (this.i) + "-image").toggleClass("project-image-active");
-            $("#project-" + (this.iPrev) + "-text").toggleClass("project-text-active");
-            $("#project-" + (this.iPrev) + "-image").toggleClass("project-image-active");
-            $("#project-" + (this.iPrev) + "-text").toggleClass("project-text-out");
-            $("#project-" + (this.iPrev) + "-image").toggleClass("project-image-out");
-        };
-        setTimeout(function(){
-            $(".project-text-out").removeClass("project-text-out");
-            $(".project-image-out").removeClass("project-image-out");
-        }, 2000);
-    }
-}
 
 FORMSUBMIT = {
     init: function(selector = null){
@@ -123,6 +61,39 @@ FORMSUBMIT = {
                 e.target.removeChild(loader);
             }
         });  
+    },
+}
+
+FORMVALIDATION = {
+    init: function(selector = null){
+        if(selector == null){
+            selector = 'form';
+        }
+        document.querySelectorAll(selector).forEach(item => {
+            item.addEventListener("change", this.validate);
+        });
+    },
+    validate: function(e){
+        error = "";
+        result = e.currentTarget.querySelector('#' + e.currentTarget.id + '-' + e.target.name + '-error') || document.createElement('div');
+        if (e.target.name.toLowerCase() == 'email'){
+            if (! /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(e.target.value)){
+                error = "Please enter a valid email address";
+            }
+        }
+        if (e.target.name.toLowerCase() == 'phone'){
+            if(! /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(e.target.value)){
+                error = "Please enter a valid phone number";
+            }
+        }
+        if (error.length >= 1){
+            result.classList.add('form-alert', 'form-error');
+            result.id = e.currentTarget.id + '-' + e.target.name + '-error';
+            result.innerHTML = error;
+            e.currentTarget.insertBefore(result, e.target.parentNode.nextSibling);
+        }else if (result.classList.contains('form-error')){
+            e.currentTarget.removeChild(result)
+        }
     },
 }
 
@@ -214,6 +185,8 @@ LOAD = {
 $(document).ready(function(){
     var formSubmit = FORMSUBMIT;
     var menu = MENU;
-    formSubmit.init();
+    var validate = FORMVALIDATION;
+    formSubmit.init('#footer-subscribe');
     menu.init();
+    validate.init();
 });
