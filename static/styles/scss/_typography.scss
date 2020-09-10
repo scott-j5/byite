@@ -73,6 +73,32 @@ a{
     text-decoration:none;
 }
 
+pre{
+    background-color:$very-light-grey;
+    padding:$space-lg;
+    border-top-right-radius: $space-lg;
+    border-image-slice: 1;
+    border-width: 1px;
+    border-bottom:1px solid;
+    border-left:1px solid;
+    border-image-source: linear-gradient(to left, $yellow, $pink);
+
+    &::after{
+
+    }
+}
+
+blockquote{
+    background-color:white;
+    color: $grey;
+    margin: 0;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    padding-top: .05em;
+    padding-bottom: .05em;
+    border-left: .5em $grey solid;
+}
+
 .text-muted{
     text-decoration:none;
     color:inherit;

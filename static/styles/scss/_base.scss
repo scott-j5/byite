@@ -294,8 +294,20 @@ body{
    width:100%;
 }
 
-.w-100-sm{
+.w-100-mdlg{
+   @media(max-width: $screen-mdlg){
+      width:100%;
+   }
+}
+
+.w-100-md{
    @media(max-width: $screen-md){
+      width:100%;
+   }
+}
+
+.w-100-sm{
+   @media(max-width: $screen-sm){
       width:100%;
    }
 }
@@ -489,3 +501,11 @@ img{
    75% { border-width: 3px;}
    100% { border-width: 10px; border-top-color: $yellow; border-right-color: $yellow;}
  }
+
+ ol{
+ }
+
+ .blog-content ul{
+   list-style-image:url("../img/ul-arrow.svg");
+   list-style-type: circle;
+}

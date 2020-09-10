@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
+from markdownx.utils import markdownify
 
 from .models import Blog, Tag, Series
 

@@ -4,6 +4,8 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from functools import reduce
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 import math
 from operator import and_
 
@@ -25,17 +27,21 @@ class Blog(models.Model):
     description = models.CharField(max_length=500)
     thumbnail = models.ImageField(default='blogs/thumbnails/default.jpg', upload_to='blogs/thumbnails')
     banner = models.ImageField(default='blogs/banners/default.jpg', upload_to='blogs/banners')
-    content = models.TextField()
+    content = MarkdownxField()
     views = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag, null=True, blank=True)
 
     @property
-    def read_time(self):
-        return math.ceil(len(str(self.content).split()) / 225)
-
-    @property
     def author_name(self):
         return f'{self.author.first_name} {self.author.last_name}' if self.author.first_name else self.author.username
+    
+    @property
+    def formatted_markdown(self):
+        return markdownify(self.content)
+
+    @property
+    def read_time(self):
+        return math.ceil(len(str(self.content).split()) / 225)
 
     def __str__(self):
         return self.title

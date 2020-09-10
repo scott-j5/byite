@@ -43,9 +43,9 @@
     </div>
     <img class="img-full-width blog-banner-frame-bottom" src="{% static 'img/blog-img-frame.svg' %}"/>
 </div>
-<div class="page m-t-xxl">
-    <div class="blog-content">
-        {{ object.content|safe }}
+<div class="page center-content-x m-t-xxl blog-content-container">
+    <div class="blog-content w-70 w-100-mdlg">
+        {{ object.formatted_markdown|safe }}
     </div>
 </div>
 <hr class="w-70 m-t-xxl">

@@ -17,6 +17,7 @@ from app.admin import site
 from app.views import error_403, error_404, error_500, Login
 from django.contrib import admin
 from django.urls import path, include
+from markdownx import urls as markdownx
 
 
 urlpatterns = [
@@ -25,6 +26,7 @@ urlpatterns = [
     path('', include('app.urls')),
     path('home/', include('app.urls')),
     path('blogs/', include('blogs.urls')),
+    path('markdownx/', include('markdownx.urls')),
 ]
 
 handler403 = error_403
