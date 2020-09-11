@@ -1,7 +1,4 @@
 from django.contrib import admin
+from .models import Subscriber
 
-# Register your models here.
-class CustomAdminSite(admin.AdminSite):
-    login_template = 'app/login.html'
-
-site = CustomAdminSite()
+admin.site.register(Subscriber)

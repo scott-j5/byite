@@ -28,9 +28,13 @@ def contact_us(request):
 def subscribe(request):
     data = {}
     if request.method == 'POST':
-        data["message"] = "Success!"
-        subscriber = Subscriber()
-        subscriber.email = request.POST.get('email')
+        if len(Subscriber.objects.filter(email__iexact=request.POST.get('email'))) >= 1:
+            data["error"] = "Error: this email address is already subscribed!"
+        else:
+            subscriber = Subscriber()
+            subscriber.email = request.POST.get('email')
+            subscriber.save()
+            data["success"] = f'Success! {subscriber.email} was subscribed'
     return JsonResponse(data)
 
 

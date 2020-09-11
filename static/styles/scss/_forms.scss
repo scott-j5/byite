@@ -89,6 +89,32 @@ input{
     }
 }
 
+.form-info{
+    color:$info;
+    text-align:center;
+    vertical-align:middle;
+    &::before{
+        font-family:"Font Awesome 5 Free";
+        color:inherit;
+        font-weight: 900;
+        vertical-align:middle;
+        content:"\f00d \0020";
+    }
+}
+
+.form-warn{
+    color:$warn;
+    text-align:center;
+    vertical-align:middle;
+    &::before{
+        font-family:"Font Awesome 5 Free";
+        color:inherit;
+        font-weight: 900;
+        vertical-align:middle;
+        content:"\f00d \0020";
+    }
+}
+
 .form-error{
     color:$error;
     text-align:center;

@@ -1,5 +1,4 @@
 from django.contrib import admin
-from app.admin import site
 from markdownx.admin import MarkdownxModelAdmin
 
 from .models import Blog, Series, SeriesAssignment, Tag

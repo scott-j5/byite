@@ -1,6 +1,15 @@
 BLOGLIST = {
     searchQuery: "",
     init: function(selector = null){
+        BLOGLIST.getQuery();
+        document.querySelector('input[name="search"]').addEventListener("keyup", BLOGLIST.searchDelay(function(e){BLOGLIST.search(e)}, 500));
+        document.querySelectorAll('.tag-list').forEach(item => {
+            item.querySelectorAll('li').forEach(listItem => {
+                listItem.addEventListener("click", BLOGLIST.updateTags);
+            });
+        });
+    },
+    getQuery: function(){
         params = new URLSearchParams(window.location.search);
         if(Array.from(params).length >= 1 ){
             tags = []
@@ -10,22 +19,16 @@ BLOGLIST = {
                 }
             });
             this.searchQuery = {"search":(params.get('search') || ""), "tags": tags};
-            this.renderSearch();
-            this.renderTags();
         }else{
             this.searchQuery = {"search":"", "tags": []}
         }
-
-        document.querySelector('input[name="search"]').addEventListener("keyup", BLOGLIST.searchDelay(function(e){BLOGLIST.search(e)}, 500));
-        document.querySelectorAll('.tag-list').forEach(item => {
-            item.querySelectorAll('li').forEach(listItem => {
-                listItem.addEventListener("click", BLOGLIST.updateTags);
-            });
-        });
+        this.load();
+        this.renderSearch();
+        this.renderTags();
     },
     search: function(e){
         BLOGLIST.searchQuery.search = e.target.value;
-        BLOGLIST.load();
+        BLOGLIST.load(true);
     },
     renderSearch: function(){
         document.querySelector('input[name="search"]').value = BLOGLIST.searchQuery.search;
@@ -48,7 +51,7 @@ BLOGLIST = {
             BLOGLIST.searchQuery.tags = BLOGLIST.searchQuery.tags.filter(function(f){ return f !== e.currentTarget.dataset.identifier});
         }
         BLOGLIST.renderTags();
-        BLOGLIST.load();
+        BLOGLIST.load(true);
     },
     renderTags: function(){
         //If there is active tags add active flag to ul element
@@ -69,12 +72,14 @@ BLOGLIST = {
             }
         });
     },
-    load: function(){
+    load: function(pushState=null){
         var load = LOAD;
         var args = Object.keys(BLOGLIST.searchQuery).map(function(key) {
             return key + '=' + encodeURIComponent(BLOGLIST.searchQuery[key]);
           }).join('&');
-        history.pushState(null, "", "?" + args)
+        if(pushState){
+            history.pushState(null, "", "?" + args)
+        }
         var url = window.location.protocol + "//" + window.location.host + "/blogs/get/?" + args
         var element = document.querySelector('#blog-card-list');
         load.loadToElement(element, url);
@@ -84,6 +89,10 @@ BLOGLIST = {
 $(document).ready(function(){
     var blogList = BLOGLIST;
     blogList.init();
+
+    window.onpopstate = function(e){
+        blogList.getQuery();
+    };
 });
 
 

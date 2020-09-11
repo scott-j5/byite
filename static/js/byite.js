@@ -47,8 +47,21 @@ FORMSUBMIT = {
                 return xhr;
             },
             success: function(ajaxOptions, thrownError) {
-                result.classList.add('form-alert', 'form-success');
-                result.innerHTML = JSON.parse(xhr.response).message;
+                resultJson = JSON.parse(xhr.response);
+                if(resultJson.error){
+                    result.classList.add('form-alert', 'form-error');
+                    resultText = resultJson.error;
+                }else if(resultJson.success){
+                    result.classList.add('form-alert', 'form-success');
+                    resultText = resultJson.success;
+                }else if(resultJson.message){
+                    result.classList.add('form-alert', 'form-info');
+                    resultText = resultJson.message;
+                }else{
+                    result.classList.add('form-alert', 'form-warn');
+                    resultText = "Something unexpected has happened...";
+                }
+                result.innerHTML = resultText;
                 e.target.append(result);
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -94,7 +107,21 @@ FORMVALIDATION = {
         }else if (result.classList.contains('form-error')){
             e.currentTarget.removeChild(result)
         }
+        FORMVALIDATION.checkErrors(e);
     },
+    checkErrors: function(e){
+        if(e.currentTarget.querySelectorAll('.form-error').length >= 1){
+            FORMVALIDATION.disable(e);
+        }else{
+            FORMVALIDATION.enable(e);
+        }
+    },
+    disable: function(e){
+        e.currentTarget.querySelector('[type="submit"]').disabled = true;
+    },
+    enable: function(e){
+        e.currentTarget.querySelector('[type="submit"]').disabled = false;
+    }
 }
 
 LOAD = {
