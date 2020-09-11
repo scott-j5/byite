@@ -27,7 +27,7 @@
                         {% else %}
                             <small><i class="fa fa-pencil-ruler"></i> Draft. updated: {{ blogs.0.updated }}</small>
                         {% endif %}
-                        <small><i class="fa fa-clock"></i> {{ blogs.0.read_time }} min. read</small>
+                        <small><i class="fa fa-book-reader"></i> {{ blogs.0.read_time }} min.</small>
                     </div>
                 </div>
             </a>
@@ -59,7 +59,7 @@
                     <div class="blog-card-img-overlay"></div>
                     <img class="blog-card-img" src="{{ blog.thumbnail.url }}"/>
                 </div>
-                <div class="blog-card-text-container">
+                <div class="blog-card-text-container flex-y space-evenly">
                     <h4>{{ blog.title }}</h4>
                     <p><small>{{ blog.description|truncatechars:100 }} </small></p>
                     <div class="space-evenly">
@@ -69,7 +69,7 @@
                         {% else %}
                             <small><i class="fa fa-pencil-ruler"></i> Draft.</small>
                         {% endif %}
-                        <small><i class="fa fa-clock"></i> {{ blog.read_time }} min. read</small>
+                        <small><i class="fa fa-book-reader"></i> {{ blog.read_time }} min.</small>
                     </div>
                 </div>
             </div>

@@ -154,6 +154,20 @@ body{
    flex-direction: row;
 }
 
+.flex-y-sm{
+   @media(max-width: $screen-sm){
+      display:flex;
+      flex-direction: column;
+   }
+}
+
+.flex-x-sm{
+   @media(max-width: $screen-sm){
+      display:flex;
+      flex-direction: row;
+   }
+}
+
 .space-evenly{
    display:flex;
    justify-content:space-between;
@@ -284,6 +298,12 @@ body{
    padding-right:$col-spacing;
 }
 
+.w-65{
+   width: calc(65% - (#{$col-spacing} * 2));
+   padding-left:$col-spacing;
+   padding-right:$col-spacing;
+}
+
 .w-70{
    width: calc(70% - (#{$col-spacing} * 2));
    padding-left:$col-spacing;
@@ -358,6 +378,26 @@ body{
 
 .m-b-xxl{
    margin-bottom:$space-xxl;
+}
+
+.p-sm{
+   padding:$space-sm;
+}
+
+.p-md{
+   padding:$space-md;
+}
+
+.p-lg{
+   padding:$space-lg;
+}
+
+.p-xl{
+   padding:$space-xl;
+}
+
+.p-xxl{
+   padding:$space-xxl;
 }
 
 .p-t-xxl{

@@ -74,7 +74,7 @@ a{
 }
 
 pre{
-    background-color:$very-light-grey;
+    background-color:white;
     padding:$space-lg;
     border-top-right-radius: $space-lg;
     border-image-slice: 1;
@@ -82,10 +82,7 @@ pre{
     border-bottom:1px solid;
     border-left:1px solid;
     border-image-source: linear-gradient(to left, $yellow, $pink);
-
-    &::after{
-
-    }
+    overflow:scroll;
 }
 
 blockquote{

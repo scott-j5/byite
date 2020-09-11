@@ -352,28 +352,41 @@
     text-align:center;
 }
 
-.blog-author{
-    @media(max-width: $screen-md){
-       order:+1;
-       margin-top:$space-xxl;
-    }
- }
-
 
  //BLOG DETAIL
  .blog-header{
     grid-column-gap:3.4rem;
  }
 
- .blog-author-img-container{
-     width:3.4rem;
+.blog-author-img-container{
+    width:6rem;
  }
+
+ .blog-details-container{
+    padding-left: 0px;
+    @media(max-width: $screen-md){
+       order:+1;
+    }
+ }
+
+.blog-details{
+    padding-left:1rem;
+}
+
+.blog-details div{
+    padding:.3rem;
+}
+
+.tag-list-container{
+    padding-top:0.3rem;
+}
 
  .blog-banner{
     position:relative;
  }
 
  .blog-banner-img{
+    min-height:200px;
     position:relative;
     background-image: linear-gradient(to bottom right, $pink, $yellow);
  }
@@ -395,14 +408,75 @@
     transform: rotate(180deg);
  }
 
- .blog-content-container{
-    
- }
-
  .blog-content{
+    padding-top:2.5rem;
+    padding-bottom:2.5rem;
+    padding-left:5rem;
+    padding-right:5rem;
     box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.3);
     background-color:$white;
     word-wrap:break-word;
     margin-top:$space-lg;
     margin-bottom:$space-lg;
+ }
+
+ .blog-content a{
+    &:hover{
+        text-decoration: underline;
+    }
+ }
+
+ .blog-content p{
+    line-height: 1.7rem;
+ }
+
+ .blog-content h1{
+
+ }
+
+ .blog-content h2{
+     margin-block-start:1em;
+     margin-block-end:.5em;
+}
+
+.blog-content h3{
+     
+}
+
+
+ .blog-content ul li{
+    margin-top: 30px;
+    padding-left: 1.6rem;
+ }
+
+ .blog-content ol li{
+    position: relative;
+    margin-top: 30px;
+    padding-left: 1rem;
+    clear: both;
+    list-style: none;
+    counter-increment: inst;
+}
+  .blog-content ol li::before {
+    content: counter(inst);
+    position: absolute;
+    background-image: linear-gradient(to bottom right, $pink, $yellow);
+    color: $white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height: 1rem;
+    width: 1rem;
+    top:-0.3rem;
+    left: -2.6rem;
+    padding: 0.6rem 0.6rem;
+    border-radius: 50%;
+    font-size: 1rem;
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.2);
+    transition: all 0.2s ease-in-out;
+  }
+
+
+ .blog-content img{
+     width: 100%;
  }

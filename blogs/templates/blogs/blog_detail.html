@@ -3,49 +3,70 @@
 
 {% block content %}
 <div class="page p-t-xxl flex-y">
-    <div class="blog-header col-2 col-1-sm w-70 w-100-sm m-t-xxl">
-        <div class="blog-author center-self-x-sm align-self-end">
-            <div class="center-content-y flex-y">
-                <div class="w-35 blog-author-img-container">
-                    <div class="img-circle img-circle-container"><img class="img-circle-img" alt="image" src="{{ object.author.profile.image.url }}" /></div>
-                </div>
-                <h5 class="m-t-lg text-center">{{ object.author_name }}</h5>
-            </div>
-        </div>
-        <div class="flex-end-content-y center-content-xy-sm">
+    <div class="blog-header w-70 w-100-mdlg m-t-xxl">
+        {% if user.is_staff %}
+            <a href="{% url 'admin:blogs_blog_change' object.id %}"><i class="fa fa-edit"></i> Edit</a>
+        {% endif %}
+        <div class="center-content-xy-sm m-t-xl">
             <div class="text-center-sm">
                 <h1 class="no-m">{{ object.title }}</h1>
                 <h5>{{ object.description }}</h5>
             </div>
         </div>
+        <div class="flex-x flex-y-sm m-t-xl">
+            <div class="blog-details-container flex-x center-content-y w-65 w-100-md m-t-xl">
+                <div class="blog-author center-self-x-sm">
+                    <div class="center-content-y flex-y">
+                        <div class="w-35 blog-author-img-container">
+                            <div class="img-circle img-circle-container"><img class="img-circle-img" alt="image" src="{{ object.author.profile.image.url }}" /></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="blog-details">
+                    <div><i class="fa fa-user"></i><small class="m-t-lg text-center"> {{ object.author_name }}</small></div>
+                    {% if object.published %}
+                        <div><small><i class="fa fa-calendar"></i> {{ blog.published_on|date:"M. j, Y" }}</small></div>
+                    {% else %}
+                        <div><small><i class="fa fa-pencil-ruler"></i> Draft. updated: {{ object.updated }}</small></div>
+                    {% endif %}
+                    <div><small><i class="fa fa-eye"></i> {{ object.views }} Views</small></div>
+                    <div><small><i class="fa fa-book-reader"></i> {{ object.read_time }} min.</small></div>
+                </div>
+            </div>
+            <div class="w-35 w-100-md m-t-xl">
+                <div class="tag-list-container">
+                    <small>Tags:</small>
+                    <ul class="tag-list">
+                        {% for tag in object.tags.all %}
+                            <a href="{% url 'blog-list' %}?tags={{tag.id}}"><li><small class="color-white">{{ tag.name }}</small></li></a>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="page flex-x m-t-xxl">
-        {% if object.published %}
-            <div><i class="fa fa-calendar"></i> {{ blog.published_on|date:"M. j, Y" }}</div>
-        {% else %}
-            <small><i class="fa fa-pencil-ruler"></i> Draft. updated: {{ object.updated }}</small>
-        {% endif %}
-        <div><i class="fa fa-eye"></i> {{ object.views }} Views</div>
-        <div><i class="fa fa-clock"></i> {{ object.read_time }} min. read</div>
-    </div>
-    <div class="page flex-x m-t-xxl">
-        <ul class="tag-list">
-            {% for tag in object.tags.all %}
-                <a href="{% url 'blog-list' %}?tags={{tag.id}}"><li><small class="color-white">{{ tag.name }}</small></li></a>
-            {% endfor %}
-        </ul>
-    </div>
+    
 </div>
 <div class="blog-banner w-100 m-t-xxl">
     <img class="img-full-width blog-banner-frame" src="{% static 'img/blog-img-frame.svg' %}"/>
     <div class="blog-banner-img">
-        <img class="img-full-width" src="{{ object.banner.url }}"/>
+        {% if object.banner.url %}
+            <img class="img-full-width" src="{{ object.banner.url }}"/>
+        {% endif %}
     </div>
     <img class="img-full-width blog-banner-frame-bottom" src="{% static 'img/blog-img-frame.svg' %}"/>
 </div>
 <div class="page center-content-x m-t-xxl blog-content-container">
     <div class="blog-content w-70 w-100-mdlg">
         {{ object.formatted_markdown|safe }}
+        <div class="blog-content-footer">
+            <p>{{ object.author_name }}</p>
+            {% if object.published %}
+                <div>Published on: {{ blog.published_on|date:"M. j, Y" }}</div>
+            {% else %}
+                <small><i class="fa fa-pencil-ruler"></i> Draft. updated: {{ object.updated }}</small>
+            {% endif %}
+        </div>
     </div>
 </div>
 <hr class="w-70 m-t-xxl">
