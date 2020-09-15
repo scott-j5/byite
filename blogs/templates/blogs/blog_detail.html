@@ -60,7 +60,8 @@
     <div class="blog-content w-70 w-100-mdlg">
         {{ object.formatted_markdown|safe }}
         <div class="blog-content-footer">
-            <p>{{ object.author_name }}</p>
+            <hr/>
+            <p>{{ object.author_name }},</p>
             {% if object.published %}
                 <div>Published on: {{ blog.published_on|date:"M. j, Y" }}</div>
             {% else %}

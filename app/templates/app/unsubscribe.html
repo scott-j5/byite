@@ -1,0 +1,41 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block scripts %}
+    {{ block.super }}
+{% endblock scripts %}
+
+{% block content %}
+<!-- START PAGE 1 -->
+<div class="page full-height col-2 col-1-sm" id="page1">
+    <div id="landing-text-wrapper">
+
+        {% if form %}
+            To unsubscribe please confirm your email below:
+            <form action="{{ app_path }}" method="post" id="login-form">
+                {% csrf_token %}
+                <div class="form-row">
+                    <p>{{ form.email.errors }}</p>
+                    <div class="input-container m-b-lg">
+                        <input class="input-field" type="text" placeholder="{{ form.email.label }}" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" {% if form.email.value != None %}value="{{ form.email.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.email.field.max_length }}" {% if form.email.field.required %}required{% endif %}/>
+                        <i class="fa fa-user-o fa-input-icon"></i>
+                    </div>
+                </div>
+                {{ form.non_field_errors }}
+                <div class="submit-row">
+                    <input class="btn w-100" type="submit" value="Unsubscribe">
+                </div>
+            </form>
+        {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        </div>
+    <div id="landing-logo-container">
+        <img id="landing-logo" src="{% static 'img/byite-logo-color.svg' %}"/>
+    </div>
+</div>
+<!-- END PAGE 1 -->
+{% endblock content %}

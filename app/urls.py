@@ -22,4 +22,5 @@ urlpatterns = [
     path('', home_view, name='home'),
     path('subscribe/', subscribe, name='subscribe'),
     path('unsubscribe/', unsubscribe, name='unsubscribe'),
+    path('unsubscribe/<str:email>', unsubscribe, name='unsubscribe'),
 ]

@@ -16,7 +16,7 @@
         </div>
         <div class="col-2 col-1-sm m-t-xl">
             {% if blogs|length > 0 %}
-            <a href="{% url 'blog-detail' blogs.0.slug %}">
+            <a class="m-b-xl" href="{% url 'blog-detail' blogs.0.slug %}">
                 <div class="blog-highlight color-white w-100 no-p m-b-xl">
                     <h3 class="no-m">{{ blogs.0.title }}</h3>
                     <p class="m-b-md">{{ blogs.0.description|truncatechars:100 }}</p>
