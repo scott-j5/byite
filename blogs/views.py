@@ -1,11 +1,13 @@
 from django.core import serializers
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
-from markdownx.utils import markdownify
+from django.views.generic.edit import BaseFormView
+from markdownx.views import ImageUploadView
 
-from .models import Blog, Tag, Series
+from .forms import BlogImageForm
+from .models import Blog, BlogImage, Tag, Series
 
 # Create your views here.
 class BlogDetail(DetailView):
@@ -55,3 +57,24 @@ def get_blogs(request):
     else:
         context["blogs"] = context["blogs"].filter(published=True).distinct()
     return render(request, 'blogs/blog_card_list.html', context)
+
+
+def blog_image(request, *args, **kwargs):
+    if kwargs.get('pk'):
+        try:
+            blog_image = BlogImage.objects.get(id=kwargs.get('pk'))
+        except Exception as e:
+            print(e)
+            return False
+    return redirect(blog_image.image.url)
+
+
+class BlogImageUpload(ImageUploadView):
+    form_class = BlogImageForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        blog_id = [x for x in self.request.META.get('HTTP_REFERER').split('/') if len(x) > 0][-2]
+        blog_slug = Blog.objects.get(id=blog_id)
+        kwargs.update({'blog_slug': blog_slug.slug})
+        return kwargs

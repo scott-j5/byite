@@ -18,18 +18,21 @@ class Tag(models.Model):
         return self.name
 
 class Blog(models.Model):
+    def get_upload_path(instance, filename):
+        return f'blog_images/{instance.slug}/{filename}'
+
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     published = models.BooleanField(default=False)
     published_on = models.DateTimeField(default=None, null=True, blank=True)
-    updated = models.DateTimeField(default=timezone.now())
+    updated = models.DateTimeField(default=timezone.now, null=False, blank=False)
     title = models.CharField(max_length=150)
     slug = models.SlugField(max_length=150, unique=True)
     description = models.CharField(max_length=500)
-    thumbnail = models.ImageField(null=True, upload_to='blogs/thumbnails')
-    banner = models.ImageField(null=True, upload_to='blogs/banners')
+    thumbnail = models.ImageField(null=True, upload_to=get_upload_path)
+    banner = models.ImageField(null=True, upload_to=get_upload_path)
     content = MarkdownxField()
     views = models.IntegerField(default=0)
-    tags = models.ManyToManyField(Tag, null=True, blank=True)
+    tags = models.ManyToManyField(Tag)
 
     @property
     def author_name(self):
@@ -66,14 +69,27 @@ class Blog(models.Model):
         is_published = Blog.objects.only("published").filter(id=self.id).first()
 
         if(kwargs.pop("updated", None)):
-            self.updated = timezone.now()
+            self.updated = timezone.now
         
         if is_published and not is_published.published and self.published:
-            self.published_on = timezone.now()
+            self.published_on = timezone.now
         super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['-published_on', 'title']
+
+
+class BlogImage(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+
+    def get_upload_path(instance, filename):
+        return f'blog_images/{instance.blog.slug}/content/{filename}'
+
+    image = models.ImageField(null=False, blank=False, upload_to=get_upload_path)
+
+    def __str__(self):
+        return f'{self.image.name}'
+
 
 class Series(models.Model):
     name = models.CharField(max_length=150)

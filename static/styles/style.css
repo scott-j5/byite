@@ -509,7 +509,7 @@ img {
 }
 
 .tag-list-active li {
-  opacity: 0.75;
+  opacity: 0.6;
 }
 
 .loading {
@@ -568,11 +568,6 @@ img {
     border-right-color: #ffcf7b;
   }
 }
-.blog-content ul {
-  list-style-image: url("../img/ul-arrow.svg");
-  list-style-type: circle;
-}
-
 body {
   font-family: "raleway", "roboto", sans-serif;
   color: #383a42;

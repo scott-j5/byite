@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+from datetime import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -158,6 +159,8 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 #Markdownx Settings
 MARKDOWNX_IMAGE_MAX_SIZE = {
-    'size': (1000, 1000),
+    'size': (1000, 1500),
     'quality': 90
 }
+MARKDOWNX_MEDIA_PATH = datetime.now().strftime('blog_images/%Y/%m/%d')
+MARKDOWNX_UPLOAD_URLS_PATH = '/blogs/blog/he-world/image/upload/'
