@@ -69,10 +69,10 @@ class Blog(models.Model):
         is_published = Blog.objects.only("published").filter(id=self.id).first()
 
         if(kwargs.pop("updated", None)):
-            self.updated = timezone.now
+            self.updated = timezone.now()
         
         if is_published and not is_published.published and self.published:
-            self.published_on = timezone.now
+            self.published_on = timezone.now()
         super().save(*args, **kwargs)
 
     class Meta:
