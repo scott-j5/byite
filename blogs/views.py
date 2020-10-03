@@ -9,6 +9,9 @@ from markdownx.views import ImageUploadView
 from .forms import BlogImageForm
 from .models import Blog, BlogImage, Tag, Series
 
+import os
+import json
+
 # Create your views here.
 class BlogDetail(DetailView):
     model = Blog
