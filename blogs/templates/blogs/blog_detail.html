@@ -1,6 +1,14 @@
 {% extends "app/base.html" %}
 {% load static %}
 
+{% block scripts %}
+    {{ block.super }}
+    <script src="{% static 'js/blog.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'styles/highlight/monokai.css' %}">
+    <script src="{% static 'js/highlight.pack.js' %}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}
+
 {% block content %}
 <div class="page p-t-xxl flex-y">
     <div class="blog-header w-70 w-100-mdlg m-t-xxl">
