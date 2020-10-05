@@ -1,5 +1,6 @@
 {% extends "app/base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block scripts %}
     {{ block.super }}
@@ -37,7 +38,7 @@
                     {% else %}
                         <div><small><i class="fa fa-pencil-ruler"></i> Draft. updated: {{ object.updated }}</small></div>
                     {% endif %}
-                    <div><small><i class="fa fa-eye"></i> {{ object.views }} Views</small></div>
+                    <div><small><i class="fa fa-eye"></i> {{ object.views|intword }} Views</small></div>
                     <div><small><i class="fa fa-book-reader"></i> {{ object.read_time }} min.</small></div>
                 </div>
             </div>

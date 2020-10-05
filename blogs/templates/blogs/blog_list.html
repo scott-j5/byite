@@ -51,25 +51,31 @@
         </div>
     </div>
 </div>
-<div class="page blog-list col-3 col-2-mdlg col-1-sm m-t-xxl" id="blog-card-list">
+<div class="page col-2 col-1-sm m-t-xxl" id="blog-card-list">
     {% for blog in blogs %}
         <a class="text-muted" href="{% url 'blog-detail' blog.slug %}">
-            <div class="blog-card flex-x">
+            <div class="blog-card">
                 <div class="blog-card-img-container center-content-xy">
                     <div class="blog-card-img-overlay"></div>
                     <img class="blog-card-img" src="{{ blog.thumbnail.url }}"/>
                 </div>
-                <div class="blog-card-text-container flex-y space-evenly">
-                    <h4>{{ blog.title }}</h4>
-                    <p><small>{{ blog.description|truncatechars:100 }} </small></p>
-                    <div class="space-evenly">
-                        <small><i class="fa fa-user"></i> {{ blog.author_name|truncatechars:13 }}</small>
-                        {% if blog.published %}
-                            <small><i class="fa fa-calendar"></i> {{ blog.published_on|date:"M. j, Y" }}</small>
-                        {% else %}
-                            <small><i class="fa fa-pencil-ruler"></i> Draft.</small>
-                        {% endif %}
-                        <small><i class="fa fa-book-reader"></i> {{ blog.read_time }} min.</small>
+                <div class="blog-card-text-container flex-y">
+                    <div class="blog-card-header-container">
+                        <div class="blog-card-header">
+                            <small>{{ blog.author_name }}</small>
+                            {% if blog.published %}
+                                <small>{{ blog.published_on|date:"M. j, Y" }}  | <i class="fa fa-book-reader"></i> {{ blog.read_time }} min.</small>
+                            {% else %}
+                                <small>Draft. <i class="fa fa-pencil-ruler"></i></small>
+                            {% endif %}
+                        </div>
+                        <div class="blog-card-title">
+                            <h4>{{ blog.title }}</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="blog-card-description">
+                        <small>{{ blog.description|truncatechars:100 }} </small>
                     </div>
                 </div>
             </div>

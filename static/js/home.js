@@ -71,8 +71,10 @@ SLIDER = {
             }
         };
         setTimeout(function(){
-            document.querySelector("#project-text-out").classList.remove("project-text-out");
-            document.querySelector("#project-image-out").classList.remove("project-image-out");
+            if(prevElems[key]){
+                document.querySelector(".project-text-out").classList.remove("project-text-out");
+                document.querySelector(".project-image-out").classList.remove("project-image-out");
+            }
         }, 2000);
     }
 }
