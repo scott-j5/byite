@@ -5,15 +5,14 @@
 
 @font-family{
     font-family: raleway;
-    font-display: block;
+    font-display: fallback;
     src: url("https://fonts.googleapis.com/css?family=Raleway:400,300,500,700");
 }
 @font-family{
     font-family: roboto;
-    font-display: block;
+    font-display: fallback;
     src: url("https://fonts.googleapis.com/css?family=Roboto:400,300,500,700");
 }
-
 
 body{
     font-family:'raleway', 'roboto', sans-serif;
