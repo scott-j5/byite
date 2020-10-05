@@ -570,6 +570,7 @@ img {
 }
 body {
   font-family: "raleway", "roboto", sans-serif;
+  font-display: optional;
   color: #383a42;
 }
 

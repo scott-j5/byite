@@ -209,7 +209,7 @@ LOAD = {
     },
 }
 
-$(document).ready(function(){
+window.addEventListener("DOMContentLoaded", function(){
     var formSubmit = FORMSUBMIT;
     var menu = MENU;
     var validate = FORMVALIDATION;

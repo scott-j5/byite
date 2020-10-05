@@ -42,26 +42,42 @@ SLIDER = {
     },
     render: function(){
         document.querySelector("#project-gears").style.transform = "rotate("+ (-this.i*90) + "deg)";
+        currentElems = {
+            "text": document.querySelector("#project-" + (this.i) + "-text"),
+            "image": document.querySelector("#project-" + (this.i) + "-image")
+        }
+        prevElems = {
+            "text": document.querySelector("#project-" + (this.iPrev) + "-text"),
+            "image": document.querySelector("#project-" + (this.iPrev) + "-image")
+        }
         if(this.initial == 1){
             this.initial = 0;
-            $("#project-" + (this.i) + "-text").toggleClass("project-text-active");
-            $("#project-" + (this.i) + "-image").toggleClass("project-image-active");
+            for(var key in currentElems){
+                if(currentElems[key]){
+                    currentElems[key].classList.toggle("project-"+ key +"-active");
+                }
+            }
         }else{
-            $("#project-" + (this.i) + "-text").toggleClass("project-text-active");
-            $("#project-" + (this.i) + "-image").toggleClass("project-image-active");
-            $("#project-" + (this.iPrev) + "-text").toggleClass("project-text-active");
-            $("#project-" + (this.iPrev) + "-image").toggleClass("project-image-active");
-            $("#project-" + (this.iPrev) + "-text").toggleClass("project-text-out");
-            $("#project-" + (this.iPrev) + "-image").toggleClass("project-image-out");
+            for(var key in currentElems){
+                if(currentElems[key]){
+                    currentElems[key].classList.toggle("project-"+ key +"-active");
+                }
+            }
+            for(var key in prevElems){
+                if(prevElems[key]){
+                    prevElems[key].classList.toggle("project-"+ key +"-active");
+                    prevElems[key].classList.toggle("project-"+ key +"-out");
+                }
+            }
         };
         setTimeout(function(){
-            $(".project-text-out").removeClass("project-text-out");
-            $(".project-image-out").removeClass("project-image-out");
+            document.querySelector("#project-text-out").classList.remove("project-text-out");
+            document.querySelector("#project-image-out").classList.remove("project-image-out");
         }, 2000);
     }
 }
 
-$(document).ready(function(){
+window.addEventListener("DOMContentLoaded", function(){
     var slider = SLIDER;
     slider.timer(10000);
 

@@ -86,7 +86,7 @@ BLOGLIST = {
     },
 }
 
-$(document).ready(function(){
+window.addEventListener("DOMContentLoaded", function(){
     var blogList = BLOGLIST;
     blogList.init();
 
