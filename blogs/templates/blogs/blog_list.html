@@ -14,20 +14,34 @@
                 <h1 class="no-m color-white">Recent blogs</h1>
             </div>
         </div>
-        <div class="col-2 col-1-sm m-t-xl">
+        <div class="col-2 col-1-sm m-t-xxl">
             {% if blogs|length > 0 %}
             <a class="m-b-xl" href="{% url 'blog-detail' blogs.0.slug %}">
-                <div class="blog-highlight color-white w-100 no-p m-b-xl">
-                    <h3 class="no-m">{{ blogs.0.title }}</h3>
-                    <p class="m-b-md">{{ blogs.0.description|truncatechars:100 }}</p>
-                    <div class="space-evenly">
-                        <small><i class="fa fa-user"></i> {{ blogs.0.author_name }}</small>
-                        {% if blogs.0.published %}
-                            <small><i class="fa fa-calendar"></i> {{ blogs.0.published_on|date:"M. j, Y" }}</small>
-                        {% else %}
-                            <small><i class="fa fa-pencil-ruler"></i> Draft. updated: {{ blogs.0.updated }}</small>
-                        {% endif %}
-                        <small><i class="fa fa-book-reader"></i> {{ blogs.0.read_time }} min.</small>
+                <div class="blog-highlight color-white w-100 no-p">
+                    <div class="blog-card-highlight">
+                        <div class="blog-card-img-container center-content-xy">
+                            <div class="blog-card-img-overlay"></div>
+                            <img class="blog-card-img" src="{{ blogs.0.thumbnail.url }}"/>
+                        </div>
+                        <div class="blog-card-text-container flex-y">
+                            <div class="blog-card-header-container">
+                                <div class="blog-card-header">
+                                    <small>{{ blogs.0.author_name }}</small>
+                                    {% if blogs.0.published %}
+                                        <small>{{ blogs.0.published_on|date:"M. j, Y" }}  | <i class="fa fa-book-reader"></i> {{ blogs.0.read_time }} min.</small>
+                                    {% else %}
+                                        <small>Draft. <i class="fa fa-pencil-ruler"></i></small>
+                                    {% endif %}
+                                </div>
+                                <div class="blog-card-title">
+                                    <h4>{{ blogs.0.title }}</h4>
+                                </div>
+                            </div>
+                            
+                            <div class="blog-card-description">
+                                <small>{{ blogs.0.description|truncatechars:100 }} </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </a>
