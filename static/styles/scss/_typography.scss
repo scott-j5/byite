@@ -2,11 +2,6 @@
 
 //FONTS ARE LOADED IN BASE .HTML//
 
-body{
-    font-family:'raleway', 'roboto', sans-serif;
-    color: $dark-grey;
- }
-
 html{
     font-size: 11px;
 
@@ -26,6 +21,13 @@ html{
         font-size: 29px;
     }
 }
+
+body{
+    font-family:'raleway', 'roboto', sans-serif;
+    color: $dark-grey;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+ }
 
 h1, h2, h3, h4, h5, h6, body {
     font-weight: 200;

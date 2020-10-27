@@ -80,11 +80,10 @@ class Blog(models.Model):
 
 
 class BlogImage(models.Model):
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
-
     def get_upload_path(instance, filename):
         return f'blog_images/{instance.blog.slug}/content/{filename}'
 
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     image = models.ImageField(null=False, blank=False, upload_to=get_upload_path)
 
     def __str__(self):

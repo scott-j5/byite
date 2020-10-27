@@ -3,7 +3,12 @@ MENU = {
     init: function(){
         document.querySelector('#hamburger').addEventListener('click', this.toggleMenu);
         document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', this.toggleMenu);
+            item.addEventListener('click', function(e){
+                //Toggle menu away if link is clicked that doesnt redirect page
+                if (document.querySelector(".nav-wrapper").classList.contains("nav-wrapper--open")){
+                    this.toggleMenu
+                }
+            });
         })
     },
     toggleMenu: function(e){

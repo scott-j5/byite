@@ -189,6 +189,13 @@ body{
    align-items:flex-end;
 }
 
+.center-content-xy{
+   display:flex;
+   justify-items:center;
+   justify-content:center;
+   align-items:center;
+}
+
 .center-content-x-md{
    @media (max-width: $screen-md){
       display:flex;
@@ -247,13 +254,6 @@ body{
    @media (max-width: $screen-md){
       display:none;
    }
-}
-
-.center-content-xy{
-   display:flex;
-   justify-items:center;
-   justify-content:center;
-   align-items:center;
 }
 
 .center-self-x{
