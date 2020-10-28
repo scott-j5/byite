@@ -5,7 +5,8 @@
 
 //page 1
 #page1{
-    background-image:url('../img/wave.svg');
+    //SET IN  HTML DUE TO PRIVATE S3 objects.
+    //background-image:url('../img/wave.svg');
     background-size: auto 100%;
     background-position: 37% 0%;
 
@@ -46,7 +47,8 @@
     top:-1px;
     color:white;
     background-color:#ffcf7b;
-    background-image: url('../img/watermarks.svg');
+    //SET IN  HTML DUE TO PRIVATE S3 objects.
+    //background-image: url('../img/watermarks.svg');
     background-size: auto 100%;
     background-position:50% 0%;
 }
@@ -133,7 +135,8 @@
     background-color:$white;
     width:calc(100% - #{$page-padding});
     padding-right:0px;
-    background-image: url('../img/projects1.svg');
+    //SET IN  HTML DUE TO PRIVATE S3 objects.
+    //background-image: url('../img/projects1.svg');
     background-size: auto 100%;
     background-position: 55% 0%;
     grid-gap:0px;
@@ -248,7 +251,8 @@
     display:grid;
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(1, 1fr);
-    background-image: url('../img/contact-us.svg');
+    //SET IN  HTML DUE TO PRIVATE S3 objects.
+    //background-image: url('../img/contact-us.svg');
     background-size: auto 100%;
     background-position: 55% 0%;
     height: 100%;
