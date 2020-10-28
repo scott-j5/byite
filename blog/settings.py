@@ -134,9 +134,8 @@ USE_L10N = True
 USE_TZ = True
 
 
-## Not required for s3 file uploads
-# LOGIN_REDIRECT_URL = 'home'
-# LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -146,9 +145,10 @@ USE_TZ = True
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-
+#Where 'collectstatic' dumps static files
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'local_static')
+#URL prefix used by static template tags
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_cdn')
 
 # S3 folder to upload static files to
 STATICFILES_LOCATION = 'static'
