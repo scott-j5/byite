@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -100,7 +100,7 @@ DATABASES = {
     }
 }
 DATABASE_SIZE = "40GB"
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -135,19 +135,25 @@ USE_L10N = True
 USE_TZ = True
 
 
+## Not required for s3 file uploads
+# LOGIN_REDIRECT_URL = 'home'
+# LOGIN_URL = 'login'
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
-
+# Where to look for static files during collect static
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_cdn')
 
-LOGIN_REDIRECT_URL = 'home'
-LOGIN_URL = 'login'
+# S3 folder to upload static files to
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'static_storages.StaticStorage'
 
 
 #Email settings
@@ -167,7 +173,9 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# S3 folder to upload media files to
+MEDIAFILES_LOCATION = 'media'
+DEFAULT_FILE_STORAGE = 'media_storages.MediaStorage'
 
 
 #Markdownx Settings
@@ -175,5 +183,7 @@ MARKDOWNX_IMAGE_MAX_SIZE = {
     'size': (1000, 1500),
     'quality': 90
 }
+
+
 MARKDOWNX_MEDIA_PATH = datetime.now().strftime('blog_images/%Y/%m/%d')
 MARKDOWNX_UPLOAD_URLS_PATH = '/blogs/blog/he-world/image/upload/'
