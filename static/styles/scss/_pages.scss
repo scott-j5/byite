@@ -277,7 +277,8 @@
 //BLOG LIST
 .blog-list-header-container{
     background-color: $very-dark-grey;
-    background-image: url('../img/cookie-watermark-left.png');
+    //SET IN  HTML DUE TO PRIVATE S3 objects.
+    //background-image: url('../img/cookie-watermark-left.png');
     background-size: 66% auto;
     background-position: 100% 25%;
     background-repeat: no-repeat;
