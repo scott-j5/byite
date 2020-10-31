@@ -11,14 +11,12 @@ from .settings import IMAGES_DEFAULT_IMAGE_PROPS
 
 
 def process_vector(image):
-    # Image: BytesIO file
     if contains_javascript(image):
         raise ValidationError(_("File rejected: JavaScript was detected within the uploaded file."), code='file_invalid')
     return image
 
 
 def process_raster(image, props=None):
-    # Image: BytesIO file
     if props == None:
         props = IMAGES_DEFAULT_IMAGE_PROPS
     # Returns PIL Image
@@ -34,7 +32,6 @@ def process_raster(image, props=None):
 
 
 def contains_javascript(image):
-    # Image: BytesIO file
     data = str(image, encoding='UTF-8')
     # ------------------------------------------------
     # Handles JavaScript nodes and stringified nodes.

@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from functools import reduce
-from images.models import CustomImageField
+from images.models import ScaleItImageField, CropItImageField
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 import math
@@ -30,8 +30,8 @@ class Blog(models.Model):
     title = models.CharField(max_length=150)
     slug = models.SlugField(max_length=150, unique=True)
     description = models.CharField(max_length=500)
-    thumbnail = CustomImageField(max_width=1000, max_height=1000, null=True, blank=True, upload_to=get_upload_path)
-    banner = models.ImageField(null=True, blank=True, upload_to=get_upload_path)
+    thumbnail = ScaleItImageField(max_width=1000, max_height=1000, null=True, blank=True, upload_to=get_upload_path)
+    banner = CropItImageField(null=True, blank=True, upload_to=get_upload_path)
     content = MarkdownxField()
     views = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
