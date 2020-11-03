@@ -22,7 +22,7 @@ class Tag(models.Model):
 class Blog(models.Model):
     def get_upload_path(instance, filename):
         return f'blog_images/{instance.slug}/{filename}'
-
+    
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     published = models.BooleanField(default=False)
     published_on = models.DateTimeField(default=None, null=True, blank=True)
@@ -30,8 +30,8 @@ class Blog(models.Model):
     title = models.CharField(max_length=150)
     slug = models.SlugField(max_length=150, unique=True)
     description = models.CharField(max_length=500)
-    thumbnail = ScaleItImageField(max_width=1000, max_height=1000, null=True, blank=True, upload_to=get_upload_path)
-    banner = CropItImageField(null=True, blank=True, upload_to=get_upload_path)
+    thumbnail = ScaleItImageField(max_width=100, max_height=100, null=True, blank=True, upload_to=get_upload_path)
+    banner = CropItImageField(max_width=200, max_height=200, null=True, blank=True, upload_to=get_upload_path)
     content = MarkdownxField()
     views = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
@@ -39,7 +39,7 @@ class Blog(models.Model):
     @property
     def author_name(self):
         return f'{self.author.first_name} {self.author.last_name}' if self.author.first_name else self.author.username
-    
+
     @property
     def formatted_markdown(self):
         return markdownify(self.content)
@@ -84,7 +84,7 @@ class Blog(models.Model):
 class BlogImage(models.Model):
     def get_upload_path(instance, filename):
         return f'blog_images/{instance.blog.slug}/content/{filename}'
-
+    
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     image = models.ImageField(null=False, blank=False, upload_to=get_upload_path)
 

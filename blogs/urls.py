@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 
 from .views import blog_list, BlogDetail, get_blogs, get_blogs_json, BlogImageUpload, blog_image
 

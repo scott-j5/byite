@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'projects.apps.ProjectsConfig',
     'images',
+    'images.tests',
     'markdownx',
     'storages',
     'users.apps.UsersConfig',
