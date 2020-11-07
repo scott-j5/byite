@@ -1,0 +1,140 @@
+.imageit-container{
+    width:100%;
+}
+
+.imageit-upload{
+    width: calc(100% - 2rem);
+    padding:1rem;
+    height: auto;
+    min-height: 125px;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    background-color:rgba(73, 164, 209, 0.03);
+    border: 2px dashed rgba(73, 164, 209,0.4);
+    border-radius:7px;
+}
+
+.imageit-upload-icon{
+    width:3rem;
+}
+
+.imageit-upload div{
+    padding: 0px;
+    margin: .3rem 0px;
+}
+
+.imageit-browse-files{
+    padding: .5rem 1.5rem;
+    background-color: rgb(121, 174, 200);
+    border: 1px solid rgb(73, 164, 209);
+    border-radius: 2px;
+    color:white;
+}
+
+.imageit-upload.active{
+    background-color:rgba(73, 164, 209, 0.1);
+    border: 2px dashed rgba(73, 164, 209,0.7);
+}
+
+.imageit-initial{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(100% - 2rem);
+    padding: 1rem;
+    min-height: 50px;
+    max-height: 150px;
+    margin-top: 1rem;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+}
+
+.imageit-intial-image{
+    max-width:33.3%;
+    max-height:150px;
+}
+
+.imageit-clear-image{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background-color: #ff3466;
+    color: white;
+    border: 2px solid #ff3466;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.imageit-text-light{
+    color: #a4b7bd;
+}
+/*
+.imageit-container{
+    width:100%;
+    display:flex;
+    align-items:center;
+}
+
+
+.imageit-initial{
+    max-width:66.6%;
+    max-height:350px;
+    margin:10px;
+}
+
+.imageit-initial-text{
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    padding-top:5px;
+    padding-bottom:5px;
+    text-align:center;
+    color:black;
+    background-color: rgba(255, 255, 255, 0.3);
+    overflow:hidden;
+}
+
+.imageit-upload{
+    margin:10px;
+}
+
+
+
+.imageit-initial-image-container{
+    position:relative;
+}
+
+.imageit-initial-image{
+    display:block;
+    max-width:100%;
+    max-height:100%;
+}
+
+.imageit-clear-image{
+    position: absolute;
+    display:table;
+    top: 0px;
+    right: 0px;
+    height: 1.5rem;
+    width: 1.5rem;
+    padding: 5px;
+    line-height:1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-bottom-left-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.3)
+}
+.imageit-clear-image span{
+    display:table-cell;
+    vertical-align: middle;
+}
+
+.imageit-inactive{
+    display:none;
+}
+*/

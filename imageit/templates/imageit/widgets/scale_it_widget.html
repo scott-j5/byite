@@ -1,0 +1,68 @@
+<div class="imageit-container">
+    <div class="imageit-upload">
+        <div><img class="imageit-upload-icon" src="/static/imageit/img/image-icon.svg"/></div>
+        <div>Drag & Drop</div>
+        <div class="imageit-text-light"> or </div>
+        <div><button type="button" class="imageit-browse-files">Browse Files</button></div>
+    </div>
+    {% if widget.is_initial %}
+    <div class="imageit-initial">
+        <div>
+            <div>
+                <!--{{ widget.initial_text }}-->
+            </div>
+            <div>
+                <a href="{{ widget.value.url }}" target="_blank">
+                    <img class="imageit-initial-image" alt="Initial image" src="{{ widget.value.url }}" />
+                </a>
+            </div>
+        </div>
+        <div>
+            something.jpg
+        </div>
+        {% if not widget.required %}
+            <div>
+                <div class="imageit-clear-image" title="{{ widget.clear_checkbox_label }}" data-checkboxname="{{ widget.checkbox_name }}"><span>x</span></div>
+                <input hidden type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}>
+            </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+
+
+<!--
+<div class="imageit-container">
+    {% if widget.is_initial %}
+        <div class="imageit-initial">
+            <div class="imageit-initial-image-container">
+                <a href="{{ widget.value.url }}" target="_blank">
+                    <img class="imageit-initial-image" alt="Initial image" src="{{ widget.value.url }}" />
+                    {% if widget.inital_text %}
+                        <div class="imageit-initial-text imageit-inactive">{{ widget.initial_text }}</div>
+                    {% endif %}
+                </a>
+                {% if not widget.required %}
+                    <div class="imageit-clear-image" title="{{ widget.clear_checkbox_label }}" data-checkboxname="{{ widget.checkbox_name }}"><span>x</span></div>
+                    <input hidden type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}>
+                {% endif %}
+            </div>
+            <div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="imageit-upload">
+        {% if widget.is_initial %}
+            <div>
+                {{ widget.initial_text }}: 
+                <a href="{{ widget.value.url }}">
+                    {{ widget.value.file.name }}
+                </a>
+            </div>
+            
+        {% endif %}
+        {{ widget.input_text }}:
+        <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+    </div>
+</div>-->

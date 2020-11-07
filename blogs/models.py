@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from functools import reduce
-from images.models import ScaleItImageField, CropItImageField
+from imageit.models import ScaleItImageField, CropItImageField
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 import math
