@@ -1,5 +1,6 @@
 
 IMAGEIT = {
+    fileTypes: ['svg', 'jpg', 'png'],
     addListeners: function(){
         //Listeners for dropping or uploading a file
         document.querySelectorAll('.imageit-upload').forEach(item =>{
@@ -9,8 +10,8 @@ IMAGEIT = {
             item.addEventListener('click', IMAGEIT.selectFile, false);
         });
         //Listener of cancelling intial image
-        document.querySelectorAll('.imageit-clear-initial').forEach(item =>{
-            item.addEventListener('click', IMAGEIT.toggleInitial, false);
+        document.querySelectorAll('.imageit-clear-image').forEach(item =>{
+            item.addEventListener('click', IMAGEIT.togglePreview, false);
         });
     },
     selectFile: function(e){
@@ -18,108 +19,138 @@ IMAGEIT = {
     },
     uploadHover: function(e){
         e.currentTarget.classList.toggle('active');
-        console.log('hovered');
     },
     processDrop: function(e){
         e.preventDefault();
         IMAGEIT.uploadHover(e);
         //IF LENGTH OF FILES IS MORE THAN ONE, SHOW ERROR
         let files = e.dataTransfer.files;
-        ([...files]).forEach(file =>{
-            IMAGEIT.previewImage(e, file);
-            IMAGEIT.processImage(e, file);
-        });
+        if ([...files].length > 1){
+            IMAGEIT.renderError(IMAGEIT.getImageitContainer(e), 'Only one file is accepted!')
+        }else{
+            ([...files]).forEach(file =>{
+                let extension = file.name.split('.').pop().toLowerCase()
+                if (IMAGEIT.fileTypes.indexOf(extension) == -1){
+                    IMAGEIT.renderError(IMAGEIT.getImageitContainer(e), 'Only ' + IMAGEIT.fileTypes.join(", ") + ' files are accepted!')
+                }else{
+                    IMAGEIT.previewFile(IMAGEIT.getImageitContainer(e), file);
+                    IMAGEIT.clearErrors(IMAGEIT.getImageitContainer(e));
+                }
+                console.log('passed');
+            });
+        };
     },
-    processImage: function(e, file){
-        console.log('dropped');
-        //Set value of select to file
-    },
-    previewImage: function(e, file){
-        // Hide initial if it exists
-        // Add previewed
+    processImage: function(file){
         let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = function(){
-            let img = document.createElement('img');
-            img.src = reader.result;
-            document.querySelector('.imageit-upload').appendChild(img);
-        }
+            console.log('returned');
+            return reader.result;
+        };
     },
-    clearUpload: function(e){
-        //Clear the upload select
-        //Render initial if checked or not
-    },
-    toggleInitial: function(e){
-        checkboxName = e.currentTarget.dataset.checkboxname;
-        checkbox = document.querySelector('[name="'+checkboxName+'"]');
-        checkbox.checked = !(checkbox.checked);
+    previewFile: function(imageitContainer, file){
+        // Add preview to imageit-preview-container
+        // JSX maybe?
+        let temp = document.getElementById('imageit-preview').cloneNode(true);
+        let img = IMAGEIT.processImage(file);
 
-        IMAGEIT.renderInitial(e);
+        temp.removeAttribute('id');
+        temp.classList.add('imageit-preview');
+        
+        //Change img src
+        temp.querySelector('.imageit-preview-image').src = img;
+        temp.querySelector('.imageit-preview-link').href = img;
+        //Change img name
+        temp.querySelector('.imageit-preview-filename').innerHTML = file.name;
+        //Change current -> new
+        temp.querySelector('.imageit-preview-help-text').innerHTML = 'New';
+        //Add event listeners
+        temp.querySelector('.imageit-clear-image').addEventListener('click', IMAGEIT.togglePreview, false);
+        
+        imageitContainer.querySelector('.imageit-preview-container').prepend(temp);
+        console.log(imageitContainer);
+        IMAGEIT.renderPreview(imageitContainer);
     },
-    renderInitial: function(e){
-        checkbox = e.currentTarget.closest('.imageit-container').querySelector('[name="'+checkboxName+'"]');
-        if (hidden){
-            //Hide initial
-            //Find imageit-container - then use query selctor on that to make sure it always works
-            e.currentTarget.closest('.imageit-initial').classList.toggle('imageit-inactive');
+    togglePreview: function(e){
+        e.stopPropagation();
+        e.preventDefault();
+        let preview = e.currentTarget.closest('.imageit-preview');
+        let imageitContainer = IMAGEIT.getImageitContainer(e);
+
+        if(preview.classList.contains('imageit-initial')){
+            let checkbox = preview.querySelector('[type="checkbox"]');
+            checkbox.checked = !(checkbox.checked);
         }else{
-            //Show undo button
+            preview.remove();
+            //Maybe tell it to leave an undo button there??
         }
+        IMAGEIT.renderPreview(imageitContainer);
+    },
+    renderPreview: function(imageitContainer){
+        console.log(imageitContainer);
+        let container = imageitContainer.querySelector('.imageit-preview-container');
+        
+        if(container){
+            let initial = container.querySelectorAll('.imageit-preview.imageit-initial');
+            let previews = container.querySelectorAll('.imageit-preview:not(.imageit-initial)');
+
+            // If images have been dropped, show their previews
+            // and hide initial previews
+            if (previews.length > 0){
+                //Remove inactive class from each
+                //Add inactive to initial
+                previews.forEach(item => {
+                    console.log(item);
+                    item.firstElementChild.classList.remove('imageit-inactive');
+                });
+                if(initial.length > 0){
+                    initial.forEach(item => {
+                        item.firstElementChild.classList.add('imageit-inactive');
+                    });
+                }
+            }else{
+                // If no dropped images, show initial
+                // If initial is to be cleared, show undo button
+                if(initial.length > 0){
+                    initial.forEach(item => {
+                        let checkbox = item.querySelector('input[type="checkbox"]');
+                        if(checkbox.checked){
+                            // Move this into seperate function
+                            let undo = document.createElement('a');
+                            undo.innerHTML = item.querySelector('.imageit-preview-filename').innerHTML + ' removed! Undo'
+                            undo.classList.add('imageit-undo-button');
+                            undo.addEventListener('click', IMAGEIT.togglePreview, false);
+                            item.append(undo);
+                            //Hide initial image preview
+                            item.firstElementChild.classList.add('imageit-inactive');
+                        }else{
+                            let undoButton = item.querySelector('.imageit-undo-button')
+                            if(undoButton){
+                                undoButton.remove();
+                            };
+                            item.firstElementChild.classList.remove('imageit-inactive');
+                        }
+                    });   
+                }
+            }
+        }
+    },
+    renderError: function(imageitContainer, error){
+        let errorElem = document.createElement('div');
+        errorElem.classList.add('imageit-error');
+        errorElem.innerHTML = error;
+        imageitContainer.querySelector('.imageit-upload').append(errorElem);
+    },
+    clearErrors: function(imageitContainer){
+        imageitContainer.querySelectorAll('.imageit-error').forEach(item =>{
+            item.remove();
+        });
+    },
+    getImageitContainer: function(e){
+        return e.currentTarget.closest('.imageit-container');
     },
 }
 
-
-
-
-/*
-IMAGEIT = {
-    //Add event listeners to all imageit form fields
-    addListeners: function(e){
-        document.querySelectorAll('.imageit-clear-image').forEach( item => {
-            item.addEventListener('click', function(e){
-                IMAGEIT.toggleClear(e);
-            });
-        });
-        document.querySelectorAll('.imageit-initial-image-container').forEach( item => {
-            item.addEventListener('mouseenter', function(e){
-                IMAGEIT.toggleInitialText(e)
-            });
-            item.addEventListener('mouseleave', function(e){
-                IMAGEIT.toggleInitialText(e);
-            });
-        });
-    },
-    //If a new image is selected, show it instead of initial image
-    showSelected: function(e){
-        //Hide existing image if it exists and show new one
-    },
-    //If a new file is selected, allow the user to clear their choice
-    undoSelected: function(e){
-
-    },
-    //Toggle the clearing of initial image in the form
-    toggleClear: function(e){
-        checkboxName = e.currentTarget.dataset.checkboxname;
-        checkbox = document.querySelector('[name="'+checkboxName+'"]');
-        checkbox.checked = !(checkbox.checked);
-
-        if (checkbox.checked){
-            //Hide initial
-            e.currentTarget.closest('.imageit-initial').classList.toggle('imageit-inactive');
-        }else{
-            //Show undo button, Copy dimensions
-        }
-        // Get name data attr and toggle checkbox by that name
-        // Hide initial and replace with undo button
-    },
-    toggleInitialText: function(e){
-        elem = e.currentTarget.querySelector('.imageit-initial-text');
-        if (elem){
-            elem.classList.toggle('imageit-inactive');
-        }
-    },
-}
-*/
 window.addEventListener("DOMContentLoaded", function(){
     IMAGEIT.addListeners();
 });

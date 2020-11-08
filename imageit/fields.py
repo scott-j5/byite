@@ -1,7 +1,7 @@
 from django.contrib.admin.widgets import AdminFileWidget
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
-from django.forms import MultiValueField, FileField, ClearableFileInput, IntegerField
+from django.forms import MultiValueField, FileField, IntegerField
 from django.forms.widgets import MultiWidget, NumberInput
 from django.utils.translation import gettext_lazy as _
 
@@ -40,7 +40,7 @@ class ScaleItImageFormField(FileField):
 
 
 class CropItImageFormField(MultiValueField):
-    widget = ServerCropItImageWidget(widgets=[ClearableFileInput, NumberInput, NumberInput, NumberInput, NumberInput,])
+    widget = ServerCropItImageWidget(widgets=[ScaleItImageWidget, NumberInput, NumberInput, NumberInput, NumberInput,])
 
     def __init__(self, max_length=None, widget=None, img_props=None, **kwargs):
         if img_props:
@@ -52,7 +52,7 @@ class CropItImageFormField(MultiValueField):
         # Or define a different message for each field.
         fields = (
             ## HEREE IS CAUSING AN ERROR. SHOULD BE SCALEITIMAGEFORMFIELD???
-            FileField(
+            ScaleItImageFormField(
                 error_messages={'incomplete': 'Please select an image to upload.'},
             ),
             IntegerField(
