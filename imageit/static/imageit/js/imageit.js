@@ -4,8 +4,9 @@ IMAGEIT = {
     addListeners: function(){
         //Listeners for dropping or uploading a file
         document.querySelectorAll('.imageit-upload').forEach(item =>{
-            item.addEventListener('dragenter', IMAGEIT.uploadHover, false);
-            item.addEventListener('dragleave', IMAGEIT.uploadHover, false);
+            item.addEventListener('dragenter', IMAGEIT.dzActive, false);
+            item.addEventListener('dragover', IMAGEIT.dzActive, false);
+            item.addEventListener('dragleave', IMAGEIT.dzInactive, false);
             item.addEventListener('drop', IMAGEIT.processDrop, false);
             item.addEventListener('click', IMAGEIT.selectFile, false);
         });
@@ -17,28 +18,36 @@ IMAGEIT = {
     selectFile: function(e){
         console.log('select');
     },
-    uploadHover: function(e){
-        e.currentTarget.classList.toggle('active');
+    dzActive: function(e){
+        e.currentTarget.classList.add('active');
+    },
+    dzInactive: function(e){
+        e.currentTarget.classList.remove('active');
     },
     processDrop: function(e){
+        let imageitContainer = IMAGEIT.getImageitContainer(e);
+        
         e.preventDefault();
-        IMAGEIT.uploadHover(e);
-        //IF LENGTH OF FILES IS MORE THAN ONE, SHOW ERROR
+        IMAGEIT.dzInactive(e);
+        IMAGEIT.showLoading(imageitContainer);
+
+        //Raise error if multiple files are selected when not allowed
+        let uploadElem = imageitContainer.querySelector('.imageit-upload');
         let files = e.dataTransfer.files;
-        if ([...files].length > 1){
-            IMAGEIT.renderError(IMAGEIT.getImageitContainer(e), 'Only one file is accepted!')
+        if (uploadElem.dataset.multiple.toLowerCase() != 'multiple' && [...files].length > 1){
+            IMAGEIT.renderError(imageitContainer, 'Only one file is accepted!');
         }else{
             ([...files]).forEach(file =>{
-                let extension = file.name.split('.').pop().toLowerCase()
+                let extension = file.name.split('.').pop().toLowerCase();
                 if (IMAGEIT.fileTypes.indexOf(extension) == -1){
-                    IMAGEIT.renderError(IMAGEIT.getImageitContainer(e), 'Only ' + IMAGEIT.fileTypes.join(", ") + ' files are accepted!')
+                    IMAGEIT.renderError(imageitContainer, 'Only ' + IMAGEIT.fileTypes.join(", ") + ' files are accepted!');
                 }else{
-                    IMAGEIT.previewFile(IMAGEIT.getImageitContainer(e), file);
-                    IMAGEIT.clearErrors(IMAGEIT.getImageitContainer(e));
+                    IMAGEIT.previewFile(imageitContainer, file);
+                    IMAGEIT.clearErrors(imageitContainer);
                 }
                 console.log('passed');
             });
-        };
+        }
     },
     processImage: function(file){
         let reader = new FileReader();
@@ -51,25 +60,32 @@ IMAGEIT = {
     previewFile: function(imageitContainer, file){
         // Add preview to imageit-preview-container
         // JSX maybe?
-        let temp = document.getElementById('imageit-preview').cloneNode(true);
-        let img = IMAGEIT.processImage(file);
 
-        temp.removeAttribute('id');
-        temp.classList.add('imageit-preview');
-        
-        //Change img src
-        temp.querySelector('.imageit-preview-image').src = img;
-        temp.querySelector('.imageit-preview-link').href = img;
-        //Change img name
-        temp.querySelector('.imageit-preview-filename').innerHTML = file.name;
-        //Change current -> new
-        temp.querySelector('.imageit-preview-help-text').innerHTML = 'New';
-        //Add event listeners
-        temp.querySelector('.imageit-clear-image').addEventListener('click', IMAGEIT.togglePreview, false);
-        
-        imageitContainer.querySelector('.imageit-preview-container').prepend(temp);
-        console.log(imageitContainer);
-        IMAGEIT.renderPreview(imageitContainer);
+        let reader = new FileReader();
+
+        reader.readAsDataURL(file);
+        reader.onloadend = function(){
+            console.log('returned');
+            //return reader.result;
+
+            let temp = document.getElementById('imageit-preview').cloneNode(true);
+            let img = reader.result;
+            temp.removeAttribute('id');
+            temp.classList.add('imageit-preview');
+            
+            //Change img src
+            temp.querySelector('.imageit-preview-image').src = img;
+            temp.querySelector('.imageit-preview-link').href = img;
+            //Change img name
+            temp.querySelector('.imageit-preview-filename').innerHTML = file.name;
+            //Change current -> new
+            temp.querySelector('.imageit-preview-help-text').innerHTML = 'New';
+            //Add event listeners
+            temp.querySelector('.imageit-clear-image').addEventListener('click', IMAGEIT.togglePreview, false);
+            
+            imageitContainer.querySelector('.imageit-preview-container').prepend(temp);
+            IMAGEIT.renderPreview(imageitContainer);
+        };
     },
     togglePreview: function(e){
         e.stopPropagation();
@@ -117,23 +133,30 @@ IMAGEIT = {
                         if(checkbox.checked){
                             // Move this into seperate function
                             let undo = document.createElement('a');
-                            undo.innerHTML = item.querySelector('.imageit-preview-filename').innerHTML + ' removed! Undo'
+                            undo.innerHTML = item.querySelector('.imageit-preview-filename').innerHTML + ' removed! Undo';
                             undo.classList.add('imageit-undo-button');
                             undo.addEventListener('click', IMAGEIT.togglePreview, false);
                             item.append(undo);
                             //Hide initial image preview
                             item.firstElementChild.classList.add('imageit-inactive');
                         }else{
-                            let undoButton = item.querySelector('.imageit-undo-button')
+                            let undoButton = item.querySelector('.imageit-undo-button');
                             if(undoButton){
                                 undoButton.remove();
-                            };
+                            }
                             item.firstElementChild.classList.remove('imageit-inactive');
                         }
                     });   
                 }
             }
+            IMAGEIT.hideLoading(imageitContainer);
         }
+    },
+    showLoading: function(imageitContainer){
+        imageitContainer.classList.add('imageit-loading');
+    },
+    hideLoading: function(imageitContainer){
+        imageitContainer.classList.remove('imageit-loading');
     },
     renderError: function(imageitContainer, error){
         let errorElem = document.createElement('div');
@@ -149,7 +172,7 @@ IMAGEIT = {
     getImageitContainer: function(e){
         return e.currentTarget.closest('.imageit-container');
     },
-}
+};
 
 window.addEventListener("DOMContentLoaded", function(){
     IMAGEIT.addListeners();

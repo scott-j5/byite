@@ -1,5 +1,5 @@
 <div class="imageit-container">
-    <div class="imageit-upload">
+    <div class="imageit-upload" data-type="{{ widget.type }}" data-name="{{ widget.name }}" {% if widget.attrs.multiple %}data-multiple="multiple"{% endif %} {% include "django/forms/widgets/attrs.html" %}>
         <div class="imageit-upload-prompt">
             <div><img class="imageit-upload-icon" src="/static/imageit/img/image-icon.svg"/></div>
             <div>Drag & Drop</div>
@@ -28,6 +28,7 @@
                             <input hidden type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}>
                         </div>
                     {% endif %}
+                    <!--<input hidden type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>-->
                 </div>
             </div>
         {% endif %}
