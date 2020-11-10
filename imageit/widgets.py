@@ -4,11 +4,11 @@ from django.forms.widgets import MultiWidget, ClearableFileInput
 class ScaleItImageWidget(ClearableFileInput):
     template_name = 'imageit/widgets/scale_it_widget.html'
     initial_text = 'Current'
-    multiple = {'multiple': True}
+    #multiple = {'multiple': True}
 
     def __init__(self, * args, **kwargs):
         super(ScaleItImageWidget, self).__init__(*args, **kwargs)
-        self.attrs.update(self.multiple)
+        #self.attrs.update(self.multiple)
 
     class Media:
         css = {"all": ('/static/imageit/css/scaleit.css',),}

@@ -15,7 +15,7 @@
                     </a>
                     <div class="imageit-preview-text">
                         <p>
-                            <strong>{{ widget.initial_text }}</strong>
+                            <strong class="imageit-preview-help-text">{{ widget.initial_text }}</strong>
                         </p>
                         <hr>
                         <p class="imageit-preview-filename">
@@ -32,25 +32,6 @@
                 </div>
             </div>
         {% endif %}
-            <div id="imageit-preview">
-                <div class="imageit-preview-content">
-                    <a class="imageit-preview-link" href="" target="_blank">
-                        <img class="imageit-preview-image" alt="Image preview" src="" />
-                    </a>
-                    <div class="imageit-preview-text">
-                        <p>
-                            <strong class="imageit-preview-help-text">{{ widget.initial_text }}</strong>
-                        </p>
-                        <hr>
-                        <p class="imageit-preview-filename">
-                            {{ widget.value.file.name }}
-                        </p>
-                    </div>
-                    <div>
-                        <div class="imageit-clear-image"><span>x</span></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

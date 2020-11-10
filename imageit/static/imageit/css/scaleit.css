@@ -17,7 +17,7 @@
     transition: all 0.2s ease-in;
 }
 
-.imageit-upload.active{
+.imageit-upload.imageit-active{
     background-color:rgba(73, 164, 209, 0.1);
     border: 2px dashed rgba(73, 164, 209,0.7);
 }
