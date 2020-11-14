@@ -10,8 +10,10 @@ def retrieve(name):
         return False
 
 
-IMAGES_MAX_UPLOAD_SIZE_MB = retrieve('IMAGES_MAX_UPLOAD_SIZE_MB') or 50
-IMAGES_ACCEPTED_CONTENT_TYPES = retrieve('IMAGES_ACCEPTED_CONTENT_TYPES') or 'image/jpeg', 'image/png', 'image/svg+xml'
-IMAGES_SVG_CONTENT_TYPE = retrieve('IMAGES_SVG_CONTENT_TYPE') or 'image/svg+xml'
-IMAGES_DPI = retrieve('IMAGES_DPI') or 90
-IMAGES_DEFAULT_IMAGE_PROPS = retrieve('IMAGES_DEFAULT_IMAGE_PROPS') or {"max_width": 1000, "max_height": 1000, "quality": IMAGES_DPI, "upscale": False}
+IMAGEIT_MAX_UPLOAD_SIZE_MB = retrieve('IMAGEIT_MAX_UPLOAD_SIZE_MB') or 50
+IMAGEIT_ACCEPTED_CONTENT_TYPES = retrieve('IMAGEIT_ACCEPTED_CONTENT_TYPES') or 'image/jpeg', 'image/png', 'image/svg+xml'
+IMAGEIT_SVG_CONTENT_TYPE = retrieve('IMAGEIT_SVG_CONTENT_TYPE') or 'image/svg+xml'
+IMAGEIT_DPI = retrieve('IMAGEIT_DPI') or 90
+IMAGEIT_DEFAULT_IMAGE_PROPS = retrieve('IMAGEIT_DEFAULT_IMAGE_PROPS') or {"max_width": 1000, "max_height": 1000, "quality": IMAGEIT_DPI, "upscale": False}
+IMAGEIT_IMAGE_PROPERTIES = retrieve('IMAGEIT_IMAGE_PROPERTIES') or ["max_width", "max_height", "quality", "upscale"]
+IMAGEIT_CROP_PROPERTIES = retrieve('IMAGEIT_CROP_PROPERTIES') or ["x1", "y1", "x2", "y2"]

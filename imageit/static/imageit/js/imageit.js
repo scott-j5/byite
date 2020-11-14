@@ -1,86 +1,96 @@
-
-
-//Initialise the fields in the template so that widget attributes can
-//Specify allowed file types
 class Imageit{
-
-    //Add options??
     constructor(element){
-        this.fileTypes = ['svg', 'jpg', 'png'];
+        this.fileTypes = ['svg', 'jpg', 'jpeg', 'png'];
         this.field = element;
-        this.fieldName = element.querySelector('.imageit-upload').dataset.name;
+        this.fileInput = element.querySelector('.imageit-selector')
+        this.fileInputName = this.fileInput.name;
+        this.fileInputMultiple = this.fileInput.multiple;
         this.initialFiles = []
         this.files = [];
         this.errors = [];
         
-        let multipleVal = element.querySelector('.imageit-upload').dataset.multiple
-        if (multipleVal) this.multiple = (multipleVal.toLowerCase() == 'multiple') ? true : false;
+        // If input field is a child of a 'cropit' container, set crop to true
+        if (this.field.closest('.imageit-cropit-container')){
+            let inputPrefix = this.fileInputName.slice(0, -1);
 
-        this.addListeners();
+            this.crop = true;
+            this.cropValInputs = [];
+            
+            // Find inputs for crop coordinates and add them to this.cropValInputs
+            for(var i = 1; i <= 4; i++){
+                this.cropValInputs.push(this.field.parentNode.querySelector('input[name="' + inputPrefix + i + '"]'));
+            }
+        }else{
+            this.crop = false;
+        }
+        
+        //Hide traditional selector. This ensures usual functionality on no JS browsers
+        element.querySelector('.imageit-pseudo-selector').style.display = 'block';
+        this.fileInput.hidden = true;
+
+        //Retreive initial values to allow management of their state
         this.retreiveInitial();
-    };
-
-    //Add all listeners to the field and dz
-    addListeners(){
-        let uploadElem = this.field.querySelector('.imageit-upload');
-        
-        //Listeners for dropping or uploading a file
-        uploadElem.addEventListener('dragenter', this.dzActive.bind(this), false);
-        uploadElem.addEventListener('dragover', this.dzActive.bind(this), false);
-        uploadElem.addEventListener('dragleave', this.dzInactive.bind(this), false);
-        uploadElem.addEventListener('drop', this.processDrop.bind(this), false);
-        uploadElem.addEventListener('click', this.selectFile.bind(this), false);
-        
-        this.addPreviewListeners(uploadElem);
+        this.addListeners();
     }
 
-    addPreviewListeners(){
-        //Listener for cancelling intial images
+    //Retreive any initial files
+    retreiveInitial(){
+        //Retrieve any initial value from a field
+        this.field.querySelectorAll('.imageit-preview-general.imageit-initial').forEach(item =>{
+            //Instantiate image class for each of the initials
+            let initialElem = item.querySelector('.imageit-preview-image');
+            this.initialFiles.push(new ImageitImg(initialElem.src, initialElem.closest('.imageit-preview-general'), true));
+        });
+    }
+
+    //Add all required listeners to the field
+    addListeners(){        
+        //Listeners for change of file select
+        this.fileInput.addEventListener('change', this.selectFile.bind(this), false);
+        
+        //Add listeners for clearing initial previews, triggering cropper ui's etc.
+        this.addPreviewListeners();
+    }
+    
+    //Add listeners for clearing intial images or cancelling selected imgs
+    //Executed every render
+    addPreviewListeners(){     
         this.field.querySelectorAll('.imageit-clear-image').forEach(item =>{
             item.addEventListener('click', this.togglePreview.bind(this), false);
         });
         this.field.querySelectorAll('.imageit-undo-button').forEach(item =>{
             item.addEventListener('click', this.togglePreview.bind(this), false);
         });
+        if(this.crop){
+            this.field.querySelectorAll('.imageit-cropper-image').forEach(item =>{
+                let cropper = new Cropper(item, {viewMode: 2});
+                item.addEventListener('crop', this.setCropVals.bind(this), false);
+            });
+        }
     }
 
-    //Retreive any initial files
-    retreiveInitial(){
-        //Retrieve any initial value from a field
-        this.field.querySelectorAll('.imageit-preview.imageit-initial').forEach(item =>{
-            //Instantiate image class for each of the initials
-            let initialElem = item.querySelector('.imageit-preview-image');
-            this.initialFiles.push(new ImageitImg(initialElem.src, initialElem.closest('.imageit-preview'), true));
-        });
-    }
-
-    //Trigger file selection window
-    selectFile(){
-
-    }
-
-    //Process a drop event in the field
-    processDrop(e){
-        e.preventDefault();
-
-        this.dzInactive();
-        this.loadingActive();
-
-        //Raise error if multiple files are selected when not allowed
-        let fileTypes = this.fileTypes;
-        let files = e.dataTransfer.files;
+    //Triggered on change of file select input
+    selectFile(e){
+        let files = Array.from(e.target.files);
+        
+        //Clear files every time input is changed. (If submitting by ajax this can be changed to preserve state)
+        this.files = [];
         this.errors = [];
-        if (! this.multiple && [...files].length + this.files.length > 1){
+        
+        //Raise error if multiple files are selected without multiple flag on input
+        //Else instantiate selected file as ImageitImg obj.
+        if (! this.fileInputMultiple && files.length + this.files.length > 1){
             this.errors.push({'code': 1001, 'file': '', 'message': 'Only one file is accepted!'});
         }else{
-            ([...files]).forEach(file =>{
+            (files).forEach(file =>{
                 let newImg = new ImageitImg(file);
 
-                if (fileTypes.indexOf(newImg.fileExtension) == -1){
+                //Raise error if selected file is not in accepted file types
+                if (this.fileTypes.indexOf(newImg.fileExtension) == -1){
                     this.errors.push({
                         'code': 1002, 
                         'file': file.name, 
-                        'message': 'Only ' + fileTypes.join(", ") + ' files are accepted!',
+                        'message': 'Only ' + this.fileTypes.join(", ") + ' files are accepted!',
                     });
                 }else{
                     this.files.push(newImg);
@@ -89,25 +99,42 @@ class Imageit{
         }
         this.render();
     }
-
+    
     // Toggle image previews
     togglePreview(e){
-        //If initial toggle hidden field
-        //If not initial remove it
         let allFiles = this.files.concat(this.initialFiles);
-        let file = allFiles.find(item => item.elem == e.currentTarget.closest('.imageit-preview'));
+        //Using the target of the event, find target obj to be toggled
+        let file = allFiles.find(item => item.elem == e.currentTarget.closest('.imageit-preview-general'));
         
+        //If initial toggle hidden field on obj
+        //If not initial, remove from files
         if (file.initial){
             file.hidden = !file.hidden;
+            file.clearCheckbox.checked = ! file.clearCheckbox.checked;
         }else{
-            let fileIndex = this.files.find(item => item.elem == e.currentTarget.closest('.imageit-preview'));
-            console.log(this.files);
+            let fileIndex = this.files.find(item => item.elem == e.currentTarget.closest('.imageit-preview-general'));
+            this.fileInput.value = "";
             delete this.files.splice(fileIndex, 1);
             console.log(this.files);
         }
         this.render();
     }
 
+    //Apply coordinates of crop to the relevant input fields
+    setCropVals(e){
+        let vals = [
+            e.detail.x,
+            e.detail.y,
+            e.detail.x + e.detail.width,
+            e.detail.y + e.detail.height
+        ]
+
+        for(var i = 0; i < this.cropValInputs.length; i++){
+            this.cropValInputs[i].value = vals[i];
+        }
+    }
+
+    //Prepares a list of img object to render, Based on new selected files/ or initial files
     prepRender(){
         if (this.files.length > 0){
             return this.files;
@@ -122,8 +149,8 @@ class Imageit{
         let renderContainer = this.field.querySelector('.imageit-preview-container');
         let renderElems = this.prepRender();
         renderContainer.innerHTML = '';
-        //Make sure to render errors of imgs
-        //Add dom element to each img
+
+        //Render any errors for the field
         if(this.errors.length > 0){
             for(var i = 0; i < this.errors.length; i++){
                 let error = this.errors[i];
@@ -133,33 +160,18 @@ class Imageit{
                 renderContainer.append(errorElem);
             }
         }
+
+        //Render out previews for each of the elements
         for(var i = 0; i < renderElems.length; i++){
             let item = renderElems[i];
-            item.preview().then((result) => {
-                console.log('rendered');
+            item.preview(this.crop).then((result) => {
                 renderContainer.append(result);
                 this.addPreviewListeners();
             });
         }
     }
-
-    // Trigger ui interaction when mouse dragged over dz
-    dzActive(){
-        this.field.querySelector('.imageit-upload').classList.add('imageit-active');
-    }
-    dzInactive(){
-        this.field.querySelector('.imageit-upload').classList.remove('imageit-active');
-    }
-
-    // Toggle loading ui elements on dz
-    loadingActive(){
-        console.log(this.field);
-        this.field.classList.add('imageit-loading');
-    }
-    loadingInactive(){
-        this.field.classList.remove('imageit-loading');
-    }
 }
+
 
 class ImageitImg{
     //Include errors
@@ -167,29 +179,31 @@ class ImageitImg{
     constructor(file, elem=false, initial=false){
         this._file = file;
         this._processedFile = false;
+        this.elem = elem;
         this.initial = initial;
         this.hidden = false;
+
+        //If initital image pull props from dom elements
         if (this.initial){
             if(elem){
                 this.descriptor = elem.querySelector('.imageit-preview-help-text').textContent;
                 this.fileName = elem.querySelector('.imageit-preview-filename').textContent;
+                this.clearCheckbox = elem.querySelector('.imageit-clear-image-checkbox');
             }else{
                 this.descriptor = 'Current';
                 this.fileName = file;
             }
+            (this.clearCheckbox) ? this.clearable = true : this.clearable = false;
             this.fileExtension = this.fileName.split('.').pop().toLowerCase();
         }else{
             this.fileName = file.name;
             this.fileExtension = file.name.split('.').pop().toLowerCase();
             this.descriptor = 'New';
-        }
-        if (elem){
-            this.elem = elem;
-        }else{
-            this.elem = false;
+            this.clearable = true;
         }
 
-        //Might have to move this outside constructor
+        //Reads selected file and returns it
+        //Returns Promise, resolves to img
         this.processedFile = function(){
             return new Promise((resolve) => {
                 if (this._processedFile == false && !this.initial){
@@ -206,37 +220,65 @@ class ImageitImg{
             });
         };
 
-        this.preview = function(){
+        //Generates a preview dom element and returns it
+        //Returns promise, resolves to dom element
+        this.preview = function(crop=false){
             return new Promise((resolve) => {
                 let preview = document.createElement('div');
-                preview.dataset.target = this.fileName;
-                preview.classList.add('imageit-preview');
+                preview.classList.add('imageit-preview-general');
+
                 if (this.initial) preview.classList.add('imageit-initial');
+                //Append clear checkbox to preview (used to tell django to remove an initial file)
+                if (this.clearCheckbox) preview.append(this.clearCheckbox);
     
                 if (this.hidden){
                     //Render undo button
                     let undo = document.createElement('a');
-                    undo.innerHTML = this.fileName + ' removed! Undo';
+                    undo.innerHTML = this.fileName + ' Removed! Undo';
                     undo.classList.add('imageit-undo-button');
                     preview.append(undo);
+
+                    
+                    
                     this.elem = preview;
                     resolve(preview);
                 }else{
                     this.processedFile().then((response) => {
-                        preview.innerHTML = 
-                            '<div class="imageit-preview-content">' +
-                                '<a class="imageit-preview-link" href="' + response + '" target="_blank">' +
-                                    '<img class="imageit-preview-image" alt="Image preview" src="' + response + '" />' +
-                                '</a>' +
-                                '<div class="imageit-preview-text">' +
-                                    '<p><strong class="imageit-preview-help-text">' + this.descriptor + '</strong></p>' +
-                                    '<hr>' +
-                                    '<p class="imageit-preview-filename">' + this.fileName + '</p>' +
-                                '</div>' +
-                                '<div>' +
-                                    '<div class="imageit-clear-image"><span>x</span></div>' +
-                                '</div>' +
-                            '</div>';
+                        let htmlStr = '';
+
+                        if(crop && ! this.initial){
+                            //Render cropper
+                            preview.classList.add('imageit-cropper');
+                            htmlStr = htmlStr + '<div class="imageit-cropper-content">';
+                            if (this.clearable){
+                                htmlStr = htmlStr + '<div class="imageit-clear-image imageit-cancel-crop"><span>Cancel</span></div>';
+                            }
+                            htmlStr = htmlStr +     '<div class="imageit-cropper-image-container">' +
+                                                        '<img class="imageit-cropper-image" alt="Image crop preview" src="' + response + '" />' + 
+                                                    '</div>' +
+                                                '</div>';
+                        }else{
+                            //Render preview
+                            preview.classList.add('imageit-preview');
+                            htmlStr = htmlStr +
+                                    '<a class="imageit-preview-link" href="' + response + '" target="_blank">' +
+                                        '<img class="imageit-preview-image" alt="Image preview" src="' + response + '" />' +
+                                    '</a>' +
+                                    '<div class="imageit-preview-text">' +
+                                        '<p><strong class="imageit-preview-help-text">' + this.descriptor + '</strong></p>' +
+                                        '<hr>' +
+                                        '<p class="imageit-preview-filename">' + this.fileName + '</p>' +
+                                    '</div>';
+                            if (this.clearable){
+                                htmlStr = htmlStr +
+                                    '<div>' +
+                                        '<div class="imageit-clear-image"><span>x</span></div>' +
+                                    '</div>';
+                            }
+                        }
+                        
+                        preview.innerHTML = htmlStr;
+                        
                         this.elem = preview;
                         resolve(preview);
                     });
@@ -246,448 +288,9 @@ class ImageitImg{
     }
 }
 
-
 window.addEventListener("DOMContentLoaded", function(){
     var fields = []
     document.querySelectorAll('.imageit-container').forEach(item => {
         fields.push(new Imageit(item));
     });
 });
-
-
-
-
-
-
-
-/*
-
-
-
-
-IMAGEIT = {
-    fileTypes: ['svg', 'jpg', 'png'],
-    fields: {},
-
-    init: function(){
-        IMAGEIT.initialiseFields();
-        console.log(IMAGEIT.fields);
-    },
-    img: function(file, initial=false){
-        this._file = file;
-        this._processedFile = false;
-        this.initial = initial;
-        if (this.initial){
-            this.fileName = file;
-            this.fileExtension = file.split('.').pop().toLowerCase();
-        }else{
-            this.fileName = file.name;
-            this.fileExtension = file.name.split('.').pop().toLowerCase();
-        }
-
-        this.processedFile = function(){
-            return new Promise((resolve, reject) => {
-                if (this._processedFile == false && !this.initial){
-                    let reader = new FileReader();
-                    reader.readAsDataURL(this._file);
-                    reader.onloadend = function(){
-                        this._processedFile = reader.result;
-                    };
-                }else if (this.initial){
-                    this._processedFile = this._file;
-                }
-                resolve(this._processedFile);
-            });
-        };
-    },
-    initialiseFields: function(){
-        //Initialise each individual field
-        document.querySelectorAll('.imageit-container').forEach( item => {
-            let fieldName = item.querySelector('.imageit-upload').dataset.name;
-            IMAGEIT.fields[fieldName] = [];
-            IMAGEIT.addListeners(item);
-            let initial = IMAGEIT.retreiveInitial(item);
-            IMAGEIT.fields[fieldName].push(initial);
-        });
-    },
-    retreiveInitial: function(imageitContainer){
-        let initialImages = []
-        //Retrieve any initial value from a field
-        imageitContainer.querySelectorAll('.imageit-preview.imageit-initial').forEach(item =>{
-            //Create images from each of the initials
-            let initialSrc = item.querySelector('.imageit-preview-image').src;
-            initialImages.push(new IMAGEIT.img(initialSrc, true));
-        });
-        return initialImages;
-    },
-    addListeners: function(imageitContainer){
-        let uploadElem = imageitContainer.querySelector('.imageit-upload');
-        
-        //Listeners for dropping or uploading a file
-        uploadElem.addEventListener('dragenter', IMAGEIT.dzActive, false);
-        uploadElem.addEventListener('dragover', IMAGEIT.dzActive, false);
-        uploadElem.addEventListener('dragleave', IMAGEIT.dzInactive, false);
-        uploadElem.addEventListener('drop', IMAGEIT.processDrop, false);
-        uploadElem.addEventListener('click', IMAGEIT.selectFile, false);
-        
-        //Listener for cancelling intial image
-        uploadElem.querySelectorAll('.imageit-clear-image').forEach(item =>{
-            item.addEventListener('click', IMAGEIT.togglePreview, false);
-        });
-    },
-    render: function(){
-
-    }
-
-
-
-
-
-    selectFile: function(e){
-        console.log('select');
-    },
-    dzActive: function(e){
-        e.currentTarget.classList.add('active');
-    },
-    dzInactive: function(e){
-        e.currentTarget.classList.remove('active');
-    },
-    processDrop: function(e){
-        let imageitContainer = IMAGEIT.getImageitContainer(e);
-        
-        e.preventDefault();
-        IMAGEIT.dzInactive(e);
-        IMAGEIT.showLoading(imageitContainer);
-
-        //Raise error if multiple files are selected when not allowed
-        let uploadElem = imageitContainer.querySelector('.imageit-upload');
-        let files = e.dataTransfer.files;
-        if (uploadElem.dataset.multiple.toLowerCase() != 'multiple' && [...files].length > 1){
-            IMAGEIT.renderError(imageitContainer, 'Only one file is accepted!');
-        }else{
-            ([...files]).forEach(file =>{
-                let extension = file.name.split('.').pop().toLowerCase();
-                if (IMAGEIT.fileTypes.indexOf(extension) == -1){
-                    IMAGEIT.renderError(imageitContainer, 'Only ' + IMAGEIT.fileTypes.join(", ") + ' files are accepted!');
-                }else{
-                    IMAGEIT.previewFile(imageitContainer, file);
-                    IMAGEIT.clearErrors(imageitContainer);
-                }
-                console.log('passed');
-            });
-        }
-    },
-    processImage: function(file){
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function(){
-            console.log('returned');
-            return reader.result;
-        };
-    },
-    previewFile: function(imageitContainer, file){
-        // Add preview to imageit-preview-container
-        // JSX maybe?
-
-        let reader = new FileReader();
-
-        reader.readAsDataURL(file);
-        reader.onloadend = function(){
-            console.log('returned');
-            //return reader.result;
-
-            let temp = document.getElementById('imageit-preview').cloneNode(true);
-            let img = reader.result;
-            temp.removeAttribute('id');
-            temp.classList.add('imageit-preview');
-            
-            //Change img src
-            temp.querySelector('.imageit-preview-image').src = img;
-            temp.querySelector('.imageit-preview-link').href = img;
-            //Change img name
-            temp.querySelector('.imageit-preview-filename').innerHTML = file.name;
-            //Change current -> new
-            temp.querySelector('.imageit-preview-help-text').innerHTML = 'New';
-            //Add event listeners
-            temp.querySelector('.imageit-clear-image').addEventListener('click', IMAGEIT.togglePreview, false);
-            
-            imageitContainer.querySelector('.imageit-preview-container').prepend(temp);
-            IMAGEIT.renderPreview(imageitContainer);
-        };
-    },
-    togglePreview: function(e){
-        e.stopPropagation();
-        e.preventDefault();
-        let preview = e.currentTarget.closest('.imageit-preview');
-        let imageitContainer = IMAGEIT.getImageitContainer(e);
-
-        if(preview.classList.contains('imageit-initial')){
-            let checkbox = preview.querySelector('[type="checkbox"]');
-            checkbox.checked = !(checkbox.checked);
-        }else{
-            preview.remove();
-            //Maybe tell it to leave an undo button there??
-        }
-        IMAGEIT.renderPreview(imageitContainer);
-    },
-    renderPreview: function(imageitContainer){
-        console.log(imageitContainer);
-        let container = imageitContainer.querySelector('.imageit-preview-container');
-        
-        if(container){
-            let initial = container.querySelectorAll('.imageit-preview.imageit-initial');
-            let previews = container.querySelectorAll('.imageit-preview:not(.imageit-initial)');
-
-            // If images have been dropped, show their previews
-            // and hide initial previews
-            if (previews.length > 0){
-                //Remove inactive class from each
-                //Add inactive to initial
-                previews.forEach(item => {
-                    console.log(item);
-                    item.firstElementChild.classList.remove('imageit-inactive');
-                });
-                if(initial.length > 0){
-                    initial.forEach(item => {
-                        item.firstElementChild.classList.add('imageit-inactive');
-                    });
-                }
-            }else{
-                // If no dropped images, show initial
-                // If initial is to be cleared, show undo button
-                if(initial.length > 0){
-                    initial.forEach(item => {
-                        let checkbox = item.querySelector('input[type="checkbox"]');
-                        if(checkbox.checked){
-                            // Move this into seperate function
-                            let undo = document.createElement('a');
-                            undo.innerHTML = item.querySelector('.imageit-preview-filename').innerHTML + ' removed! Undo';
-                            undo.classList.add('imageit-undo-button');
-                            undo.addEventListener('click', IMAGEIT.togglePreview, false);
-                            item.append(undo);
-                            //Hide initial image preview
-                            item.firstElementChild.classList.add('imageit-inactive');
-                        }else{
-                            let undoButton = item.querySelector('.imageit-undo-button');
-                            if(undoButton){
-                                undoButton.remove();
-                            }
-                            item.firstElementChild.classList.remove('imageit-inactive');
-                        }
-                    });   
-                }
-            }
-            IMAGEIT.hideLoading(imageitContainer);
-        }
-    },
-    showLoading: function(imageitContainer){
-        imageitContainer.classList.add('imageit-loading');
-    },
-    hideLoading: function(imageitContainer){
-        imageitContainer.classList.remove('imageit-loading');
-    },
-    renderError: function(imageitContainer, error){
-        let errorElem = document.createElement('div');
-        errorElem.classList.add('imageit-error');
-        errorElem.innerHTML = error;
-        imageitContainer.querySelector('.imageit-upload').append(errorElem);
-    },
-    clearErrors: function(imageitContainer){
-        imageitContainer.querySelectorAll('.imageit-error').forEach(item =>{
-            item.remove();
-        });
-    },
-    getImageitContainer: function(e){
-        return e.currentTarget.closest('.imageit-container');
-    },
-};
-
-window.addEventListener("DOMContentLoaded", function(){
-    document.querySelectorAll('-imageit-container').forEach(item => {
-        const field = new IMAGEIT.init();
-    });
-});
-
-
-/*
-
-
-IMAGEIT = {
-    fileTypes: ['svg', 'jpg', 'png'],
-    images: {},
-    addListeners: function(){
-        //Listeners for dropping or uploading a file
-        document.querySelectorAll('.imageit-upload').forEach(item =>{
-            item.addEventListener('dragenter', IMAGEIT.dzActive, false);
-            item.addEventListener('dragover', IMAGEIT.dzActive, false);
-            item.addEventListener('dragleave', IMAGEIT.dzInactive, false);
-            item.addEventListener('drop', IMAGEIT.processDrop, false);
-            item.addEventListener('click', IMAGEIT.selectFile, false);
-        });
-        //Listener of cancelling intial image
-        document.querySelectorAll('.imageit-clear-image').forEach(item =>{
-            item.addEventListener('click', IMAGEIT.togglePreview, false);
-        });
-    },
-    selectFile: function(e){
-        console.log('select');
-    },
-    dzActive: function(e){
-        e.currentTarget.classList.add('active');
-    },
-    dzInactive: function(e){
-        e.currentTarget.classList.remove('active');
-    },
-    processDrop: function(e){
-        let imageitContainer = IMAGEIT.getImageitContainer(e);
-        
-        e.preventDefault();
-        IMAGEIT.dzInactive(e);
-        IMAGEIT.showLoading(imageitContainer);
-
-        //Raise error if multiple files are selected when not allowed
-        let uploadElem = imageitContainer.querySelector('.imageit-upload');
-        let files = e.dataTransfer.files;
-        if (uploadElem.dataset.multiple.toLowerCase() != 'multiple' && [...files].length > 1){
-            IMAGEIT.renderError(imageitContainer, 'Only one file is accepted!');
-        }else{
-            ([...files]).forEach(file =>{
-                let extension = file.name.split('.').pop().toLowerCase();
-                if (IMAGEIT.fileTypes.indexOf(extension) == -1){
-                    IMAGEIT.renderError(imageitContainer, 'Only ' + IMAGEIT.fileTypes.join(", ") + ' files are accepted!');
-                }else{
-                    IMAGEIT.previewFile(imageitContainer, file);
-                    IMAGEIT.clearErrors(imageitContainer);
-                }
-                console.log('passed');
-            });
-        }
-    },
-    processImage: function(file){
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function(){
-            console.log('returned');
-            return reader.result;
-        };
-    },
-    previewFile: function(imageitContainer, file){
-        // Add preview to imageit-preview-container
-        // JSX maybe?
-
-        let reader = new FileReader();
-
-        reader.readAsDataURL(file);
-        reader.onloadend = function(){
-            console.log('returned');
-            //return reader.result;
-
-            let temp = document.getElementById('imageit-preview').cloneNode(true);
-            let img = reader.result;
-            temp.removeAttribute('id');
-            temp.classList.add('imageit-preview');
-            
-            //Change img src
-            temp.querySelector('.imageit-preview-image').src = img;
-            temp.querySelector('.imageit-preview-link').href = img;
-            //Change img name
-            temp.querySelector('.imageit-preview-filename').innerHTML = file.name;
-            //Change current -> new
-            temp.querySelector('.imageit-preview-help-text').innerHTML = 'New';
-            //Add event listeners
-            temp.querySelector('.imageit-clear-image').addEventListener('click', IMAGEIT.togglePreview, false);
-            
-            imageitContainer.querySelector('.imageit-preview-container').prepend(temp);
-            IMAGEIT.renderPreview(imageitContainer);
-        };
-    },
-    togglePreview: function(e){
-        e.stopPropagation();
-        e.preventDefault();
-        let preview = e.currentTarget.closest('.imageit-preview');
-        let imageitContainer = IMAGEIT.getImageitContainer(e);
-
-        if(preview.classList.contains('imageit-initial')){
-            let checkbox = preview.querySelector('[type="checkbox"]');
-            checkbox.checked = !(checkbox.checked);
-        }else{
-            preview.remove();
-            //Maybe tell it to leave an undo button there??
-        }
-        IMAGEIT.renderPreview(imageitContainer);
-    },
-    renderPreview: function(imageitContainer){
-        console.log(imageitContainer);
-        let container = imageitContainer.querySelector('.imageit-preview-container');
-        
-        if(container){
-            let initial = container.querySelectorAll('.imageit-preview.imageit-initial');
-            let previews = container.querySelectorAll('.imageit-preview:not(.imageit-initial)');
-
-            // If images have been dropped, show their previews
-            // and hide initial previews
-            if (previews.length > 0){
-                //Remove inactive class from each
-                //Add inactive to initial
-                previews.forEach(item => {
-                    console.log(item);
-                    item.firstElementChild.classList.remove('imageit-inactive');
-                });
-                if(initial.length > 0){
-                    initial.forEach(item => {
-                        item.firstElementChild.classList.add('imageit-inactive');
-                    });
-                }
-            }else{
-                // If no dropped images, show initial
-                // If initial is to be cleared, show undo button
-                if(initial.length > 0){
-                    initial.forEach(item => {
-                        let checkbox = item.querySelector('input[type="checkbox"]');
-                        if(checkbox.checked){
-                            // Move this into seperate function
-                            let undo = document.createElement('a');
-                            undo.innerHTML = item.querySelector('.imageit-preview-filename').innerHTML + ' removed! Undo';
-                            undo.classList.add('imageit-undo-button');
-                            undo.addEventListener('click', IMAGEIT.togglePreview, false);
-                            item.append(undo);
-                            //Hide initial image preview
-                            item.firstElementChild.classList.add('imageit-inactive');
-                        }else{
-                            let undoButton = item.querySelector('.imageit-undo-button');
-                            if(undoButton){
-                                undoButton.remove();
-                            }
-                            item.firstElementChild.classList.remove('imageit-inactive');
-                        }
-                    });   
-                }
-            }
-            IMAGEIT.hideLoading(imageitContainer);
-        }
-    },
-    showLoading: function(imageitContainer){
-        imageitContainer.classList.add('imageit-loading');
-    },
-    hideLoading: function(imageitContainer){
-        imageitContainer.classList.remove('imageit-loading');
-    },
-    renderError: function(imageitContainer, error){
-        let errorElem = document.createElement('div');
-        errorElem.classList.add('imageit-error');
-        errorElem.innerHTML = error;
-        imageitContainer.querySelector('.imageit-upload').append(errorElem);
-    },
-    clearErrors: function(imageitContainer){
-        imageitContainer.querySelectorAll('.imageit-error').forEach(item =>{
-            item.remove();
-        });
-    },
-    getImageitContainer: function(e){
-        return e.currentTarget.closest('.imageit-container');
-    },
-};
-
-window.addEventListener("DOMContentLoaded", function(){
-    IMAGEIT.addListeners();
-});*/

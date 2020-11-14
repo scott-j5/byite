@@ -8,6 +8,12 @@ from .models import TestScaleItModel, TestCropItModel
 
 # Create your tests here.
 
+# Test Models
+
+# Test fields
+
+# Test widgets
+
 
 # Test Server side scaling of images
 class ScaleItTestCase(TestCase):

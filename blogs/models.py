@@ -11,12 +11,19 @@ import math
 from operator import and_
 
 
+from django.contrib.contenttypes.fields import GenericRelation
+from dropzoneit.models import DropZoneItField
+
 # Create your models here.
 class Tag(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+
+class Series(models.Model):
+    name = models.CharField(max_length=150)
+    slug = models.SlugField(max_length=150)
 
 
 class Blog(models.Model):
@@ -35,6 +42,8 @@ class Blog(models.Model):
     content = MarkdownxField()
     views = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
+    dropzone = DropZoneItField()
+    test = models.ForeignKey(Series, on_delete=models.CASCADE, null=True, blank=True)
 
     @property
     def author_name(self):
@@ -92,9 +101,7 @@ class BlogImage(models.Model):
         return f'{self.image.name}'
 
 
-class Series(models.Model):
-    name = models.CharField(max_length=150)
-    slug = models.SlugField(max_length=150)
+
 
 
 class SeriesAssignment(models.Model):

@@ -1,0 +1,37 @@
+<div class="dropzoneit-container">
+    <div class="imageit-upload" data-type="{{ widget.type }}" data-name="{{ widget.name }}" {% if widget.attrs.multiple %}data-multiple="multiple"{% endif %} {% include "django/forms/widgets/attrs.html" %}>
+        <div class="imageit-upload-prompt">
+            <div><img class="imageit-upload-icon" src="/static/imageit/img/image-icon.svg"/></div>
+            <div>Drag & Drop</div>
+            <div class="imageit-text-light"> or </div>
+            <div><button type="button" class="imageit-browse-files">Browse Files</button></div>    
+        </div>
+        <div class="imageit-preview-container">
+            {% if widget.is_initial %}
+            <div class="imageit-preview imageit-initial">
+                <div class="imageit-preview-content">
+                    <a href="{{ widget.value.url }}" target="_blank">
+                        <img class="imageit-preview-image" alt="Image preview" src="{{ widget.value.url }}" />
+                    </a>
+                    <div class="imageit-preview-text">
+                        <p>
+                            <strong class="imageit-preview-help-text">{{ widget.initial_text }}</strong>
+                        </p>
+                        <hr>
+                        <p class="imageit-preview-filename">
+                            {{ widget.value.file.name }}
+                        </p>
+                    </div>
+                    {% if not widget.required %}
+                        <div>
+                            <div class="imageit-clear-image" title="{{ widget.clear_checkbox_label }}" data-checkboxname="{{ widget.checkbox_name }}"><span>x</span></div>
+                            <input hidden type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}>
+                        </div>
+                    {% endif %}
+                    <!--<input hidden type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>-->
+                </div>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+</div>

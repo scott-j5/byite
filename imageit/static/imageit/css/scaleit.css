@@ -1,63 +1,11 @@
-.imageit-container{
-    width:100%;
-}
-
-.imageit-upload{
-    width: calc(100% - 2rem - 4px);
-    padding:1rem;
-    height: auto;
-    min-height: 125px;
-    display:flex;
-    flex-direction: column;
-    align-items:center;
-    justify-content:center;
-    background-color:rgba(73, 164, 209, 0.03);
-    border: 2px dashed rgba(73, 164, 209,0.4);
-    border-radius:7px;
-    transition: all 0.2s ease-in;
-}
-
-.imageit-upload.imageit-active{
-    background-color:rgba(73, 164, 209, 0.1);
-    border: 2px dashed rgba(73, 164, 209,0.7);
-}
-
-.imageit-upload-prompt{
-    display:flex;
-    flex-direction:column;
-    align-items: center;
-    justify-content: center;
-}
-
-.imageit-upload-prompt div{
-    padding: 0px;
-    margin: .3rem 0px;
-}
-
-.imageit-upload-icon{
-    width:3rem;
-}
-
-.imageit-browse-files{
-    padding: .5rem 1.5rem;
-    background-color: rgb(121, 174, 200);
-    border: 1px solid rgb(73, 164, 209);
-    border-radius: 2px;
-    color:white;
-}
-
-/* Hidden element used as template */
-#imageit-preview{
-    display:none;
+/* SCALEIT STYLES */
+.imageit-preview-container{
+    max-width: calc(100% - 2rem);
+    margin: 1.5rem 0px;
+    padding: 0px 1rem;
 }
 
 .imageit-preview{
-    max-width: calc(100% - 2rem);
-    margin: 1rem 0px;
-    padding: 1rem;
-}
-
-.imageit-preview-content{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -79,13 +27,72 @@
     box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
 }
 
+
+/* CROPPER STYLES */
+.imageit-cropper{
+    display:flex;
+    justify-content:center;
+    width:100%;
+}
+
+.imageit-cropper-content{
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+    min-height: 75px;
+}
+
+.imageit-cropper-image-container{
+    max-height:80vh;
+}
+
+.imageit-cropper-image{
+    max-width:100%;
+    max-height:100%;
+}
+
+.imageit-clear-image.imageit-cancel-crop{
+    width: calc(100% - 4px);
+    height: 2rem;
+    margin-bottom: 1.5rem;
+    color: #ff3466;
+    border: 2px solid #ff3466;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* GENERAL STYLES */
+.imageit-container{
+    display:flex;
+    flex-direction: column;
+    width:100%;
+}
+
+.imageit-pseudo-selector{
+    display:none;
+    width: calc(100% - 5rem - 2px) !important;
+    padding: .5rem 1.5rem !important;
+    margin: 0px 1rem;
+    background-color: rgb(121, 174, 200);
+    border: 1px solid rgb(73, 164, 209);
+    border-radius: 4px;
+    color:white;
+    text-align:center;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.imageit-selector-icon{
+    height: 1.5em;
+    margin-right: 1.5em;
+}
+
 .imageit-clear-image{
     display: flex;
     align-items: center;
     justify-content: center;
     width: 2rem;
     height: 2rem;
-    /*background-color: #ff3466;*/
     color: #ff3466;
     border: 2px solid #ff3466;
     border-radius: 50%;
@@ -110,7 +117,7 @@
 
 
 
-
+/* For loading */
 .loading{
     position:relative;
     opacity:0.5;

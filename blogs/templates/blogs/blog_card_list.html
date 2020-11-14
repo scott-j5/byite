@@ -9,7 +9,7 @@
             <div class="blog-card">
                 <div class="blog-card-img-container center-content-xy">
                     <div class="blog-card-img-overlay"></div>
-                    <img class="blog-card-img" src="{{ blog.thumbnail.url }}"/>
+                    <img class="blog-card-img" src="{% if blog.thumbnail %}{{ blog.thumbnail.url }}{% endif %}"/>
                 </div>
                 <div class="blog-card-text-container flex-y">
                     <div class="blog-card-header-container">

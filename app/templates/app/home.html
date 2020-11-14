@@ -91,7 +91,7 @@
     <div id="project-images-container">
         {% for project in projects %}
             <div class="project-image" id="project-{{ forloop.counter0 }}-image">
-                <img class="project-img" src="{{ project.image.url }}"/>
+                <img class="project-img" src="{% if project.image %}{{ project.image.url }}{% endif %}"/>
             </div>
         {% if forloop.last %}
             <div class="project-image" id="project-{{ forloop.counter }}-image">

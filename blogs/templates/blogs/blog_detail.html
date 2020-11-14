@@ -59,7 +59,7 @@
 <div class="blog-banner w-100 m-t-xxl">
     <img class="img-full-width blog-banner-frame" src="{% static 'img/blog-img-frame.svg' %}"/>
     <div class="blog-banner-img">
-        {% if object.banner.url %}
+        {% if object.banner %}
             <img class="img-full-width" src="{{ object.banner.url }}"/>
         {% endif %}
     </div>
