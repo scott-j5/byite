@@ -1,662 +1,327 @@
 
 //Initialise the fields in the template so that widget attributes can
 //Specify allowed file types
-class Imageit{
+class DropZoneIt{
 
     //Add options??
     constructor(element){
-        this.fileTypes = ['svg', 'jpg', 'png'];
         this.field = element;
-        this.fieldName = element.querySelector('.imageit-upload').dataset.name;
-        this.initialFiles = []
+        this.instanceId = this.field.dataset.dzit_instance;
+        this.cType = this.field.dataset.dzit_ctype;
         this.files = [];
         this.errors = [];
-        
-        let multipleVal = element.querySelector('.imageit-upload').dataset.multiple
-        if (multipleVal) this.multiple = (multipleVal.toLowerCase() == 'multiple') ? true : false;
 
         this.addListeners();
-        this.retreiveInitial();
+        this.getInitial();
     };
 
     //Add all listeners to the field and dz
     addListeners(){
-        let uploadElem = this.field.querySelector('.imageit-upload');
-        
+        let dzElem = this.field.querySelector('.dropzoneit');
+        let dzSelect = dzElem.querySelector('.dropzoneit-file-selector');
+
         //Listeners for dropping or uploading a file
-        uploadElem.addEventListener('dragenter', this.dzActive.bind(this), false);
-        uploadElem.addEventListener('dragover', this.dzActive.bind(this), false);
-        uploadElem.addEventListener('dragleave', this.dzInactive.bind(this), false);
-        uploadElem.addEventListener('drop', this.processDrop.bind(this), false);
-        uploadElem.addEventListener('click', this.selectFile.bind(this), false);
-        
-        this.addPreviewListeners(uploadElem);
+        dzElem.addEventListener('dragenter', this.dzActive.bind(this), false);
+        dzElem.addEventListener('dragover', this.dzActive.bind(this), false);
+        dzElem.addEventListener('dragleave', this.dzInactive.bind(this), false);
+        dzElem.addEventListener('drop', this.processDrop.bind(this), false);
+        dzSelect.addEventListener('change', this.selectFile.bind(this), false);
     }
 
-    addPreviewListeners(){
-        //Listener for cancelling intial images
-        this.field.querySelectorAll('.imageit-clear-image').forEach(item =>{
-            item.addEventListener('click', this.togglePreview.bind(this), false);
-        });
-        this.field.querySelectorAll('.imageit-undo-button').forEach(item =>{
-            item.addEventListener('click', this.togglePreview.bind(this), false);
-        });
-    }
 
     //Retreive any initial files
-    retreiveInitial(){
-        //Retrieve any initial value from a field
-        this.field.querySelectorAll('.imageit-preview.imageit-initial').forEach(item =>{
-            //Instantiate image class for each of the initials
-            let initialElem = item.querySelector('.imageit-preview-image');
-            this.initialFiles.push(new ImageitImg(initialElem.src, initialElem.closest('.imageit-preview'), true));
-        });
+    getInitial(){
+        let url = '/dropzoneit/list/' + this.cType + '/' + this.instanceId + '/';
+        this.field.classList.add('dropzoneit-loading');
+
+        //Ajax function to get files
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', url, true);
+        
+        // Add listener for change of request ready state
+        xhr.addEventListener('readystatechange', function(e) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                let data = JSON.parse(xhr.response).data;
+                let files = [];
+                for (var i=0; i < data.length; i ++){
+                    files.push(new DropZoneItFile(JSON.stringify(data[i]), this.field));
+                }
+                this.files = files;
+                this.field.classList.remove('dropzoneit-loading');
+                this.render();
+            }
+            else if (xhr.readyState == 4 && xhr.status != 200) {
+                // Error. Inform the user
+                this.errors.push(xhr.statusText);
+                this.field.classList.remove('dropzoneit-loading');
+                this.render();
+            }
+        }.bind(this));
+        
+        xhr.send(null);
     }
 
-    //Trigger file selection window
-    selectFile(){
 
+    //Process files from select window
+    selectFile(e){
+        e.preventDefault();
+
+        let files = e.target.files;
+        this.processFiles(files);
     }
 
     //Process a drop event in the field
     processDrop(e){
         e.preventDefault();
-
         this.dzInactive();
-        this.loadingActive();
 
-        //Raise error if multiple files are selected when not allowed
-        let fileTypes = this.fileTypes;
-        let files = e.dataTransfer.files;
-        this.errors = [];
-        if (! this.multiple && [...files].length + this.files.length > 1){
-            this.errors.push({'code': 1001, 'file': '', 'message': 'Only one file is accepted!'});
-        }else{
-            ([...files]).forEach(file =>{
-                let newImg = new ImageitImg(file);
-
-                if (fileTypes.indexOf(newImg.fileExtension) == -1){
-                    this.errors.push({
-                        'code': 1002, 
-                        'file': file.name, 
-                        'message': 'Only ' + fileTypes.join(", ") + ' files are accepted!',
-                    });
-                }else{
-                    this.files.push(newImg);
-                }
-            });
-        }
-        this.render();
+        let files = e.dataTransfer.files;    
+        this.processFiles(files);
     }
 
-    // Toggle image previews
-    togglePreview(e){
-        //If initial toggle hidden field
-        //If not initial remove it
-        let allFiles = this.files.concat(this.initialFiles);
-        let file = allFiles.find(item => item.elem == e.currentTarget.closest('.imageit-preview'));
-        
-        if (file.initial){
-            file.hidden = !file.hidden;
-        }else{
-            let fileIndex = this.files.find(item => item.elem == e.currentTarget.closest('.imageit-preview'));
-            console.log(this.files);
-            delete this.files.splice(fileIndex, 1);
-            console.log(this.files);
-        }
-        this.render();
-    }
-
-    prepRender(){
-        if (this.files.length > 0){
-            return this.files;
-        }else if (this.initialFiles.length > 0){
-            return this.initialFiles;
-        }
-        return [];
-    }
-
-    //Render any previews in this field
-    render(){
-        let renderContainer = this.field.querySelector('.imageit-preview-container');
-        let renderElems = this.prepRender();
-        renderContainer.innerHTML = '';
-        //Make sure to render errors of imgs
-        //Add dom element to each img
-        if(this.errors.length > 0){
-            for(var i = 0; i < this.errors.length; i++){
-                let error = this.errors[i];
-                let errorElem = document.createElement('div');
-                errorElem.classList.add('imageit-error');
-                errorElem.innerHTML = error.message;
-                renderContainer.append(errorElem);
+    processFiles(files){
+        ([...files]).forEach(file =>{
+            let fileProps = {
+                "file": file,
+                "name": file.name,
+                "content_type": this.cType,
+                "instance_id": this.instanceId,
             }
+            let newFile = new DropZoneItFile(fileProps, this.field, true);
+            newFile.post();
+            this.files.push(newFile);
+        });
+        this.render();
+    }
+
+    //Render any previews in this drop zone field
+    render(){
+        for (var i=0; i < this.files.length; i++){
+            this.files[i].render();
         }
-        for(var i = 0; i < renderElems.length; i++){
-            let item = renderElems[i];
-            item.preview().then((result) => {
-                console.log('rendered');
-                renderContainer.append(result);
-                this.addPreviewListeners();
-            });
-        }
+    }
+
+
+    load(url, data=false){
+        return new Promise((resolve) => {
+            let dzField = this.field;
+            dzField.classList.add('dropzoneit-loading');
+            //Ajax function to get files
+            const xhr = new XMLHttpRequest();
+            
+            if (data){
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+                xhr.send(data); 
+            }else{
+                xhr.open('GET', url, true);
+                xhr.send(null); 
+            };
+
+            xhr.onload = function(){
+                dzField.classList.remove('dropzoneit-loading');
+                resolve(xhr.response);
+            }
+        });
     }
 
     // Trigger ui interaction when mouse dragged over dz
     dzActive(){
-        this.field.querySelector('.imageit-upload').classList.add('imageit-active');
+        this.field.querySelector('.dropzoneit').classList.add('dropzoneit-active');
     }
     dzInactive(){
-        this.field.querySelector('.imageit-upload').classList.remove('imageit-active');
-    }
-
-    // Toggle loading ui elements on dz
-    loadingActive(){
-        console.log(this.field);
-        this.field.classList.add('imageit-loading');
-    }
-    loadingInactive(){
-        this.field.classList.remove('imageit-loading');
+        this.field.querySelector('.dropzoneit').classList.remove('dropzoneit-active');
     }
 }
 
-class ImageitImg{
-    //Include errors
 
-    constructor(file, elem=false, initial=false){
-        this._file = file;
-        this._processedFile = false;
-        this.initial = initial;
-        this.hidden = false;
-        if (this.initial){
-            if(elem){
-                this.descriptor = elem.querySelector('.imageit-preview-help-text').textContent;
-                this.fileName = elem.querySelector('.imageit-preview-filename').textContent;
+class DropZoneItFile{
+    constructor(data, parentContainer, isNew=false){
+        this.parentContainer = parentContainer;
+        this.new = isNew;
+        this.errors = [];
+
+        try{
+            if(typeof data === 'object'){
+                var obj = data;
             }else{
-                this.descriptor = 'Current';
-                this.fileName = file;
+                var obj = JSON.parse(data);
             }
-            this.fileExtension = this.fileName.split('.').pop().toLowerCase();
-        }else{
-            this.fileName = file.name;
-            this.fileExtension = file.name.split('.').pop().toLowerCase();
-            this.descriptor = 'New';
+            this.id = obj.id || false;
+            this.content_type = obj.content_type || false;
+            this.object_id = obj.object_id || false;
+            this.file = obj.file || false;
+            this.fileName = obj.name || false;
+            this.url = obj.url || false;
+            this.hidden = false;
+            this.removable = obj.removable || false;
+
+            (this.file) ? this.loading = true : this.loading = false;
+        }catch (e){
+            this.errors.push(e);
         }
-        if (elem){
-            this.elem = elem;
+    }
+
+    render(renderContainer=false){
+        var container = renderContainer || this.parentContainer.querySelector('.dropzoneit-preview-container');
+        var elem = document.createElement('div');
+        elem.classList.add('dropzoneit-preview');
+
+        //Render preview if this.hidden == false
+        if (! this.hidden){
+            var html = '<div class="dropzoneit-preview-content">';
+            if (this.loading){
+                html = html + '<div class="dropzoneit-loading-container"><div class="dropzoneit-loading-bar"></div></div>'
+            }else{
+                html = html + '<a class="dropzoneit-preview-link" href="' + this.url + '" target="_blank">' +
+                                '<img class="dropzoneit-preview-image" alt="File preview" src="' + this.url + '" />' +
+                            '</a>' +
+                            '<div class="dropzoneit-preview-text">';
+                if(this.new) html = html +
+                                '<p><strong class="dropzoneit-preview-help-text">New</strong></p>' +
+                                '<hr>';
+                html = html + 
+                                '<a href="' + this.url + '"><p class="dropzoneit-preview-filename">' + this.fileName + '</p></a>' +
+                            '</div>';
+                if (this.removable) html = html + 
+                            '<div class="dropzoneit-delete-file" data-delete-id=' + this.id + '><img src="/static/dropzoneit/img/trash.svg"/></div>';
+            }
+            html = html + '</div>';
+
+            //Render any field errors
+            if (this.errors.length > 0 ){
+                for (var i=0; i < this.errors.length; i++){
+                    let error = this.errors[i];
+                    html = html + '<div class="dropzoneit-error">' + error + '</div>';
+                }
+            }
+            elem.innerHTML = html;
         }else{
+            elem = false;
+        }
+
+        //Only render element if the generated dome element differs from current this.elem
+        if(elem instanceof Element && (!this.elem || !this.elem.isEqualNode(elem))){
+            if (this.elem) this.elem.remove();
+            container.append(elem);
+            this.elem = elem;
+            this.addListeners();
+        }else if (! elem){
+            if (this.elem) this.elem.remove();
             this.elem = false;
         }
+    }
 
-        //Might have to move this outside constructor
-        this.processedFile = function(){
-            return new Promise((resolve) => {
-                if (this._processedFile == false && !this.initial){
-                    let reader = new FileReader();
-                    reader.readAsDataURL(this._file);
-                    reader.onloadend = function(){
-                        this._processedFile = reader.result;
-                        resolve(this._processedFile);
-                    };
-                }else if (this.initial){
-                    this._processedFile = this._file;
-                    resolve(this._processedFile);
-                }
-            });
-        };
+    // Add listener for deleting files
+    addListeners(){
+        let deleteButton = this.elem.querySelector('.dropzoneit-delete-file');
+        if (deleteButton) deleteButton.addEventListener('click', this.delete.bind(this), false);
+    }
 
-        this.preview = function(){
-            return new Promise((resolve) => {
-                let preview = document.createElement('div');
-                preview.dataset.target = this.fileName;
-                preview.classList.add('imageit-preview');
-                if (this.initial) preview.classList.add('imageit-initial');
-    
-                if (this.hidden){
-                    //Render undo button
-                    let undo = document.createElement('a');
-                    undo.innerHTML = this.fileName + ' removed! Undo';
-                    undo.classList.add('imageit-undo-button');
-                    preview.append(undo);
-                    this.elem = preview;
-                    resolve(preview);
-                }else{
-                    this.processedFile().then((response) => {
-                        preview.innerHTML = 
-                            '<div class="imageit-preview-content">' +
-                                '<a class="imageit-preview-link" href="' + response + '" target="_blank">' +
-                                    '<img class="imageit-preview-image" alt="Image preview" src="' + response + '" />' +
-                                '</a>' +
-                                '<div class="imageit-preview-text">' +
-                                    '<p><strong class="imageit-preview-help-text">' + this.descriptor + '</strong></p>' +
-                                    '<hr>' +
-                                    '<p class="imageit-preview-filename">' + this.fileName + '</p>' +
-                                '</div>' +
-                                '<div>' +
-                                    '<div class="imageit-clear-image"><span>x</span></div>' +
-                                '</div>' +
-                            '</div>';
-                        this.elem = preview;
-                        resolve(preview);
-                    });
-                }
-            });
+    // Add loading bar dom elements to preview
+    startLoad(){
+        this.loading = true;
+        this.render();
+    }
+
+    // Update loading bar percentage
+    updateLoad(percentage){
+        let loadBar = this.elem.querySelector('.dropzoneit-loading-bar');
+        
+        if (loadBar){
+            loadBar.style.width = percentage + '%';
+            if (percentage >= 100) loadBar.innerHTML = 'Processing...';
         }
+    }
+
+    // Remove loading bar element from preview
+    endLoad(){
+        this.loading = false;
+        this.render();
+    }
+
+    // Send this file to the server
+    post(){
+        this.startLoad();
+
+        var url = '/dropzoneit/post/';
+        var xhr = new XMLHttpRequest()
+        var formData = new FormData()
+        var csrfToken = this.parentContainer.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        xhr.open('POST', url, true)
+
+        // Add listener for upload progress
+        xhr.upload.addEventListener("progress", function(e){
+            let percentage = (e.loaded * 100.0 / e.total) || 100;
+            this.updateLoad(percentage);
+        }.bind(this));
+
+        // Add listener for change of request ready state
+        xhr.addEventListener('readystatechange', function(e) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                //Update props
+                //Update props trigger end load
+                let obj = JSON.parse(xhr.response).data;
+                this.id = obj.id || false;
+                this.content_type = obj.content_type || false;
+                this.fileName = obj.name || false;
+                this.url = obj.url || false;
+                this.hidden = false;
+                this.removable = obj.removable || false;
+                this.endLoad();
+            }
+            else if (xhr.readyState == 4 && xhr.status != 200) {
+                // Render errors
+                this.errors.push(xhr.statusText);
+                this.render();
+            }
+        }.bind(this));
+        formData.append('file', this.file);
+        formData.append('content_type', 2);
+        formData.append('object_id', 1);
+        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+        xhr.send(formData);
+    }
+
+    // Retreive a file from server. requires this.id to be set
+    load(){
+        let url = '/dropzoneit/post/blogs/blog/1/';
+        //do something
+    }
+
+    // Delete a file from the server
+    delete(){
+        let id = this.id;
+        var url = '/dropzoneit/delete/' + id + '/';
+        var xhr = new XMLHttpRequest()
+
+        xhr.open('GET', url, true)
+
+        // Add listener for change of request ready state
+        xhr.addEventListener('readystatechange', function(e) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                //Update props
+                //Update props trigger end load
+                this.hidden = true;
+                this.render();
+            }
+            else if (xhr.readyState == 4 && xhr.status != 200) {
+                // Error. Inform the user
+                this.errors.push(xhr.statusText);
+                this.render();
+            }
+        }.bind(this));
+
+        xhr.send(null)
     }
 }
 
 
 window.addEventListener("DOMContentLoaded", function(){
     var fields = []
-    document.querySelectorAll('.imageit-container').forEach(item => {
-        fields.push(new Imageit(item));
+    document.querySelectorAll('.dropzoneit-container').forEach(item => {
+        fields.push(new DropZoneIt(item));
     });
 });
-
-
-
-
-
-
-
-/*
-IMAGEIT = {
-    fileTypes: ['svg', 'jpg', 'png'],
-    fields: {},
-    init: function(){
-        IMAGEIT.initialiseFields();
-        console.log(IMAGEIT.fields);
-    },
-    img: function(file, initial=false){
-        this._file = file;
-        this._processedFile = false;
-        this.initial = initial;
-        if (this.initial){
-            this.fileName = file;
-            this.fileExtension = file.split('.').pop().toLowerCase();
-        }else{
-            this.fileName = file.name;
-            this.fileExtension = file.name.split('.').pop().toLowerCase();
-        }
-        this.processedFile = function(){
-            return new Promise((resolve, reject) => {
-                if (this._processedFile == false && !this.initial){
-                    let reader = new FileReader();
-                    reader.readAsDataURL(this._file);
-                    reader.onloadend = function(){
-                        this._processedFile = reader.result;
-                    };
-                }else if (this.initial){
-                    this._processedFile = this._file;
-                }
-                resolve(this._processedFile);
-            });
-        };
-    },
-    initialiseFields: function(){
-        //Initialise each individual field
-        document.querySelectorAll('.imageit-container').forEach( item => {
-            let fieldName = item.querySelector('.imageit-upload').dataset.name;
-            IMAGEIT.fields[fieldName] = [];
-            IMAGEIT.addListeners(item);
-            let initial = IMAGEIT.retreiveInitial(item);
-            IMAGEIT.fields[fieldName].push(initial);
-        });
-    },
-    retreiveInitial: function(imageitContainer){
-        let initialImages = []
-        //Retrieve any initial value from a field
-        imageitContainer.querySelectorAll('.imageit-preview.imageit-initial').forEach(item =>{
-            //Create images from each of the initials
-            let initialSrc = item.querySelector('.imageit-preview-image').src;
-            initialImages.push(new IMAGEIT.img(initialSrc, true));
-        });
-        return initialImages;
-    },
-    addListeners: function(imageitContainer){
-        let uploadElem = imageitContainer.querySelector('.imageit-upload');
-        
-        //Listeners for dropping or uploading a file
-        uploadElem.addEventListener('dragenter', IMAGEIT.dzActive, false);
-        uploadElem.addEventListener('dragover', IMAGEIT.dzActive, false);
-        uploadElem.addEventListener('dragleave', IMAGEIT.dzInactive, false);
-        uploadElem.addEventListener('drop', IMAGEIT.processDrop, false);
-        uploadElem.addEventListener('click', IMAGEIT.selectFile, false);
-        
-        //Listener for cancelling intial image
-        uploadElem.querySelectorAll('.imageit-clear-image').forEach(item =>{
-            item.addEventListener('click', IMAGEIT.togglePreview, false);
-        });
-    },
-    render: function(){
-    }
-    selectFile: function(e){
-        console.log('select');
-    },
-    dzActive: function(e){
-        e.currentTarget.classList.add('active');
-    },
-    dzInactive: function(e){
-        e.currentTarget.classList.remove('active');
-    },
-    processDrop: function(e){
-        let imageitContainer = IMAGEIT.getImageitContainer(e);
-        
-        e.preventDefault();
-        IMAGEIT.dzInactive(e);
-        IMAGEIT.showLoading(imageitContainer);
-        //Raise error if multiple files are selected when not allowed
-        let uploadElem = imageitContainer.querySelector('.imageit-upload');
-        let files = e.dataTransfer.files;
-        if (uploadElem.dataset.multiple.toLowerCase() != 'multiple' && [...files].length > 1){
-            IMAGEIT.renderError(imageitContainer, 'Only one file is accepted!');
-        }else{
-            ([...files]).forEach(file =>{
-                let extension = file.name.split('.').pop().toLowerCase();
-                if (IMAGEIT.fileTypes.indexOf(extension) == -1){
-                    IMAGEIT.renderError(imageitContainer, 'Only ' + IMAGEIT.fileTypes.join(", ") + ' files are accepted!');
-                }else{
-                    IMAGEIT.previewFile(imageitContainer, file);
-                    IMAGEIT.clearErrors(imageitContainer);
-                }
-                console.log('passed');
-            });
-        }
-    },
-    processImage: function(file){
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function(){
-            console.log('returned');
-            return reader.result;
-        };
-    },
-    previewFile: function(imageitContainer, file){
-        // Add preview to imageit-preview-container
-        // JSX maybe?
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function(){
-            console.log('returned');
-            //return reader.result;
-            let temp = document.getElementById('imageit-preview').cloneNode(true);
-            let img = reader.result;
-            temp.removeAttribute('id');
-            temp.classList.add('imageit-preview');
-            
-            //Change img src
-            temp.querySelector('.imageit-preview-image').src = img;
-            temp.querySelector('.imageit-preview-link').href = img;
-            //Change img name
-            temp.querySelector('.imageit-preview-filename').innerHTML = file.name;
-            //Change current -> new
-            temp.querySelector('.imageit-preview-help-text').innerHTML = 'New';
-            //Add event listeners
-            temp.querySelector('.imageit-clear-image').addEventListener('click', IMAGEIT.togglePreview, false);
-            
-            imageitContainer.querySelector('.imageit-preview-container').prepend(temp);
-            IMAGEIT.renderPreview(imageitContainer);
-        };
-    },
-    togglePreview: function(e){
-        e.stopPropagation();
-        e.preventDefault();
-        let preview = e.currentTarget.closest('.imageit-preview');
-        let imageitContainer = IMAGEIT.getImageitContainer(e);
-        if(preview.classList.contains('imageit-initial')){
-            let checkbox = preview.querySelector('[type="checkbox"]');
-            checkbox.checked = !(checkbox.checked);
-        }else{
-            preview.remove();
-            //Maybe tell it to leave an undo button there??
-        }
-        IMAGEIT.renderPreview(imageitContainer);
-    },
-    renderPreview: function(imageitContainer){
-        console.log(imageitContainer);
-        let container = imageitContainer.querySelector('.imageit-preview-container');
-        
-        if(container){
-            let initial = container.querySelectorAll('.imageit-preview.imageit-initial');
-            let previews = container.querySelectorAll('.imageit-preview:not(.imageit-initial)');
-            // If images have been dropped, show their previews
-            // and hide initial previews
-            if (previews.length > 0){
-                //Remove inactive class from each
-                //Add inactive to initial
-                previews.forEach(item => {
-                    console.log(item);
-                    item.firstElementChild.classList.remove('imageit-inactive');
-                });
-                if(initial.length > 0){
-                    initial.forEach(item => {
-                        item.firstElementChild.classList.add('imageit-inactive');
-                    });
-                }
-            }else{
-                // If no dropped images, show initial
-                // If initial is to be cleared, show undo button
-                if(initial.length > 0){
-                    initial.forEach(item => {
-                        let checkbox = item.querySelector('input[type="checkbox"]');
-                        if(checkbox.checked){
-                            // Move this into seperate function
-                            let undo = document.createElement('a');
-                            undo.innerHTML = item.querySelector('.imageit-preview-filename').innerHTML + ' removed! Undo';
-                            undo.classList.add('imageit-undo-button');
-                            undo.addEventListener('click', IMAGEIT.togglePreview, false);
-                            item.append(undo);
-                            //Hide initial image preview
-                            item.firstElementChild.classList.add('imageit-inactive');
-                        }else{
-                            let undoButton = item.querySelector('.imageit-undo-button');
-                            if(undoButton){
-                                undoButton.remove();
-                            }
-                            item.firstElementChild.classList.remove('imageit-inactive');
-                        }
-                    });   
-                }
-            }
-            IMAGEIT.hideLoading(imageitContainer);
-        }
-    },
-    showLoading: function(imageitContainer){
-        imageitContainer.classList.add('imageit-loading');
-    },
-    hideLoading: function(imageitContainer){
-        imageitContainer.classList.remove('imageit-loading');
-    },
-    renderError: function(imageitContainer, error){
-        let errorElem = document.createElement('div');
-        errorElem.classList.add('imageit-error');
-        errorElem.innerHTML = error;
-        imageitContainer.querySelector('.imageit-upload').append(errorElem);
-    },
-    clearErrors: function(imageitContainer){
-        imageitContainer.querySelectorAll('.imageit-error').forEach(item =>{
-            item.remove();
-        });
-    },
-    getImageitContainer: function(e){
-        return e.currentTarget.closest('.imageit-container');
-    },
-};
-window.addEventListener("DOMContentLoaded", function(){
-    document.querySelectorAll('-imageit-container').forEach(item => {
-        const field = new IMAGEIT.init();
-    });
-});
-/*
-IMAGEIT = {
-    fileTypes: ['svg', 'jpg', 'png'],
-    images: {},
-    addListeners: function(){
-        //Listeners for dropping or uploading a file
-        document.querySelectorAll('.imageit-upload').forEach(item =>{
-            item.addEventListener('dragenter', IMAGEIT.dzActive, false);
-            item.addEventListener('dragover', IMAGEIT.dzActive, false);
-            item.addEventListener('dragleave', IMAGEIT.dzInactive, false);
-            item.addEventListener('drop', IMAGEIT.processDrop, false);
-            item.addEventListener('click', IMAGEIT.selectFile, false);
-        });
-        //Listener of cancelling intial image
-        document.querySelectorAll('.imageit-clear-image').forEach(item =>{
-            item.addEventListener('click', IMAGEIT.togglePreview, false);
-        });
-    },
-    selectFile: function(e){
-        console.log('select');
-    },
-    dzActive: function(e){
-        e.currentTarget.classList.add('active');
-    },
-    dzInactive: function(e){
-        e.currentTarget.classList.remove('active');
-    },
-    processDrop: function(e){
-        let imageitContainer = IMAGEIT.getImageitContainer(e);
-        
-        e.preventDefault();
-        IMAGEIT.dzInactive(e);
-        IMAGEIT.showLoading(imageitContainer);
-        //Raise error if multiple files are selected when not allowed
-        let uploadElem = imageitContainer.querySelector('.imageit-upload');
-        let files = e.dataTransfer.files;
-        if (uploadElem.dataset.multiple.toLowerCase() != 'multiple' && [...files].length > 1){
-            IMAGEIT.renderError(imageitContainer, 'Only one file is accepted!');
-        }else{
-            ([...files]).forEach(file =>{
-                let extension = file.name.split('.').pop().toLowerCase();
-                if (IMAGEIT.fileTypes.indexOf(extension) == -1){
-                    IMAGEIT.renderError(imageitContainer, 'Only ' + IMAGEIT.fileTypes.join(", ") + ' files are accepted!');
-                }else{
-                    IMAGEIT.previewFile(imageitContainer, file);
-                    IMAGEIT.clearErrors(imageitContainer);
-                }
-                console.log('passed');
-            });
-        }
-    },
-    processImage: function(file){
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function(){
-            console.log('returned');
-            return reader.result;
-        };
-    },
-    previewFile: function(imageitContainer, file){
-        // Add preview to imageit-preview-container
-        // JSX maybe?
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function(){
-            console.log('returned');
-            //return reader.result;
-            let temp = document.getElementById('imageit-preview').cloneNode(true);
-            let img = reader.result;
-            temp.removeAttribute('id');
-            temp.classList.add('imageit-preview');
-            
-            //Change img src
-            temp.querySelector('.imageit-preview-image').src = img;
-            temp.querySelector('.imageit-preview-link').href = img;
-            //Change img name
-            temp.querySelector('.imageit-preview-filename').innerHTML = file.name;
-            //Change current -> new
-            temp.querySelector('.imageit-preview-help-text').innerHTML = 'New';
-            //Add event listeners
-            temp.querySelector('.imageit-clear-image').addEventListener('click', IMAGEIT.togglePreview, false);
-            
-            imageitContainer.querySelector('.imageit-preview-container').prepend(temp);
-            IMAGEIT.renderPreview(imageitContainer);
-        };
-    },
-    togglePreview: function(e){
-        e.stopPropagation();
-        e.preventDefault();
-        let preview = e.currentTarget.closest('.imageit-preview');
-        let imageitContainer = IMAGEIT.getImageitContainer(e);
-        if(preview.classList.contains('imageit-initial')){
-            let checkbox = preview.querySelector('[type="checkbox"]');
-            checkbox.checked = !(checkbox.checked);
-        }else{
-            preview.remove();
-            //Maybe tell it to leave an undo button there??
-        }
-        IMAGEIT.renderPreview(imageitContainer);
-    },
-    renderPreview: function(imageitContainer){
-        console.log(imageitContainer);
-        let container = imageitContainer.querySelector('.imageit-preview-container');
-        
-        if(container){
-            let initial = container.querySelectorAll('.imageit-preview.imageit-initial');
-            let previews = container.querySelectorAll('.imageit-preview:not(.imageit-initial)');
-            // If images have been dropped, show their previews
-            // and hide initial previews
-            if (previews.length > 0){
-                //Remove inactive class from each
-                //Add inactive to initial
-                previews.forEach(item => {
-                    console.log(item);
-                    item.firstElementChild.classList.remove('imageit-inactive');
-                });
-                if(initial.length > 0){
-                    initial.forEach(item => {
-                        item.firstElementChild.classList.add('imageit-inactive');
-                    });
-                }
-            }else{
-                // If no dropped images, show initial
-                // If initial is to be cleared, show undo button
-                if(initial.length > 0){
-                    initial.forEach(item => {
-                        let checkbox = item.querySelector('input[type="checkbox"]');
-                        if(checkbox.checked){
-                            // Move this into seperate function
-                            let undo = document.createElement('a');
-                            undo.innerHTML = item.querySelector('.imageit-preview-filename').innerHTML + ' removed! Undo';
-                            undo.classList.add('imageit-undo-button');
-                            undo.addEventListener('click', IMAGEIT.togglePreview, false);
-                            item.append(undo);
-                            //Hide initial image preview
-                            item.firstElementChild.classList.add('imageit-inactive');
-                        }else{
-                            let undoButton = item.querySelector('.imageit-undo-button');
-                            if(undoButton){
-                                undoButton.remove();
-                            }
-                            item.firstElementChild.classList.remove('imageit-inactive');
-                        }
-                    });   
-                }
-            }
-            IMAGEIT.hideLoading(imageitContainer);
-        }
-    },
-    showLoading: function(imageitContainer){
-        imageitContainer.classList.add('imageit-loading');
-    },
-    hideLoading: function(imageitContainer){
-        imageitContainer.classList.remove('imageit-loading');
-    },
-    renderError: function(imageitContainer, error){
-        let errorElem = document.createElement('div');
-        errorElem.classList.add('imageit-error');
-        errorElem.innerHTML = error;
-        imageitContainer.querySelector('.imageit-upload').append(errorElem);
-    },
-    clearErrors: function(imageitContainer){
-        imageitContainer.querySelectorAll('.imageit-error').forEach(item =>{
-            item.remove();
-        });
-    },
-    getImageitContainer: function(e){
-        return e.currentTarget.closest('.imageit-container');
-    },
-};
-window.addEventListener("DOMContentLoaded", function(){
-    IMAGEIT.addListeners();
-});*/

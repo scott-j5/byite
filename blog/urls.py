@@ -27,6 +27,7 @@ urlpatterns = [
     path('home/', include('app.urls')),
     path('blogs/', include('blogs.urls')),
     path('markdownx/', include('markdownx.urls')),
+    path('dropzoneit/', include('dropzoneit.urls')),
 ]
 
 handler403 = error_403

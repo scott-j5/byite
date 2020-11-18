@@ -1,10 +1,11 @@
 from django.urls import path
 
-from .views import DropZoneItGet, DropZoneItPost, DropZoneItDelete
-'''
+from .views import dropzoneit_list, dropzoneit_get, dropzoneit_post, dropzoneit_delete
+
+
 urlpatterns = [
-    path('get/<int:pk>/', DropZoneItGet.as_view(), name='dz-list'),
-    path('post/<int:pk>/', DropZoneItPost.as_view(), name='dz-post'),
-    path('delete/<int:pk>/', DropZoneItDelete.as_view(), name='dz-delete'),
+    path('list/<int:ctype>/<int:object_id>/', dropzoneit_list, name='dzit-list'),
+    path('get/<int:pk>/', dropzoneit_get, name='dzit-get'),
+    path('post/', dropzoneit_post, name='dzit-post'),
+    path('delete/<int:pk>/', dropzoneit_delete, name='dzit-delete'),
 ]
-'''

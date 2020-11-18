@@ -2,7 +2,7 @@ from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
 
 from .models import Blog, BlogImage, Series, SeriesAssignment, Tag
-from dropzoneit.admin import DropZoneItAdmin, DropZoneItInLine
+from dropzoneit.admin import DropZoneItAdmin, DropZoneItInline
 
 
 class DropAndMarkdownAdmin(DropZoneItAdmin, MarkdownxModelAdmin):
