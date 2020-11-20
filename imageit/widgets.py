@@ -8,12 +8,12 @@ class ScaleItImageWidget(ClearableFileInput):
     initial_text = 'Current'
 
     def __init__(self, *args, **kwargs):
-        if kwargs.get('required') == True:
+        if kwargs.get('multiple') == True:
             raise ImproperlyConfigured(_('Scaleit image widget does not support multi-file selectors'), code="Disallowed widget attrs")
         super(ScaleItImageWidget, self).__init__(*args, **kwargs)
 
     class Media:
-        css = {"all": ('/static/imageit/css/scaleit.css',),}
+        css = {"all": ('/static/imageit/css/imageit.css',),}
         js = ('/static/imageit/js/imageit.js',)
 
 
@@ -21,11 +21,13 @@ class CropItImageWidget(MultiWidget):
     template_name = 'imageit/widgets/crop_it_widget.html'
 
     def __init__(self, *args, **kwargs):
+        if kwargs.get('multiple') == True:
+            raise ImproperlyConfigured(_('Cropit image widget does not support multi-file selectors'), code="Disallowed widget attrs")
         super(CropItImageWidget, self).__init__(*args, **kwargs)
 
     def decompress(self, value):
         return [value, 0, 0, 0, 0]
 
     class Media:
-        css = {"all": ('/static/imageit/css/scaleit.css', 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.css'),}
+        css = {"all": ('/static/imageit/css/imageit.css', 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.css'),}
         js = ('https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.js', '/static/imageit/js/imageit.js')
