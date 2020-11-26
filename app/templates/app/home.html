@@ -10,7 +10,7 @@
 
 {% block content %}
 <!-- START SECTION 1 -->
-<div class="page vh-95 col-2 col-1-sm" id="section-1">
+<div class="page vh-95 col-2 col-1-md" id="section-1">
     <div id="landing-logo-container">
         <img id="landing-logo" src="{% static 'img/byite-logo-color.svg' %}"/>
     </div>
@@ -25,22 +25,25 @@
             <div class="call-to-action">Contact Us!</div>
         </div>
     </div>
-    <img class="bg-image" src="{% static 'img/landing-blob.svg' %}"/>
+    <div id="landing-bg-container">
+        <img class="bg-image" src="{% static 'img/landing-blob.svg' %}"/>
+    </div>
 </div>
 <!-- END SECTION 1 -->
 
 <!-- START SECTION 2 -->
 <div class="page vh-95 flex-start-content-x center-content-y" id="section-2">
-    <div class="relative z-mid w-50 blob-text-left">
+    <div class="relative z-mid w-50 w-100-sm blob-text-left">
         <h1 class="no-m-t">Technologies</h1>
         <h4>We specialise in technology. It is our goal to come up with the most creative solutions to your problems, no matter the technical approach!</h4>
     </div>
     <img class="bg-image" src="{% static 'img/content-blob.svg' %}"/>
+    <img class="watermark-image" src="{% static 'img/watermarks.svg' %}"/>
 </div>
 <!-- END SECTION 2 -->
 
-<div class="page vh-55 flex-end-content-y" id="section-3-pre">
-    <div class="p-b-xxl text-center">
+<div class="page vh-55 center-content-y" id="section-3-pre">
+    <div class="p-xxl text-center">
         <h1>Our Mission</h1>
         <h4>
             We're not here to provide cookie cutter solutions.

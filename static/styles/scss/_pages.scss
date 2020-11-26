@@ -8,16 +8,36 @@
     position:relative;
 }
 
-#section-1 .bg-image{
+#landing-bg-container{
+    position:absolute;
     top:0px;
-    left:50%;
-    transform: translateX(-20%);
-    height:65%;
+    right:0px;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+
+    @media (min-width: $screen-md){
+        width:50%;
+        height:100%;
+    }
+}
+
+#section-1 .bg-image{
+    top:45%;
+    left:0px;
+    min-height: 46%;
+    min-width: 130%;
+    transform: translateY(-100%);
+    object-fit: cover;
     filter: drop-shadow(10px 2px 10px rgba(0,0,0,0.35));
 
     @media (min-width: $screen-md){
+        top:100%;
+        left:50%;
         height:100%;
-        transform: translateX(-16%);
+        min-height: 50%;
+        min-width: 70%;
+        transform: translateX(-16%) translateY(-100%);
     }
 }
 
@@ -25,8 +45,11 @@
     display:flex;
     justify-content:flex-end;
     align-self:flex-end;
+    height:50%;
+    width: auto;
 
     @media (min-width: $screen-md){
+        height:auto;
         align-self:center;
     }
 }
@@ -34,7 +57,12 @@
 #landing-logo{
     position:relative;
     z-index: 1;
-    width:63%;
+    height:100%;
+
+    @media (min-width: $screen-md){
+        height:auto;
+        width:63%;
+    }
 }
 
 #landing-text-wrapper{
@@ -42,6 +70,7 @@
     align-self:flex-start;
     grid-row:2/ 2;
     text-align:left;
+    padding: $space-xl 0px;
 
     @media (min-width: $screen-md){
         text-align:left;
@@ -72,15 +101,26 @@
 
 #section-2 .bg-image{
     top:0px;
-    left:100%;
+    left:103%;
     height:100%;
     transform: translateX(-100%);
 
     filter: drop-shadow(10px 2px 10px rgba(0,0,0,0.35));
 
     @media (min-width: $screen-md){
+        left:60%;
+    }
+
+    @media (min-width: $screen-lg){
         left:53.5%;
     }
+}
+
+#section-2 .watermark-image{
+    position:absolute;
+    top:0px;
+    left:0px;
+    height: 100%;
 }
 
 .blob-text-left{
