@@ -5,7 +5,7 @@ MENU = {
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function(e){
                 //Toggle menu away if link is clicked that doesnt redirect page
-                if (document.querySelector(".nav-wrapper").classList.contains("nav-wrapper--open")){
+                if (document.querySelector(".nav-wrapper").classList.contains("nav-wrapper-open")){
                     this.toggleMenu
                 }
             });
@@ -13,7 +13,7 @@ MENU = {
     },
     toggleMenu: function(e){
         document.querySelector('#hamburger').classList.toggle('on');
-        document.querySelector(".nav-wrapper").classList.toggle('nav-wrapper--open');
+        document.querySelector(".nav-wrapper").classList.toggle('nav-wrapper-open');
     },
 }
 

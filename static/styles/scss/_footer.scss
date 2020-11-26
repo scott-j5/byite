@@ -5,7 +5,7 @@
     padding-bottom:60px;
     padding-left:$page-padding;
     padding-right:$page-padding;
-    min-height:$header-min-height;
+    min-height:$header-height;
     color:$dark-grey;
     background-color:$white;
     grid-column-gap: 4%;
@@ -46,4 +46,8 @@
 .footer-icon{
   width:2.4em;
   height:2.4em;
+}
+
+#subscribe-submit{
+  border-radius: 0px 0px 1em 1em;
 }

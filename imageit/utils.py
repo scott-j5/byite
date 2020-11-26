@@ -98,7 +98,6 @@ def validate_mime(image):
 def resize(image, img_props, crop_props):
     # Image: InMemoryUploadedFile
     # Open image and store format/metadata.
-
     pil_image = Image.open(image)
     pil_image_format, pil_image_info = pil_image.format, pil_image.info
     if img_props.get('quality'):

@@ -71,7 +71,7 @@
         <div class="blog-content-footer">
             <hr/>
             <p>{{ object.author_name }},</p>
-            {% if object.published %}
+            {% if object.published_on %}
                 <div>Published on: {{ blog.published_on|date:"M. j, Y" }}</div>
             {% else %}
                 <small><i class="fa fa-pencil-ruler"></i> Draft. updated: {{ object.updated }}</small>

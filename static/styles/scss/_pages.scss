@@ -3,37 +3,45 @@
     --cubic-buzier: cubic-bezier(.32,.13,.2,1.00); 
  }
 
-//page 1
-#page1{
-    //SET IN  HTML DUE TO PRIVATE S3 objects.
-    //background-image:url('../img/wave.svg');
-    background-size: auto 100%;
-    background-position: 37% 0%;
+//Section 1
+#section-1{
+    position:relative;
+}
+
+#section-1 .bg-image{
+    top:0px;
+    left:50%;
+    transform: translateX(-20%);
+    height:65%;
+    filter: drop-shadow(10px 2px 10px rgba(0,0,0,0.35));
 
     @media (min-width: $screen-md){
-        background-position: 47% 0%;
+        height:100%;
+        transform: translateX(-16%);
     }
 }
 
 #landing-logo-container{
     display:flex;
-    justify-content:center;
+    justify-content:flex-end;
     align-self:flex-end;
+
     @media (min-width: $screen-md){
-        display: flex;
         align-self:center;
     }
 }
 
 #landing-logo{
-    width:60%;
+    position:relative;
+    z-index: 1;
+    width:63%;
 }
 
 #landing-text-wrapper{
     color:white;
     align-self:flex-start;
     grid-row:2/ 2;
-    text-align:center;
+    text-align:left;
 
     @media (min-width: $screen-md){
         text-align:left;
@@ -42,7 +50,181 @@
     }
 }
 
-//page 2
+#landing-text-wrapper h1{
+    margin-bottom:0px;
+}
+
+.call-to-action{
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    margin-top:$space-md;
+    border-radius: 1.6rem;
+    background-color: $dark-grey;
+    font-weight:400;
+    cursor:pointer;
+}
+
+
+//Section 2
+#section-2{
+    position:relative;
+}
+
+#section-2 .bg-image{
+    top:0px;
+    left:100%;
+    height:100%;
+    transform: translateX(-100%);
+
+    filter: drop-shadow(10px 2px 10px rgba(0,0,0,0.35));
+
+    @media (min-width: $screen-md){
+        left:53.5%;
+    }
+}
+
+.blob-text-left{
+    padding: 0px $space-md $space-md 0px;
+}
+
+
+#funnel-img-container{
+    position:relative;
+    display:flex;
+    align-items:flex-end;
+    justify-content: center;
+    width:100vw;
+    padding-top:$space-lg;
+    overflow:hidden;
+}
+
+#funnel-img{
+    bottom:0px;
+    height:55vh;
+    max-height:200px;
+    min-width:100vw;
+    object-fit:cover;
+    filter: drop-shadow(10px 2px 10px rgba(0,0,0,0.35));
+
+    @media (min-width: $screen-mdlg){
+        max-height:9999px;
+    }
+}
+
+//Section 3
+#section-3-pre{
+    color: $white;
+}
+
+#section-3{
+    position:relative;
+    background-color: $white;
+    top:-2px;
+}
+
+#person-img{
+    height:40vh;
+}
+
+
+
+//Section 4
+#section-4{
+    position:relative;
+    top:-2px;
+    background-color: $white;
+}
+
+#projects-title{
+    height: 10%;
+}
+
+.project-cards{
+    padding: 0px 0px 1px 0px;
+    @media (min-width: $screen-md){
+        padding: 0px 12.5% 1px 12.5%;
+    }
+}
+
+.project-card{
+    display:grid;
+    grid-template-columns: auto;
+    grid-template-rows: repeat(2, 1fr);
+    height: 80vh;
+    width: 100%;
+    margin: 13% 0px;
+    background-color: white;
+    border-radius:1rem;
+    overflow:hidden;
+    box-shadow: 0px 15px 35px rgba(0,0,0,0.3);
+
+    @media (min-width: $screen-md){
+        height: 50vh;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+    }
+}
+
+.project-card-text{
+    padding: 5%;
+    height: 90%;
+}
+
+.project-card-link{
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    margin-top:$space-md;
+    border-radius: 1.6rem;
+    color: $white;
+    background-image: radial-gradient(100% 75% at 100% 100%, $yellow, $pink);
+    font-weight:400;
+}
+
+.project-card-img{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    height:100%;
+    background-image: radial-gradient(100% 100% at 100% 100%, $yellow, $pink);
+    overflow:hidden;
+}
+
+.project-card-img img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+
+//Contact Form
+#contact-section{
+    position:relative;
+    top:-3px;
+    background-image: linear-gradient(to bottom, $white, $very-light-grey);
+}
+
+.contact-form-graphic{
+    height:100%;
+    overflow:hidden;
+}
+
+.contact-form-graphic img{
+    height:60%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//Section 2
  #page2{
     top:-1px;
     color:white;
@@ -174,17 +356,7 @@
     padding-right:$page-padding;
 }
 
-#projects-title{
-    position:absolute;
-    top:50%;
-    transform: translateY(-325%);
-    width:calc(100% - (#{$page-padding} * 3));
-    right:$page-padding;
-    @media (min-width: $screen-md){
-        width:calc(100% - (#{$page-padding} * 3));
-        right:calc(#{$page-padding} * 3);
-    }
-}
+
 
 .project-text{
     position:absolute;

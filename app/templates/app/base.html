@@ -39,44 +39,29 @@
 
             <!-- START HEADER -->
             <div id="header-wrapper">
-                <div id="header-bg">
+                <div class="header-item" id="header-logo-wrapper">
                     <img class="header-logo-blob" src="{% static 'img/nav-logo-blob.svg' %}"/>
-                </div>
-                <div id="header-logo-wrapper">
                     <a href="{% url 'home' %}">
                         <img class="header-logo" src="{% static 'img/byite-logo-color.svg' %}"/>
                     </a>
                 </div>
-                <div>
+                <div class="header-item" id="header-menu-wrapper">
                     <div class="nav-wrapper">
                         <nav id="site-nav">
                             <a class="nav-item text-muted" href="{% url 'home' %}#page3">Projects</a>
                             <a class="nav-item text-muted" href="{% url 'blog-list' %}">Blog</a>
                             <a class="nav-item nav-item-last text-muted" href="{% url 'home' %}#page4">Contact</a>
                         </nav>
-                        <div id="nav-background">
+                        <div id="mobile-nav-background">
                             <img id="mobile-nav-cookie" src="{% static 'img/cookie-watermark-left.png' %}"/>
                         </div>
                     </div>
-                    <div id="menu-toggle">
-                        <div class="hamburger">
-                            <div class="menu" id="hamburger">
-                                <div class="menu_line menu_line-q"></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewbox="0 0 80 80">
-                                    <path class="path-a" d="M 24 26 h 36 a 14 14 0 0 1 -6 28 l -28 -28" />
-                                    <path class="path-a" d="M 56 54 h -36 a 14 14 0 0 1 6 -28 l 28 28" />
-                                </svg>
-                            </div>
-                        </div>
-                        <!--
-                        <div class="menu" id="hamburger">
-                            <div class="menu_line menu_line-q"></div>
-                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-5 -5 110 110">
-                                <path class="path-a" d="M 0 0 h 100 a 14 14 0 0 1 0 100 l -100 -100" />
-                                <path class="path-a" d="M 100 100 h -100 a 14 14 0 0 1 0 -100 l 100 100" />
-                            </svg>
-                        </div>
-                        -->
+                    <div class="nav-toggle" id="hamburger">
+                        <div class="nav-toggle_line nav-toggle_line-q"></div>
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-5 -5 110 110">
+                            <path class="path-a" d="M 0 0 h 100 a 14 14 0 0 1 0 100 l -100 -100" />
+                            <path class="path-a" d="M 100 100 h -100 a 14 14 0 0 1 0 -100 l 100 100" />
+                        </svg>
                     </div>
                 </div>
             </div>
@@ -128,7 +113,7 @@
                         <div class="input-container">
                             {% csrf_token %}
                             <input class="input-field" type="text" placeholder="Email" name="email"/>
-                            <button class="button-muted" type="submit" name="submit" />
+                            <button class="button-muted" id="subscribe-submit" type="submit" name="submit" />
                                 <i class="fa fa-paper-plane-o fa-input-icon fa-input-icon-hover center-self-y"></i>
                             </button>
                         </div>

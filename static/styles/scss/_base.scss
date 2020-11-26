@@ -15,6 +15,8 @@ body{
    width:100%;
    min-height:100%;
    overflow:hidden;
+   //background-image:linear-gradient(to bottom right, $pink, $yellow);
+   background-image: radial-gradient(100vw 100vw at 100vw 100vh, $yellow, $pink);
 }
 
 //General page setup classes
@@ -35,6 +37,26 @@ body{
 
 .full-height{
    min-height:100vh;
+}
+
+.vh-50{
+   min-height:50vh;
+}
+
+.vh-55{
+   min-height:55vh;
+}
+
+.vh-60{
+   min-height:60vh;
+}
+
+.vh-90{
+   min-height:90vh;
+}
+
+.vh-95{
+   min-height:95vh;
 }
 
 
@@ -142,6 +164,9 @@ body{
    grid-column: span 3; 
 }
 
+.relative{
+   position:relative;
+}
 
 //FLEX COMPONENTS
 .flex-y{
@@ -175,13 +200,22 @@ body{
 
 .center-content-x{
    display:flex;
-   justify-items:center;
    justify-content:center;
 }
 
 .center-content-y{
    display:flex;
    align-items:center;
+}
+
+.flex-start-content-x{
+   display:flex;
+   justify-content:flex-start;
+}
+
+.flex-end-content-x{
+   display:flex;
+   justify-content:flex-end;
 }
 
 .flex-end-content-y{
@@ -332,6 +366,18 @@ body{
    }
 }
 
+.z-top{
+   z-index:10;
+}
+
+.z-mid{
+   z-index:5;
+}
+
+.z-bottom{
+   z-index:0;
+}
+
 .no-padding{
    padding:0px;
 }
@@ -404,6 +450,10 @@ body{
    padding-top:$space-xxl;
 }
 
+.p-b-xxl{
+   padding-bottom:$space-xxl;
+}
+
 .no-p{
    padding:0px !important;
 }
@@ -437,6 +487,11 @@ body{
 }
 
 //Classes for responsive circle images
+.bg-image{
+   position:absolute;
+   z-index:0;
+}
+
 .img-circle-container{
    position: relative;
    width: 100%;

@@ -148,14 +148,18 @@ LOGIN_URL = 'login'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
 #Where 'collectstatic' dumps static files
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'local_static')
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
+
 #URL prefix used by static template tags
 STATIC_URL = '/static/'
 
-# S3 folder to upload static files to
-STATICFILES_LOCATION = 'static'
-STATICFILES_STORAGE = 'static_storages.StaticStorage'
+
+if not DEBUG:
+    # S3 folder to upload static files to
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'static_storages.StaticStorage'
 
 
 #Email settings

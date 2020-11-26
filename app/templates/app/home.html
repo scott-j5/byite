@@ -7,111 +7,150 @@
     <script src="{% static 'js/home.js' %}"></script>
 {% endblock scripts %}
 
+
 {% block content %}
-<!-- START PAGE 1 -->
-<div class="page full-height col-2 col-1-sm" id="page1" style="background-image: url({% static 'img/wave.svg' %})">
+<!-- START SECTION 1 -->
+<div class="page vh-95 col-2 col-1-sm" id="section-1">
+    <div id="landing-logo-container">
+        <img id="landing-logo" src="{% static 'img/byite-logo-color.svg' %}"/>
+    </div>
     <div id="landing-text-wrapper">
         <div>
             <h1>Take a byite out of something new.</h1>
         </div>
         <div>
-            <h4>From web development to data analysis and more! We leverage the latest technology to help your business stand out and perform.</h4>
+            <h5>Full-stack web development, cloud management and more! We leverage the technology that you don't care about, to achieve the results that you do!</h5>
+        </div>
+        <div>
+            <div class="call-to-action">Contact Us!</div>
         </div>
     </div>
-    <div id="landing-logo-container">
-        <img id="landing-logo" src="{% static 'img/byite-logo-color.svg' %}"/>
-    </div>
+    <img class="bg-image" src="{% static 'img/landing-blob.svg' %}"/>
 </div>
-<!-- END PAGE 1 -->
+<!-- END SECTION 1 -->
 
-<!-- START PAGE 2 -->
-<div class="page full-height col-2 col-1-sm" id=page2 style="background-image: url({% static 'img/watermarks.svg' %})">
-    <div id="capabilities-logos">
-        <div class="capability">
-            <div class="capability-text"><strong>AWS cloud</strong></div>
-            <div class="capability-logo-container"><img class="capability-logo" src="{% static 'img/aws-logo.svg' %}"/></div>
-        </div>
-        <div class="capability">
-            <div class="capability-text"><strong>Python</strong></div>
-            <div class="capability-logo-container"><img class="capability-logo" src="{% static 'img/python-logo.svg' %}"/></div>
-        </div>
-        <div class="capability">
-            <div class="capability-text"><strong>Django framework</strong></div>
-            <div class="capability-logo-container"><img class="capability-logo" src="{% static 'img/django_logo.svg' %}"/></div>
-        </div>
-        <div class="capability">
-            <div class="capability-text"><strong>Postgres Databases</strong></div>
-            <div class="capability-logo-container"><img class="capability-logo" src="{% static 'img/postgres-logo.svg' %}"/></div>
-        </div>
-        <div class="capability">
-            <div class="capability-text"><strong>Vue.js</strong></div>
-            <div class="capability-logo-container"><img class="capability-logo" src="{% static 'img/vuejs-logo.svg' %}"/></div>
-        </div>
-        <div class="capability">
-            <div class="capability-text"><strong>Javascript</strong></div>
-            <div class="capability-logo-container"><img class="capability-logo" src="{% static 'img/js-logo.svg' %}"/></div>
-        </div>
-        <div class="capability">
-            <div class="capability-text"><strong>SQL server and BI stack</strong></div>
-            <div class="capability-logo-container"><img class="capability-logo" src="{% static 'img/sql-server-logo.svg' %}"/></div>
-        </div>
-        <div class="capability">
-            <div class="capability-text"><strong>Adobe cc</strong></div>
-            <div class="capability-logo-container"><img class="capability-logo" src="{% static 'img/cc-logo.svg' %}"/></div>
-        </div>
-        <div class="capability">
-            <div class="capability-text"><strong>Ubuntu servers</strong></div>
-            <div class="capability-logo-container"><img class="capability-logo" src="{% static 'img/ubuntu-logo.svg' %}"/></div>
-        </div>
-    </div>
-    <div id="capabilities-content">
-        <h1>Technologies</h1>
+<!-- START SECTION 2 -->
+<div class="page vh-95 flex-start-content-x center-content-y" id="section-2">
+    <div class="relative z-mid w-50 blob-text-left">
+        <h1 class="no-m-t">Technologies</h1>
         <h4>We specialise in technology. It is our goal to come up with the most creative solutions to your problems, no matter the technical approach!</h4>
     </div>
+    <img class="bg-image" src="{% static 'img/content-blob.svg' %}"/>
 </div>
-<!-- END PAGE 2 -->
+<!-- END SECTION 2 -->
 
-<!-- START PAGE 3 -->
-<div class="page col-2 col-1-sm full-height" id="page3" style="background-image: url({% static 'img/projects1.svg' %})">
-    <div id="project-text-container">
-        <h1 id="projects-title">Our work</h1>
+<div class="page vh-55 flex-end-content-y" id="section-3-pre">
+    <div class="p-b-xxl text-center">
+        <h1>Our Mission</h1>
+        <h4>
+            We're not here to provide cookie cutter solutions.
+            If you're serious about growth
+            It comes down to...
+        </h4>
+    </div>
+</div>
+
+<div id="funnel-img-container">
+    <img id="funnel-img" src="{% static 'img/funnel.svg' %}"/>
+</div>
+
+<!-- START SECTION 3 -->
+<div class="page" id="section-3">
+    <div class="full-width flex-y center-content-y">
+        <h2>You</h2>
+        <img id="person-img" src="{% static 'img/person.svg' %}"/>
+    </div>
+    <div class="text-center p-b-xxl">
+        <h4>
+            You don't operate an average business, and we're not here to provide average, 
+            cookie cutter solutions. If you are serious about growing your business.
+            our mission refelects that, unique solutions for unique businesses
+              We specialise in technology. It is our goal to come up with the most creative solutions to your problems, no matter the technical approach!
+        </h4>
+    </div>
+</div>
+<!-- END SECTION 3 -->
+
+
+<!-- START SECTION 4 -->
+<div class="page full-height" id="section-4">
+    <div class="full-width text-center p-t-xxl" id="projects-title">
+        <h1 class="no-m">Recent Work</h1>
+    </div>
+    <div class="project-cards">
         {% for project in projects %}
-            <div class="project-text" id="project-{{ forloop.counter0 }}-text">
-                <h4 class="no-m-t">{{ project.client }}</h4>
-                {{ project.description }}
-            </div>
-            {% if forloop.last %}
-                <div class="project-text" id="project-{{ forloop.counter }}-text">
-                    <h4 class="no-m-t">Want to know more?</h4>
-                    Contact us <a href="{% url 'home' %}#page4"><u>here</u></a> to see how we can help you!
+            {% if forloop.counter|divisibleby:2 %}
+                <div class="project-card">
+                    <div class="project-card-text">
+                        <h2 class="no-m">{{ project.client }}</h2>
+                        <h4 class="no-m"><small>{{ project.title }}</small></h4>
+                        <p>
+                            {{ project.description }}
+                        </p>
+                        <a href=""><div class="project-card-link">Learn more</div></a>
+                    </div>
+                    <div class="project-card-img">
+                        {% if project.image %}{% if project.image.url is not null %}<img src="{{ project.image.url }}" />{% endif %}{% endif %}
+                    </div>
                 </div>
+            {% else %}
+                <div class="project-card">
+                    <div class="project-card-img">
+                        {% if project.image %}{% if project.image.url is not null %}<img src="{{ project.image.url }}" />{% endif %}{% endif %}
+                    </div>
+                    <div class="project-card-text">
+                        <h2 class="no-m">{{ project.client }}</h2>
+                        <h4 class="no-m"><small>{{ project.title }}</small></h4>
+                        <p>
+                            {{ project.description }}
+                        </p>
+                        <a href=""><div class="project-card-link">Learn more</div></a>
+                    </div>
+                </div>
+            {% endif %}
+            
+
+            {% if forloop.last %}
+                {% if forloop.counter|divisibleby:2 %}
+                    <div class="project-card">
+                        <div class="project-card-img">
+                            <img src="{% static 'img/byite-logo-color.svg' %}" />
+                        </div>
+                        <div class="project-card-text">
+                            <h2 class="no-m">Could be you?</h2>
+                            <p>
+                                Something about contact us
+                            </p>
+                            <a href=""><div class="project-card-link">Contact Us</div></a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="project-card">
+                        <div class="project-card-text">
+                            <h2 class="no-m">Could be you?</h2>
+                            <p>
+                                Something about contact us
+                            </p>
+                            <a href=""><div class="project-card-link">Contact Us</div></a>
+                        </div>
+                        <div class="project-card-img">
+                            <img src="{% static 'img/byite-logo-color.svg' %}" />
+                        </div>
+                    </div>
+                {% endif %}
             {% endif %}
         {% endfor %}
     </div>
-    <div id="project-images-container">
-        {% for project in projects %}
-            <div class="project-image" id="project-{{ forloop.counter0 }}-image">
-                <img class="project-img" src="{% if project.image %}{{ project.image.url }}{% endif %}"/>
-            </div>
-        {% if forloop.last %}
-            <div class="project-image" id="project-{{ forloop.counter }}-image">
-                <img class="project-img" src="{% static 'img/byite-logo-color.svg' %}"/>
-            </div>
-        {% endif %}
-    {% endfor %}
-        <div>
-            <img id="project-gears" src="{% static 'img/gear-1.svg' %}"/>
-        </div>
-    </div>
 </div>
-<!-- END PAGE 3 -->
+<!-- END SECTION 4 -->
 
-<!-- START PAGE 4 -->
-<div class="page col-2 col-1-sm full-height" id="page4" style="background-image: url({% static 'img/contact-us.svg' %})">
-    <div class="hidden-md">
-        
+
+<!-- SECTION 5 -->
+<div class="page col-2 col-1-sm full-height" id="contact-section">
+    <div class="contact-form-graphic center-content-x center-content-y hidden-sm">
+        <img src="{% static 'img/contact-person.svg' %}"/>
     </div>
-    <div class="w-70 w-100-sm center-self-x">
+    <div class="contact-form">
         <form id="contact-us-form" action="{% url 'contact-us' %}" method="POST">
             {% csrf_token %}
             <h1>Contact us</h1>
@@ -133,10 +172,11 @@
                 <i class="fa fa-comments-o fa-input-icon center-self-y"></i>
             </div>
             <div class="input-container">
-                <input class="btn w-100" type="submit" title="Submit" name="contact-submit"/>
+                <input class="form-submit w-100" type="submit" title="Submit" name="contact-submit"/>
             </div>
         </form>
     </div>
 </div>
-<!-- END PAGE 4 -->
+<!-- END SECTION 5 -->
+
 {% endblock content %}
