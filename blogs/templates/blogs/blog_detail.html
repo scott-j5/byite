@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="page p-t-xxl flex-y">
+<div class="page page-padded flex-y">
     <div class="blog-header w-70 w-100-mdlg m-t-xxl">
         {% if user.is_staff %}
             <a href="{% url 'admin:blogs_blog_change' object.id %}"><i class="fa fa-edit"></i> Edit</a>

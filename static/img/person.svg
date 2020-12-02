@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 25.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 401.9 928.5" style="enable-background:new 0 0 401.9 928.5;" xml:space="preserve">
+	 viewBox="0 0 401.9 879.6" style="enable-background:new 0 0 401.9 879.6;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:url(#SVGID_1_);}
 	.st1{display:none;}
@@ -22,7 +22,7 @@
 	.st16{fill:#8C6239;}
 	.st17{fill:#333333;}
 </style>
-<radialGradient id="SVGID_1_" cx="200.9325" cy="850.2532" r="193.7566" gradientTransform="matrix(1 0 0 0.1815 0 695.9182)" gradientUnits="userSpaceOnUse">
+<radialGradient id="SVGID_1_" cx="191.9325" cy="845.2532" r="193.7566" gradientTransform="matrix(1 0 0 0.1815 0 691.8257)" gradientUnits="userSpaceOnUse">
 	<stop  offset="0" style="stop-color:#020202;stop-opacity:0.3"/>
 	<stop  offset="9.538452e-02" style="stop-color:#080808;stop-opacity:0.2714"/>
 	<stop  offset="0.2205" style="stop-color:#181818;stop-opacity:0.2339"/>
@@ -32,7 +32,7 @@
 	<stop  offset="0.8492" style="stop-color:#C5C5C5;stop-opacity:4.522541e-02"/>
 	<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0"/>
 </radialGradient>
-<ellipse class="st0" cx="200.9" cy="850.3" rx="196.8" ry="34.3"/>
+<ellipse class="st0" cx="191.9" cy="845.3" rx="196.8" ry="34.3"/>
 <g>
 	<g class="st1">
 		<circle class="st2" cx="200.8" cy="-59.5" r="7.2"/>

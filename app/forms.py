@@ -8,8 +8,9 @@ from .models import Subscriber
 class ContactUsForm(forms.Form):
     name = forms.CharField()
     email = forms.EmailField()
-    phone = forms.IntegerField()
-    message = forms.CharField(widget=forms.Textarea)
+    phone = forms.IntegerField(required=False)
+    service = forms.CharField()
+    message = forms.CharField(widget=forms.Textarea, required=False)
 
 
 class UnsubscribeForm(forms.ModelForm):

@@ -38,9 +38,8 @@
         <div id="wrapper">
 
             <!-- START HEADER -->
-            <div id="header-wrapper">
+            <div id="header-wrapper" class="{% if request.path == '/home/' or request.path == '/' %}{% else %}header-wrapper-bg-active{% endif %}">
                 <div class="header-item" id="header-logo-wrapper">
-                    <img class="header-logo-blob" src="{% static 'img/nav-logo-blob.svg' %}"/>
                     <a href="{% url 'home' %}">
                         <img class="header-logo" src="{% static 'img/byite-logo-color.svg' %}"/>
                     </a>
@@ -48,9 +47,9 @@
                 <div class="header-item" id="header-menu-wrapper">
                     <div class="nav-wrapper">
                         <nav id="site-nav">
-                            <a class="nav-item text-muted" href="{% url 'home' %}#page3">Projects</a>
+                            <a class="nav-item text-muted" href="{% url 'home' %}#projects-section">Projects</a>
                             <a class="nav-item text-muted" href="{% url 'blog-list' %}">Blog</a>
-                            <a class="nav-item nav-item-last text-muted" href="{% url 'home' %}#page4">Contact</a>
+                            <a class="nav-item nav-item-last text-muted" href="{% url 'home' %}#contact-section">Contact</a>
                         </nav>
                         <div id="mobile-nav-background">
                             <img id="mobile-nav-cookie" src="{% static 'img/cookie-watermark-left.png' %}"/>
@@ -64,6 +63,7 @@
                         </svg>
                     </div>
                 </div>
+                <div class="nav-bg"></div>
             </div>
             <!-- END HEADER -->
 

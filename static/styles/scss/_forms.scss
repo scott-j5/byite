@@ -19,6 +19,12 @@ input{
     color:$dark-grey;
 }
 
+select{
+    font-family:inherit;
+    font-weight:inherit;
+    color:$dark-grey;
+}
+
 .input-container{
     display:flex;
     align-items: center;
@@ -41,14 +47,15 @@ input{
     border:0px;
  }
 
- .fa-input-icon::after{
-    position:absolute;
-    top:0px;
-    left:0px;
-    width: 2px;
-    height:100%;
-    background-image: linear-gradient(to bottom, $pink, $yellow);
-    transition: height 1s ease-in;
+ .select-field{
+    border-radius: 1.4rem;
+    background-repeat: no-repeat;
+    background-size: auto calc(100% - 2px);
+    background-position: calc(100% - 2px) 1px;
+    appearance:none;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	-ms-appearance:none;
  }
 
 .button-muted{

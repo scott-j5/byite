@@ -1,3 +1,7 @@
+html{
+   scroll-behavior: smooth;
+}
+
 %primary-gradient{
    //background-image: linear-gradient( to top, rgba(237, 47, 139, 1), rgba(255, 207, 123, 1));
    background-image: linear-gradient( to top, rgba(237, 24, 127, 93), rgba(255, 207, 123, 1));
@@ -16,7 +20,6 @@ body{
    min-height:100%;
    overflow:hidden;
    //background-image:linear-gradient(to bottom right, $pink, $yellow);
-   background-image: radial-gradient(100vw 100vw at 100vw 100vh, $yellow, $pink);
 }
 
 //General page setup classes
@@ -32,7 +35,7 @@ body{
 }
 
 .page-padded{
-   padding-top:calc((2.9rem * 1.6) + #{$space-lg});
+   padding-top:calc((#{$space-md} * 2) + #{$header-height});
 }
 
 .full-height{
@@ -49,6 +52,10 @@ body{
 
 .vh-60{
    min-height:60vh;
+}
+
+.vh-65{
+   min-height:65vh;
 }
 
 .vh-90{
@@ -454,6 +461,26 @@ body{
    padding-bottom:$space-xxl;
 }
 
+.p-y-xxl{
+   padding-top:$space-xxl;
+   padding-bottom:$space-xxl;
+}
+
+.p-y-xxxl{
+   padding-top:$space-xxxl;
+   padding-bottom:$space-xxxl;
+}
+
+.p-x-xxl{
+   padding-left:$space-xxl;
+   padding-right:$space-xxl;
+}
+
+.p-x-xxxl{
+   padding-top:$space-xxxl;
+   padding-bottom:$space-xxxl;
+}
+
 .no-p{
    padding:0px !important;
 }
@@ -529,7 +556,7 @@ img{
 
 .tag-list li{
    color:$white;
-   background: linear-gradient(-62deg, $yellow, $pink);
+   background: linear-gradient(-32deg, $yellow, $pink 90%);
    display: inline-block;
    margin: .4rem;
    padding: .5rem;
@@ -538,7 +565,7 @@ img{
    width: auto;
    border-radius:3rem;
    background-color:$grey;
-
+   font-weight: 400;
 }
 
 .tag-list li:hover{

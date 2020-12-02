@@ -36,6 +36,7 @@ def contact_us(request):
                     "name": form.cleaned_data["name"],
                     "email": form.cleaned_data["email"],
                     "phone": form.cleaned_data["phone"],
+                    "service": form.cleaned_data["service"],
                     "message": form.cleaned_data["message"],
                 }
                 
@@ -48,6 +49,8 @@ def contact_us(request):
                 data["success"] = f'Success! Your enquiry has been sent.'
             except Exception as e:
                 data["error"] = f"Error: An error occured during sending your enquiry!"
+        else:
+            data["error"] = "Error: Form invalid or incomplete!"
     else:
         raise Http404('Page not found')
     return JsonResponse(data)
@@ -56,8 +59,10 @@ def contact_us(request):
 def subscribe(request):
     data = {}
     if request.method == 'POST':
-        if len(Subscriber.objects.filter(email__iexact=request.POST.get('email'))) >= 1:
-            data["error"] = "Error: this email address is already subscribed!"
+        if request.POST.get('email') == '':
+            data["error"] = "Error: Email address must be provided!"
+        elif len(Subscriber.objects.filter(email__iexact=request.POST.get('email'))) >= 1:
+            data["error"] = "Error: This email address is already subscribed!"
         else:
             subscriber = Subscriber()
             subscriber.email = request.POST.get('email')
