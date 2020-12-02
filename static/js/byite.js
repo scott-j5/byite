@@ -6,14 +6,21 @@ MENU = {
             item.addEventListener('click', function(e){
                 //Toggle menu away if link is clicked that doesnt redirect page
                 if (document.querySelector(".nav-wrapper").classList.contains("nav-wrapper-open")){
-                    this.toggleMenu
+                    this.toggleMenu();
                 }
             });
         })
     },
     toggleMenu: function(e){
+        //Stop scroll - change focus
+        document.querySelector('body').classList.toggle('no-scroll');
+
+        //Show - Hide menu on mobile
         document.querySelector('#hamburger').classList.toggle('on');
         document.querySelector(".nav-wrapper").classList.toggle('nav-wrapper-open');
+
+        //Make sure logo is shown on open nav
+        document.getElementById('header-wrapper').classList.toggle('header-wrapper-nav-open');
     },
 }
 

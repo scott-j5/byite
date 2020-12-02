@@ -2,15 +2,14 @@ html{
    scroll-behavior: smooth;
 }
 
-%primary-gradient{
-   //background-image: linear-gradient( to top, rgba(237, 47, 139, 1), rgba(255, 207, 123, 1));
-   background-image: linear-gradient( to top, rgba(237, 24, 127, 93), rgba(255, 207, 123, 1));
-}
-
 body{
    margin:0px;
    padding:0px;
    background-color:$white;
+}
+
+.no-scroll{
+   overflow: none;
 }
 
 #wrapper{
