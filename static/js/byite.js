@@ -6,7 +6,7 @@ MENU = {
             item.addEventListener('click', function(e){
                 //Toggle menu away if link is clicked that doesnt redirect page
                 if (document.querySelector(".nav-wrapper").classList.contains("nav-wrapper-open")){
-                    this.toggleMenu();
+                    MENU.toggleMenu();
                 }
             });
         })
