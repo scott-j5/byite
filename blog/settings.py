@@ -155,10 +155,10 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
 #URL prefix used by static template tags
 STATIC_URL = '/static/'
 
-if not DEBUG:
-    # S3 folder to upload static files to
-    STATICFILES_LOCATION = 'static'
-    STATICFILES_STORAGE = 'static_storages.StaticStorage'
+#if not DEBUG:
+# S3 folder to upload static files to
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'static_storages.StaticStorage'
 
 
 #Email settings
