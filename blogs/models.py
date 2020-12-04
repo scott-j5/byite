@@ -38,7 +38,7 @@ class Blog(models.Model):
     slug = models.SlugField(max_length=150, unique=True)
     description = models.CharField(max_length=500)
     thumbnail = ScaleItImageField(max_width=250, max_height=250, quality=100, null=True, blank=True, upload_to=get_upload_path)
-    banner = CropItImageField(max_width=1000, max_height=1000, null=True, blank=True, upload_to=get_upload_path)
+    banner = ScaleItImageField(max_width=1000, max_height=1000, null=True, blank=True, upload_to=get_upload_path)
     content = MarkdownxField()
     views = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
