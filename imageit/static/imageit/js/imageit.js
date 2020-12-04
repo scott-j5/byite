@@ -216,7 +216,7 @@ class ImageitImg{
                     '<div class="imageit-preview-text">' + 
                         '<p><strong class="imageit-preview-help-text">' + this.descriptor + '</strong></p>' +
                         '<hr>' +
-                        '<a href="' + this._processedFile + '"><p class="imageit-preview-filename">' + this.fileName + '</p></a>' +
+                        '<a href="' + this._processedFile + '" target="_blank"><p class="imageit-preview-filename">' + this.fileName + '</p></a>' +
                     '</div>';
 
             if (this.removable){ 
@@ -393,7 +393,7 @@ class CropitImg extends ImageitImg{
                     '<div class="imageit-preview-text">' + 
                         '<p><strong class="imageit-preview-help-text">' + this.descriptor + '</strong></p>' +
                         '<hr>' +
-                        '<a href="' + this._processedFile + '"><p class="imageit-preview-filename">' + this.fileName + '</p></a>' +
+                        '<a href="' + this._processedFile + '" target="_blank"><p class="imageit-preview-filename">' + this.fileName + '</p></a>' +
                     '</div>';
                 if (this.removable){ 
                     html = html + 

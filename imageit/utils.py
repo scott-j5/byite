@@ -5,6 +5,7 @@ from io import BytesIO
 from os import SEEK_END
 from PIL import Image
 from re import search, IGNORECASE, MULTILINE
+from xml.etree.ElementTree import fromstring
 
 from .settings import (
     IMAGEIT_DEFAULT_IMAGE_PROPS,
@@ -58,29 +59,27 @@ def process_raster(image, img_props=None, crop_props=None):
 
 
 def contains_javascript(image):
-    # Image: InMemoryUploadedFile file
-    data = str(image.read(), encoding='UTF-8')
-
+    image.file.seek(0)
+    file_str = str(image.file.read(), encoding='UTF-8')
+    
+    # ------------------------------------------------
+    # Handles JavaScript nodes and stringified nodes.
+    # ------------------------------------------------
     # Filters against "script" / "if" / "for" within node attributes.
     pattern = r'(<\s*\bscript\b.*>.*)|(.*\bif\b\s*\(.?={2,3}.*\))|(.*\bfor\b\s*\(.*\))'
 
     found = search(
         pattern=pattern,
-        string=data,
+        string=file_str,
         flags=IGNORECASE | MULTILINE
     )
 
     if found is not None:
         return True
 
-
-    # Handles JavaScript injection into attributes
-    # for element creation.
-    from xml.etree.ElementTree import fromstring
-
     parsed_xml = (
         (attribute, value)
-        for elm in fromstring(data).iter()
+        for elm in fromstring(file_str).iter()
         for attribute, value in elm.attrib.items()
     )
 
@@ -92,6 +91,7 @@ def contains_javascript(image):
     return False
 
 
+#Implement logic to validate mime type of file?
 def validate_mime(image):
     return True
 
