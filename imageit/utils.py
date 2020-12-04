@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.utils.translation import gettext_lazy as _
 from io import BytesIO
 from os import SEEK_END
@@ -15,7 +16,7 @@ from .settings import (
 
 def process_upload(data, img_props=None, crop_props=None):
     # Check to see if a file was uploaded
-    if data:
+    if isinstance(data, InMemoryUploadedFile):
         # Check to make sure image is an accepted content type
         if data.content_type in IMAGEIT_ACCEPTED_CONTENT_TYPES:
 
@@ -58,7 +59,7 @@ def process_raster(image, img_props=None, crop_props=None):
 
 def contains_javascript(image):
     # Image: InMemoryUploadedFile file
-    data = str(image, encoding='UTF-8')
+    data = str(image.read(), encoding='UTF-8')
 
     # Filters against "script" / "if" / "for" within node attributes.
     pattern = r'(<\s*\bscript\b.*>.*)|(.*\bif\b\s*\(.?={2,3}.*\))|(.*\bfor\b\s*\(.*\))'

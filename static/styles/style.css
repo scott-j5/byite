@@ -530,6 +530,10 @@ body {
   border-image-source: conic-gradient(from -62deg, #ffcf7b, #ed2f8b);
 }
 
+.btn-rounded {
+  border-radius: 1.5rem;
+}
+
 .bg-image {
   position: absolute;
   z-index: 0;
@@ -984,6 +988,10 @@ select {
 :root {
   --speed: .3s;
   --cubic-buzier: cubic-bezier(.32,.13,.2,1.00);
+}
+
+#login-content {
+  background-image: radial-gradient(100vw 100vw at 100vw 100vh, #ffcf7b, #ed2f8b);
 }
 
 #home-content {

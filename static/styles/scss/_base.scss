@@ -512,6 +512,10 @@ body{
    border-image-source: conic-gradient(from -62deg, $yellow, $pink);
 }
 
+.btn-rounded{
+   border-radius: 1.5rem;
+}
+
 //Classes for responsive circle images
 .bg-image{
    position:absolute;

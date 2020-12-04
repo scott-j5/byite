@@ -42,7 +42,6 @@ class Blog(models.Model):
     content = MarkdownxField()
     views = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
-    dropzone = DropZoneItField()
 
     @property
     def author_name(self):

@@ -123,13 +123,14 @@
     max-height:100%;
 }
 
-.imageit-clear-image.imageit-cancel-crop{
+.imageit-clear-button.imageit-cancel-crop{
     width: calc(100% - 4px);
     height: 2rem;
     margin-bottom: 1.5rem;
     color: #ff3466;
     border: 2px solid #ff3466;
     border-radius: 4px;
+    text-align: center;
     cursor: pointer;
 }
 

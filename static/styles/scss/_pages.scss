@@ -3,6 +3,11 @@
     --cubic-buzier: cubic-bezier(.32,.13,.2,1.00); 
  }
 
+#login-content{
+    background-image: radial-gradient(100vw 100vw at 100vw 100vh, $yellow, $pink);
+}
+
+
 #home-content{
     background-image: radial-gradient(100vw 100vw at 100vw 100vh, $yellow, $pink);
 }
