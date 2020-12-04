@@ -4,21 +4,23 @@
 
 {% block scripts %}
     {{ block.super }}
+    <!-- HOME JS -->
+    <script src="{% static 'js/home.js' %}"></script>
 {% endblock scripts %}
 
 {% block content %}
 <div id="login-content">
     <div class="page full-height col-2 col-1-md" id="section-1">
         <div id="landing-text-wrapper">
-            {% if form.errors and not form.non_field_errors %}
-                <p class="errornote">
-                {% if form.errors.items|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
+                {% if form.errors and not form.non_field_errors %}
+                    <p class="errornote text-center">
+                    {% if form.errors.items|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
                     </p>
                 {% endif %}
     
                 {% if form.non_field_errors %}
                     {% for error in form.non_field_errors %}
-                        <p class="errornote">
+                        <p class="errornote text-center">
                             {{ error }}
                         </p>
                     {% endfor %}
@@ -27,7 +29,7 @@
                 <div id="content-main">
     
                 {% if user.is_authenticated %}
-                    <p class="errornote">
+                    <p class="errornote text-center">
                     {% blocktranslate trimmed %}
                         You are authenticated as {{ username }}, but are not authorized to
                         access this page. Would you like to login to a different account?
@@ -60,10 +62,10 @@
                     </div>
                     {% url 'admin_password_reset' as password_reset_url %}
                     {% if password_reset_url %}
-                    <div class="password-reset-link">
-                        <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
-                    </div>
-            {% endif %}
+                        <div class="password-reset-link">
+                            <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
+                        </div>
+                    {% endif %}
                     <div class="submit-row">
                         <input class="btn btn-rounded w-100" type="submit" value="{% translate 'Log in' %}">
                     </div>

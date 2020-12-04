@@ -5,9 +5,10 @@ class ImageitField{
         this.fileInput = element.querySelector('.imageit-selector');
         this.fileInputName = this.fileInput.name;
         this.fileInputMultiple = this.fileInput.multiple;
+        this.clearCheckbox = this.field.querySelector('.imageit-clear-image-checkbox') || false;
         this.files = [];
         this.errors = [];
-    
+
         //Hide traditional selector. This ensures usual file select functionality on no JS browsers
         this.field.querySelector('.imageit-pseudo-selector').style.display = 'block';
         this.fileInput.hidden = true;
@@ -28,7 +29,6 @@ class ImageitField{
                 "file": initialImg.src,
                 "fileName": item.querySelector('.imageit-preview-filename').textContent || initialImg.src,
                 "descriptor": item.querySelector('.imageit-preview-help-text').textContent || "Current",
-                "clearCheckbox": item.querySelector('.imageit-clear-image-checkbox'),
                 "elem": item,
                 "initial": true,
             };
@@ -97,6 +97,7 @@ class ImageitField{
     //Manager that Shows / Hides initial images according to presence of user selected files
     manageFilesState(){
         let newFiles = this.newFiles();
+        let clear = false;
 
         for(let i = 0; i < this.files.length; i++){
             let item = this.files[i];
@@ -106,6 +107,9 @@ class ImageitField{
                 item.removed = false;
             }else if (! newFiles && item.initial){
                 item.hidden = false;
+            }
+            if (item.initial && item.hidden){
+                clear = true;
             }
         }
     }
@@ -166,10 +170,7 @@ class ImageitImg{
             this.initial = obj.initial || false;
             this.elem = obj.elem || false;
             this.descriptor = obj.descriptor || 'New';
-            this.clearCheckbox = obj.clearCheckbox || false;
-            
-            // Derive if img is removable
-            (this.clearCheckbox || !this.initial) ? this.removable = true : this.removable = false;          
+            this.removable = (fieldClass.clearCheckbox) ? true : false;     
         }catch (e){
             this.errors.push(e);
         }
@@ -253,9 +254,6 @@ class ImageitImg{
 
     //Determines if rendering is nessacary and completes it
     _render(container, elem){
-        //Append clear checkbox to rendering element
-        if(elem && this.clearCheckbox) elem.append(this.clearCheckbox.cloneNode(true));
-
         //Only render element if the generated dome element differs from current this.elem
         if(elem instanceof Element && (!this.elem || !this.elem.isEqualNode(elem))){
             if (this.elem){
@@ -280,6 +278,10 @@ class ImageitImg{
         }else{
             this.fieldClass.removeFile(this);
         }
+
+        if (this.fieldClass.clearCheckbox){
+            this.fieldClass.clearCheckbox.checked = this.removed;
+        }
         this.render();
     }
 
@@ -290,11 +292,6 @@ class ImageitImg{
         if (button) button.addEventListener('click', this.toggleHide.bind(this), false);
     }
 }
-
-
-
-
-
 
 
 
