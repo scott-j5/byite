@@ -474,6 +474,10 @@
     word-wrap:break-word;
     margin-top:$space-lg;
     margin-bottom:$space-lg;
+
+    @media(max-width: $screen-mdlg){
+        box-shadow: 0px 0px 0px;
+    }
  }
 
 .blog-content a{

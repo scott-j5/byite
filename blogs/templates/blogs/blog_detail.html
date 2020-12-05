@@ -14,7 +14,7 @@
 <div class="page page-padded flex-y">
     <div class="blog-header w-70 w-100-mdlg m-t-xxl">
         {% if user.is_staff %}
-            <a href="{% url 'admin:blogs_blog_change' object.id %}"><i class="fa fa-edit"></i> Edit</a>
+            <a href="{% url 'admin:blogs_blog_change' object.id %}" target="_blank"><i class="fa fa-edit"></i> Edit</a>
         {% endif %}
         <div class="center-content-xy-sm m-t-xl">
             <div class="text-center-sm">
