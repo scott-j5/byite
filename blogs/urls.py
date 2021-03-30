@@ -9,5 +9,5 @@ urlpatterns = [
     path('get-json/', get_blogs_json, name='get-blogs-json'),
     path('blog/<slug:slug>/', BlogDetail.as_view(), name='blog-detail'),
     path('blog/<slug:blog>/image/upload/', BlogImageUpload.as_view(), name='blog-image-upload'),
-    path('blog/<slug:blog>/image/<int:pk>/', blog_image, name='blog-image'),
+    path('blog/image/<int:pk>/', blog_image, name='blog-image'),
 ]

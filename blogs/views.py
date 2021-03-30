@@ -1,16 +1,16 @@
+import json
+import os
+
 from django.core import serializers
-from django.http import JsonResponse, FileResponse
 from django.db.models import Q
-from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.http import FileResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.views.generic import DetailView, ListView
 from django.views.generic.edit import BaseFormView
-from markdownx.views import ImageUploadView
 
 from .forms import BlogImageForm
-from .models import Blog, BlogImage, Tag, Series
+from .models import Blog, BlogImage, Series, Tag
 
-import os
-import json
 
 # Create your views here.
 class BlogDetail(DetailView):
@@ -72,12 +72,29 @@ def blog_image(request, *args, **kwargs):
     return redirect(blog_image.image.url)
 
 
-class BlogImageUpload(ImageUploadView):
+class BlogImageUpload(BaseFormView):
     form_class = BlogImageForm
+    success_url = '/'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         blog_id = [x for x in self.request.META.get('HTTP_REFERER').split('/') if len(x) > 0][-2]
         blog_slug = Blog.objects.get(id=blog_id)
-        kwargs.update({'blog_slug': blog_slug.slug})
+        if blog_slug:
+            kwargs.update({'blog_slug': blog_slug.slug})
         return kwargs
+
+    def form_invalid(self, form):
+        if self.request.accepts('application/json') and not self.request.accepts('text/html'):
+            return JsonResponse(form.errors, status=400)
+
+        response = super().form_invalid(form)
+        return response
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        if self.request.accepts('application/json') and not self.request.accepts('text/html'):
+            image_path = form.save(commit=True)
+            return JsonResponse({'location': image_path})
+        return response

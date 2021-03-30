@@ -1,11 +1,11 @@
-from blog import settings
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse, Http404
 from django.shortcuts import render
 from django.template.loader import get_template
-import time
+
+from blog import settings
 from projects.models import Project
 from .forms import UnsubscribeForm, ContactUsForm
 from .models import Subscriber
@@ -39,14 +39,14 @@ def contact_us(request):
                     "service": form.cleaned_data["service"],
                     "message": form.cleaned_data["message"],
                 }
-                
+
                 html_content = template.render(context)
                 from_email = settings.EMAIL_HOST_USER
                 to = "scottjames@byitegroup.com"
                 msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()
-                data["success"] = f'Success! Your enquiry has been sent.'
+                data["success"] = 'Success! Your enquiry has been sent.'
             except Exception as e:
                 data["error"] = f"Error: An error occured during sending your enquiry!"
         else:
