@@ -155,10 +155,10 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
 #URL prefix used by static template tags
 STATIC_URL = '/static/'
 
-#if not DEBUG:
+if not DEBUG:
 # S3 folder to upload static files to
-#STATICFILES_LOCATION = 'static'
-#STATICFILES_STORAGE = 'static_storages.StaticStorage'
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'static_storages.StaticStorage'
 
 
 #Email settings
@@ -188,6 +188,7 @@ MARKDOWNX_IMAGE_MAX_SIZE = {
     'size': (1000, 1500),
     'quality': 90
 }
+
 
 
 MARKDOWNX_MEDIA_PATH = datetime.now().strftime('blog_images/%Y/%m/%d')
