@@ -157,8 +157,8 @@ STATIC_URL = '/static/'
 
 if not DEBUG:
 # S3 folder to upload static files to
-STATICFILES_LOCATION = 'static'
-STATICFILES_STORAGE = 'static_storages.StaticStorage'
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'static_storages.StaticStorage'
 
 
 #Email settings
