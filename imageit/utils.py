@@ -122,9 +122,11 @@ def resize(image, img_props, crop_props):
     #Save pil image back to bytesio file
     extension = image.content_type.split('/')[-1].upper()
     bytes_image = BytesIO()
-    pil_image.save(bytes_image, extension)
-    bytes_image.seek(0, SEEK_END)
-    
+    try:
+        pil_image.save(bytes_image, extension)
+        bytes_image.seek(0, SEEK_END)
+    except Exception as e:
+        raise ValidationError(_(f"Error: {e}. There may be an issue with your image file."))
     image.file = bytes_image
     return image
 
@@ -154,12 +156,12 @@ def scale(image, props):
     image_width, image_height = map(float, image.size)
 
     #Calculate scale ratio ensuring no side is longer than max dimenstions
-    scale = min(max_width / image_width, max_height / image_height)
+    ratio = min(max_width / image_width, max_height / image_height)
 
     # Scale image if image must be scaled down or if upscale is set to true
-    if scale < 1.0 or (scale > 1.0 and upscale):
-        scaled_width = image_width * scale
-        scaled_height = image_height * scale
+    if ratio < 1.0 or (ratio > 1.0 and upscale):
+        scaled_width = image_width * ratio
+        scaled_height = image_height * ratio
     
         image = image.resize(
             (int(scaled_width), int(scaled_height)),

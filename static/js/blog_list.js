@@ -8,19 +8,22 @@ BLOGLIST = {
                 listItem.addEventListener("click", BLOGLIST.updateTags);
             });
         });
+        BLOGLIST.setPageListeners();
     },
     getQuery: function(){
         params = new URLSearchParams(window.location.search);
         if(Array.from(params).length >= 1 ){
             tags = []
-            params.get('tags').split(',').forEach(tag =>{
-                if(tag.length >= 1 && !isNaN(tag)){
-                    tags.push(tag);
-                }
-            });
-            this.searchQuery = {"search":(params.get('search') || ""), "tags": tags};
+            if(params.get('tags')){
+                params.get('tags').split(',').forEach(tag =>{
+                    if(tag.length >= 1 && !isNaN(tag)){
+                        tags.push(tag);
+                    }
+                });
+            }
+            this.searchQuery = {"search":(params.get('search') || ""), "tags": tags, "page": (params.get('page')|| 1)};
         }else{
-            this.searchQuery = {"search":"", "tags": []}
+            this.searchQuery = {"search":"", "tags": [], "page": 1}
         }
         this.load();
         this.renderSearch();
@@ -28,7 +31,20 @@ BLOGLIST = {
     },
     search: function(e){
         BLOGLIST.searchQuery.search = e.target.value;
+        BLOGLIST.searchQuery.page = 1;
         BLOGLIST.load(true);
+    },
+    setPageListeners: function(){
+        console.log("Setting");
+        document.querySelectorAll('.page-toggle').forEach(item => {
+            item.addEventListener("click", BLOGLIST.togglePage);
+        });
+    },
+    togglePage: function(e){
+        e.preventDefault();
+        BLOGLIST.searchQuery.page = e.target.dataset.page;
+        BLOGLIST.load(true);
+        e.stopPropagation();
     },
     renderSearch: function(){
         document.querySelector('input[name="search"]').value = BLOGLIST.searchQuery.search;
@@ -50,6 +66,7 @@ BLOGLIST = {
         }else{
             BLOGLIST.searchQuery.tags = BLOGLIST.searchQuery.tags.filter(function(f){ return f !== e.currentTarget.dataset.identifier});
         }
+        BLOGLIST.searchQuery.page = 1;
         BLOGLIST.renderTags();
         BLOGLIST.load(true);
     },
@@ -80,9 +97,9 @@ BLOGLIST = {
         if(pushState){
             history.pushState(null, "", "?" + args)
         }
-        var url = window.location.protocol + "//" + window.location.host + "/blogs/get/?" + args
+        var url = window.location.protocol + "//" + window.location.host + "/blogs/?" + args
         var element = document.querySelector('#blog-card-list');
-        load.loadToElement(element, url);
+        load.loadToElement(element, url, 'text/html');
     },
 }
 

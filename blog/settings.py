@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from datetime import datetime
-import json
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djrichtextfield',
     'dropzoneit',
     'projects.apps.ProjectsConfig',
     'imageit',
@@ -155,10 +155,10 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticfiles')
 #URL prefix used by static template tags
 STATIC_URL = '/static/'
 
-#if not DEBUG:
+if not DEBUG:
 # S3 folder to upload static files to
-STATICFILES_LOCATION = 'static'
-STATICFILES_STORAGE = 'static_storages.StaticStorage'
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'static_storages.StaticStorage'
 
 
 #Email settings
@@ -190,5 +190,45 @@ MARKDOWNX_IMAGE_MAX_SIZE = {
 }
 
 
+
 MARKDOWNX_MEDIA_PATH = datetime.now().strftime('blog_images/%Y/%m/%d')
-MARKDOWNX_UPLOAD_URLS_PATH = '/blogs/blog/he-world/image/upload/'
+MARKDOWNX_UPLOAD_URLS_PATH = '/blogs/blog/default/image/upload/'
+
+
+DJRICHTEXTFIELD_CONFIG = {
+    'js': ['https://cdn.tiny.cloud/1/zsce7lst5im33auwvlcxynn7rqyiwyopckmqdtjxebwsp8x2/tinymce/5/tinymce.min.js'],
+    'init_template': 'app/init-tinymce.js',
+    'settings': {
+        'menubar': False,
+        'plugins': 'code codesample hr image lists link table',
+        'toolbar': [
+            'code | undo redo | styleselect | bold italic underline hr | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist',
+            'codesample image link | table tabledelete | tableprops tablerowprops tablecellprops | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
+        ],
+        'codesample_languages': [
+            {'text': 'Bash', 'value': 'bash' },
+            {'text': 'Apache', 'value': 'apacheconf' },
+            {'text': 'C', 'value': 'c' },
+            {'text': 'C#', 'value': 'csharp' },
+            {'text': 'C++', 'value': 'cpp' },
+            {'text': 'CSS', 'value': 'css' },
+            {'text': 'F#', 'value': 'fsharp' },
+            {'text': 'Java', 'value': 'java'},
+            {'text': 'HTML/XML', 'value': 'markup'},
+            {'text': 'JavaScript', 'value': 'javascript' },
+            {'text': 'Json', 'value': 'json' },
+            {'text': 'LESS', 'value': 'less' },
+            {'text': 'PHP', 'value': 'php'},
+            {'text': 'Python', 'value': 'python'},
+            {'text': 'Ruby', 'value': 'ruby'},
+            {'text': 'SASS', 'value': 'scss' },
+            {'text': 'SQL', 'value': 'sql' },
+            {'text': 'TypeScript', 'value': 'typescript' }
+        ],
+        'width': '100%',
+        'height': '500',
+        'branding': False,
+        'images_upload_url': '/blogs/blog/default/image/upload/',
+        'relative_urls': False,
+    }
+}

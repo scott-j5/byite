@@ -1,6 +1,4 @@
 from django import forms
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 
 from .models import Subscriber
 
@@ -14,8 +12,7 @@ class ContactUsForm(forms.Form):
 
 
 class UnsubscribeForm(forms.ModelForm):
-    
-    def clean(self, *args, **kwargs):
+    def clean(self):
         cleaned_data = super().clean()
         try:
             Subscriber.objects.get(email=cleaned_data['email'])

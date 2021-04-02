@@ -1,16 +1,17 @@
+import json
+import os
+
 from django.core import serializers
-from django.http import JsonResponse, FileResponse
+from django.core.paginator import Paginator
 from django.db.models import Q
-from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.http import FileResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.views.generic import DetailView, ListView
 from django.views.generic.edit import BaseFormView
-from markdownx.views import ImageUploadView
 
 from .forms import BlogImageForm
-from .models import Blog, BlogImage, Tag, Series
+from .models import Blog, BlogImage, Series, Tag
 
-import os
-import json
 
 # Create your views here.
 class BlogDetail(DetailView):
@@ -25,41 +26,33 @@ class BlogDetail(DetailView):
 def blog_list(request):
     context = {}
     params = request.GET.dict()
-    if request.GET.get('tags'):
-        params['tags'] = [x for x in params['tags'].split(',') if len(x) >= 1]
-    context["blogs"] = Blog.dict_filter(params)
-    if not request.user.is_anonymous:
-        context["blogs"] = context["blogs"].filter(Q(published=True) | Q(author=request.user))
-    else:
-        context["blogs"] = context["blogs"].filter(published=True)
-    context["tags"] = Tag.objects.all()
-    return render(request, 'blogs/blog_list.html', context)
 
-
-def get_blogs_json(request):
-    params = request.GET.dict()
+    # Parse GET tags to list
     if request.GET.get('tags'):
         params['tags'] = [x for x in params['tags'].split(',') if len(x) >= 1]
     blogs = Blog.dict_filter(params)
+
+    # Hide unplublished blogs except for the autoring user
     if not request.user.is_anonymous:
         blogs = blogs.filter(Q(published=True) | Q(author=request.user)).distinct()
     else:
         blogs = blogs.filter(published=True).distinct()
-    response = serializers.serialize('json', blogs)
-    return JsonResponse(response, safe=False)
-
-
-def get_blogs(request):
-    context = {}
-    params = request.GET.dict()
-    if request.GET.get('tags'):
-        params['tags'] = [x for x in params['tags'].split(',') if len(x) >= 1]
-    context["blogs"] = Blog.dict_filter(params)
-    if not request.user.is_anonymous:
-        context["blogs"] = context["blogs"].filter(Q(published=True) | Q(author=request.user)).distinct()
+    
+    context["blogs"] = blogs
+    context["tags"] = Tag.objects.all()
+    print(request.content_type)
+    if request.content_type == 'application/json':
+        response = serializers.serialize('json', blogs)
+        return JsonResponse(response, safe=False)
     else:
-        context["blogs"] = context["blogs"].filter(published=True).distinct()
-    return render(request, 'blogs/blog_card_list.html', context)
+        paginator = Paginator(context["blogs"], 4)
+        page_number = request.GET.get('page')
+        context["page_obj"] = paginator.get_page(page_number)
+
+        if request.content_type == 'text/html':
+            return render(request, 'blogs/blog_card_list.html', context)
+        else:
+            return render(request, 'blogs/blog_list.html', context)
 
 
 def blog_image(request, *args, **kwargs):
@@ -72,12 +65,29 @@ def blog_image(request, *args, **kwargs):
     return redirect(blog_image.image.url)
 
 
-class BlogImageUpload(ImageUploadView):
+class BlogImageUpload(BaseFormView):
     form_class = BlogImageForm
+    success_url = '/'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         blog_id = [x for x in self.request.META.get('HTTP_REFERER').split('/') if len(x) > 0][-2]
         blog_slug = Blog.objects.get(id=blog_id)
-        kwargs.update({'blog_slug': blog_slug.slug})
+        if blog_slug:
+            kwargs.update({'blog_slug': blog_slug.slug})
         return kwargs
+
+    def form_invalid(self, form):
+        if self.request.accepts('application/json') and not self.request.accepts('text/html'):
+            return JsonResponse(form.errors, status=400)
+
+        response = super().form_invalid(form)
+        return response
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        if self.request.accepts('application/json') and not self.request.accepts('text/html'):
+            image_path = form.save(commit=True)
+            return JsonResponse({'location': image_path})
+        return response

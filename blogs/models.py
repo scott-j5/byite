@@ -1,25 +1,20 @@
+import math
+
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Q
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from functools import reduce
-from imageit.models import ScaleItImageField, CropItImageField
+from djrichtextfield.models import RichTextField
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
-import math
-from operator import and_
 
-
-from django.contrib.contenttypes.fields import GenericRelation
-from dropzoneit.models import DropZoneItField
+from imageit.models import ScaleItImageField
 
 # Create your models here.
 class Tag(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name
+        return f'{self.name}'
 
 class Series(models.Model):
     name = models.CharField(max_length=150)
@@ -29,7 +24,7 @@ class Series(models.Model):
 class Blog(models.Model):
     def get_upload_path(instance, filename):
         return f'blog_images/{instance.slug}/{filename}'
-    
+
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     published = models.BooleanField(default=False)
     published_on = models.DateTimeField(default=None, null=True, blank=True)
@@ -39,9 +34,10 @@ class Blog(models.Model):
     description = models.CharField(max_length=500)
     thumbnail = ScaleItImageField(max_width=250, max_height=250, quality=100, null=True, blank=True, upload_to=get_upload_path)
     banner = ScaleItImageField(max_width=1000, max_height=1000, null=True, blank=True, upload_to=get_upload_path)
-    content = MarkdownxField()
+    content_old = MarkdownxField()
     views = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
+    content = RichTextField(default='')
 
     @property
     def author_name(self):
@@ -56,15 +52,16 @@ class Blog(models.Model):
         return math.ceil(len(str(self.content).split()) / 225)
 
     def __str__(self):
-        return self.title
+        return f'{self.title}'
 
+    @staticmethod
     def dict_filter(filter_dict):
         filters = {}
         if filter_dict.get('id'):
             filters['id'] = filter_dict['id']
         if filter_dict.get('search'):
             filters['title__icontains'] = filter_dict['search']
-        result = Blog.objects.filter(**filters);
+        result = Blog.objects.filter(**filters)
         if filter_dict.get('tags'):
             for tag in filter_dict.get('tags'):
                 result = result.filter(tags__id=tag)
@@ -77,9 +74,9 @@ class Blog(models.Model):
     def save(self, *args, **kwargs):
         is_published = Blog.objects.only("published").filter(id=self.id).first()
 
-        if(kwargs.pop("updated", None)):
+        if kwargs.pop("updated", None):
             self.updated = timezone.now()
-        
+
         if is_published and not is_published.published and self.published:
             self.published_on = timezone.now()
         super().save(*args, **kwargs)
@@ -91,15 +88,12 @@ class Blog(models.Model):
 class BlogImage(models.Model):
     def get_upload_path(instance, filename):
         return f'blog_images/{instance.blog.slug}/content/{filename}'
-    
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
-    image = models.ImageField(null=False, blank=False, upload_to=get_upload_path)
+
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True, blank=True)
+    image = ScaleItImageField(max_width=1000, max_height=1000, null=False, blank=False, upload_to=get_upload_path)
 
     def __str__(self):
         return f'{self.image.name}'
-
-
-
 
 
 class SeriesAssignment(models.Model):
