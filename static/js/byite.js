@@ -138,7 +138,7 @@ FORMVALIDATION = {
 
 LOAD = {
     request : null,
-    loadToElement: function(element, url){
+    loadToElement: function(element, url, contentType = false){
         var loader = element.querySelector('.loader') || document.createElement("div");
         if(! loader.classList.contains('loader')){
             element.append(loader);
@@ -146,9 +146,9 @@ LOAD = {
         }
         element.classList.add('loading');
         
-        this.loadUrl(url, function(e){LOAD.updateContent(e, element)});
+        this.loadUrl(url, function(e){LOAD.updateContent(e, element)}, contentType);
     },
-    loadUrl: function(url, onComplete){
+    loadUrl: function(url, onComplete, contentType = false){
         var xhr = new XMLHttpRequest();
         if(LOAD.request){
             LOAD.request.abort();
@@ -158,7 +158,7 @@ LOAD = {
             url: url,
             type: 'GET',
             cache: false,
-            contentType: false,
+            contentType: contentType,
             processData: false,
             xhr: function() {
                 return xhr;
