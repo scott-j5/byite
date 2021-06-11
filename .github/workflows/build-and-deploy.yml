@@ -1,0 +1,85 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build and Deploy
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Build job to build static files
+  build_and_deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install Node dependancies
+        run: npm ci
+      - name: Node build
+        run: npm run build --if-present
+      - name: Node test
+        run: npm test
+        
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install Python dependancies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Set Env vars
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_DEBUG: 0
+          DJANGO_ALLOWED_HOSTS: ''
+          DATABASE_USER: ${{ secrets.DATABASE_USER }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          EMAIL_USER: ''
+          EMAIL_PASSWORD: ''
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_STORAGE_BUCKET_NAME: ${{ secrets.AWS_STORAGE_BUCKET_NAME }}
+          
+      - name: Run Django unit tests
+        run: |
+          python manage.py test --noinput
+      - name: Collect static
+          python manage.py collectstatic
+      - name: Make migrations
+        run: |
+          python manage.py makemigrations --noinput
+          pyhton manage.py migrate --noinput
+        
+      # Retreive private key from secrets and save as file deployment.key
+      - name: Create identity file
+        env:
+          DEPLOYMENT_SSH_KEY: ${{ secrets.DEPLOYMENT_SSH_KEY }}
+        run: |
+          echo "$DEPLOYMENT_SSH_KEY" | base64 --decode  >deployment.key
+          chmod 400 deployment.key
+      
+      # Run update scripts on remote server
+      - name: Update Application on production server
+        run: |
+          ssh -i deployment.key deploy@${{ secrets.SERVER_IP }} touch ~/heyyyyy
+        # ssh -i deployment.key deploy@${{ secrets.SERVER_IP }} git -C /home/ubuntu/thumbsup fetch origin
+        # ssh -i deployment.key deploy@${{ secrets.SERVER_IP }} git -C /home/ubuntu/thumbsup checkout "${GITHUB_SHA}"
+        # ssh -i deployment.key deploy@${{ secrets.SERVER_IP }} sudo /home/ubuntu/thumbsup/admin/update.bash
+
