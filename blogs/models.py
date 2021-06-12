@@ -20,7 +20,6 @@ class Series(models.Model):
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=150)
 
-
 class Blog(models.Model):
     def get_upload_path(instance, filename):
         return f'blog_images/{instance.slug}/{filename}'

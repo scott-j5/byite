@@ -18,10 +18,10 @@ from .models import TestScaleItModel, TestCropItModel
 # Test Server side scaling of images
 class ScaleItTestCase(TestCase):
     def setUp(self):
-        with open('images/tests/static/img/test1000x1000.png', 'rb') as img:
+        with open('imageit/tests/static/img/test1000x1000.png', 'rb') as img:
             TestScaleItModel.objects.create(name='test1', image=File(img))
         
-        with open('images/tests/static/img/test_svg.svg', 'rb') as img:
+        with open('imageit/tests/static/img/test_svg.svg', 'rb') as img:
             TestScaleItModel.objects.create(name='test2', image=File(img))
 
     def test_image_scaled(self):
@@ -32,7 +32,7 @@ class ScaleItTestCase(TestCase):
         img2 = TestScaleItModel.objects.get(name='test2').image
         # Check image was uploaded
 
-        with open('images/tests/static/img/test_svg_js.svg', 'rb') as img:
+        with open('imageit/tests/static/img/test_svg_js.svg', 'rb') as img:
             self.raises(ValidationError, TestScaleItModel.objects.create(name='test3', image=File(img)))
 
 

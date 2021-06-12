@@ -1,7 +1,10 @@
 BLOGLIST = {
     searchQuery: "",
+    //Set Listeners for filter inputs
+    //Runs render on tags/ search input
     init: function(selector = null){
-        BLOGLIST.getQuery();
+        this.update();
+
         document.querySelector('input[name="search"]').addEventListener("keyup", BLOGLIST.searchDelay(function(e){BLOGLIST.search(e)}, 500));
         document.querySelectorAll('.tag-list').forEach(item => {
             item.querySelectorAll('li').forEach(listItem => {
@@ -10,8 +13,16 @@ BLOGLIST = {
         });
         BLOGLIST.setPageListeners();
     },
+    update: function(){
+        this.getQuery();
+        this.load();
+        this.renderSearchInput();
+        this.renderTags();
+    },
+    //Populates existing filter params from GET request
     getQuery: function(){
         params = new URLSearchParams(window.location.search);
+        // If GET contains params populate search query else set to defaults
         if(Array.from(params).length >= 1 ){
             tags = []
             if(params.get('tags')){
@@ -25,28 +36,22 @@ BLOGLIST = {
         }else{
             this.searchQuery = {"search":"", "tags": [], "page": 1}
         }
-        this.load();
-        this.renderSearch();
-        this.renderTags();
     },
+    //Updates search string in searchQuery, loads updated content
     search: function(e){
         BLOGLIST.searchQuery.search = e.target.value;
         BLOGLIST.searchQuery.page = 1;
         BLOGLIST.load(true);
     },
-    setPageListeners: function(){
-        console.log("Setting");
-        document.querySelectorAll('.page-toggle').forEach(item => {
-            item.addEventListener("click", BLOGLIST.togglePage);
-        });
-    },
+    //Change page number
     togglePage: function(e){
         e.preventDefault();
         BLOGLIST.searchQuery.page = e.target.dataset.page;
         BLOGLIST.load(true);
         e.stopPropagation();
     },
-    renderSearch: function(){
+    //Update the value of search input box
+    renderSearchInput: function(){
         document.querySelector('input[name="search"]').value = BLOGLIST.searchQuery.search;
     },
     searchDelay: function(callback, ms){
@@ -89,7 +94,7 @@ BLOGLIST = {
             }
         });
     },
-    load: function(pushState=null){
+    load: async function(pushState=null){
         var load = LOAD;
         var args = Object.keys(BLOGLIST.searchQuery).map(function(key) {
             return key + '=' + encodeURIComponent(BLOGLIST.searchQuery[key]);
@@ -99,7 +104,13 @@ BLOGLIST = {
         }
         var url = window.location.protocol + "//" + window.location.host + "/blogs/?" + args
         var element = document.querySelector('#blog-card-list');
-        load.loadToElement(element, url, 'text/html');
+        await load.loadToElement(element, url, 'text/html');
+        BLOGLIST.setPageListeners();
+    },
+    setPageListeners: function(){
+        document.querySelectorAll('.page-toggle').forEach(item => {
+            item.addEventListener("click", BLOGLIST.togglePage);
+        });
     },
 }
 
@@ -108,7 +119,7 @@ window.addEventListener("DOMContentLoaded", function(){
     blogList.init();
 
     window.onpopstate = function(e){
-        blogList.getQuery();
+        blogList.update();
     };
 });
 
