@@ -4,8 +4,6 @@ from django import forms
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.urls import reverse_lazy
-from markdownx.forms import ImageForm
-from markdownx.settings import MARKDOWNX_MEDIA_PATH
 
 from .models import Blog, BlogImage
 

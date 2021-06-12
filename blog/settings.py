@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'imageit',
     'imageit.tests',
-    'markdownx',
     'storages',
     'users.apps.UsersConfig',
 ]

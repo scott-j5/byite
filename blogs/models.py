@@ -4,8 +4,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from djrichtextfield.models import RichTextField
-from markdownx.models import MarkdownxField
-from markdownx.utils import markdownify
 
 from imageit.models import ScaleItImageField
 
@@ -33,7 +31,6 @@ class Blog(models.Model):
     description = models.CharField(max_length=500)
     thumbnail = ScaleItImageField(max_width=250, max_height=250, quality=100, null=True, blank=True, upload_to=get_upload_path)
     banner = ScaleItImageField(max_width=1000, max_height=1000, null=True, blank=True, upload_to=get_upload_path)
-    content_old = MarkdownxField()
     views = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
     content = RichTextField(default='')
@@ -41,10 +38,6 @@ class Blog(models.Model):
     @property
     def author_name(self):
         return f'{self.author.first_name} {self.author.last_name}' if self.author.first_name else self.author.username
-
-    @property
-    def formatted_markdown(self):
-        return markdownify(self.content)
 
     @property
     def read_time(self):
