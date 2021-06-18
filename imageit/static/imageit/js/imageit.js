@@ -77,12 +77,28 @@ class ImageitField{
 
     //Remove file from this.files
     removeFile(fileObj){
-        let filteredFiles = this.files.filter(obj => obj != fileObj);
-        this.files = filteredFiles;
+        //If initial file then set removed to true instead of actuall removing
+        if (fileObj.removable && fileObj.initial){
+            this.toggleClear();
+        }else{
+            let filteredFiles = this.files.filter(obj => obj != fileObj);
+            this.files = filteredFiles;
+        }
         this.manageFilesState();
         this.render();
     }
     
+    //Toggle the clearCheckbox value of this form and return it
+    toggleClear(){
+        if (this.clearCheckbox){
+            this.clearCheckbox.checked = ! this.clearCheckbox.checked;
+            let initialFiles = this.files.filter(obj => obj.initial);
+            for (let i = 0; i < initialFiles.length; i++){
+                initialFiles[i].removed = this.clearCheckbox.checked;
+            }
+        }
+    }
+
     //Check to see if files contains any user selected files
     newFiles(){
         let newFiles = this.files.filter(obj => ! obj.initial);
@@ -97,19 +113,20 @@ class ImageitField{
     //Manager that Shows / Hides initial images according to presence of user selected files
     manageFilesState(){
         let newFiles = this.newFiles();
-        let clear = false;
 
+        console.log(this.files);
         for(let i = 0; i < this.files.length; i++){
             let item = this.files[i];
-
+            
+            // Hide initial value if new file is selected for upload
             if (newFiles && item.initial){
                 item.hidden = true;
-                item.removed = false;
+                if (this.clearCheckbox.checked){
+                    this.toggleClear()
+                }
+            // Show initial value if file selection is cancelled
             }else if (! newFiles && item.initial){
                 item.hidden = false;
-            }
-            if (item.initial && item.hidden){
-                clear = true;
             }
         }
     }
@@ -208,26 +225,38 @@ class ImageitImg{
                 this._processedFile = await this.processFile();
                 this.fieldClass.field.classList.remove('imageit-loading');
             }
+            
+            if(this.removed){
+                //Render undo button
+                html = '<div class="imageit-preview-content">' +
+                '<div>' + this.fileName + ' Removed!' + '</div>' +
+                '<div class="imageit-toggle-hide imageit-undo-button">Undo</div>' + 
+                '</div>';
+            }else{
+                if (this instanceof CropitImg && ! this.initial){
+                    elem.classList.add('imageit-cropper');
+                    html = this.generateCropper();
+                }else{
+                    html = 
+                        '<div class="imageit-preview-content">' +
+                            '<a class="imageit-preview-link" href="' + this._processedFile + '" target="_blank">' +
+                                '<img class="imageit-preview-image" alt="File preview" src="' + this._processedFile + '" />' +
+                            '</a>' +
+                            '<div class="imageit-preview-text">' + 
+                                '<p><strong class="imageit-preview-help-text">' + this.descriptor + '</strong></p>' +
+                                '<hr>' +
+                                '<a href="' + this._processedFile + '" target="_blank"><p class="imageit-preview-filename">' + this.fileName + '</p></a>' +
+                            '</div>';
 
-            html = 
-                '<div class="imageit-preview-content">' +
-                    '<a class="imageit-preview-link" href="' + this._processedFile + '" target="_blank">' +
-                        '<img class="imageit-preview-image" alt="File preview" src="' + this._processedFile + '" />' +
-                    '</a>' +
-                    '<div class="imageit-preview-text">' + 
-                        '<p><strong class="imageit-preview-help-text">' + this.descriptor + '</strong></p>' +
-                        '<hr>' +
-                        '<a href="' + this._processedFile + '" target="_blank"><p class="imageit-preview-filename">' + this.fileName + '</p></a>' +
+                    if (this.removable){ 
+                        html = html + 
+                            '<div class="imageit-toggle-hide imageit-clear-button">X</div>';
+                    }
+                    html = html + 
                     '</div>';
-
-            if (this.removable){ 
-                html = html + 
-                    '<div class="imageit-toggle-hide imageit-clear-button">X</div>';
+                }
             }
             
-            html = html + 
-                '</div>';
-
             //Render any field errors
             if (this.errors.length > 0 ){
                 for (var i=0; i < this.errors.length; i++){
@@ -237,16 +266,7 @@ class ImageitImg{
             }
             elem.innerHTML = html;
         }else{
-            // Render undo button
-            if(this.removed){
-                //Render undo button
-                elem.innerHTML = '<div class="imageit-preview-content">' +
-                                    '<div>' + this.fileName + ' Removed!' + '</div>' +
-                                    '<div class="imageit-toggle-hide imageit-undo-button">Undo</div>' + 
-                                '</div>';
-            }else{
-                elem = false;
-            }
+            elem = false;
         }
         
         this._render(container, elem);
@@ -271,17 +291,11 @@ class ImageitImg{
     }
 
     //Toggle hidden state of this object
-    toggleHide(){
-        this.hidden = ! this.hidden;
-        if(this.initial){
-            this.removed = ! this.removed;
-        }else{
-            this.fieldClass.removeFile(this);
+    toggleHide(e=false){
+        if(! this.initial && e != false){
+            this.hidden = ! this.hidden;
         }
-
-        if (this.fieldClass.clearCheckbox){
-            this.fieldClass.clearCheckbox.checked = this.removed;
-        }
+        this.fieldClass.removeFile(this);
         this.render();
     }
 
@@ -366,70 +380,15 @@ class CropitImg extends ImageitImg{
         }
     }
 
-    async render(renderContainer=false){
-        var container = renderContainer || this.elem.parentNode || this.formField.querySelector('.imageit-preview-contianer');
-        var elem = document.createElement('div');
-        elem.classList.add('imageit-preview');
-
-        //Render preview if this.hidden == false
-        if (! this.hidden){
-            let html = '';
-            //Show loading while image is being processed
-            if (! this._processedFile){
-                this.fieldClass.field.classList.add('imageit-loading');
-                this._processedFile = await this.processFile();
-                this.fieldClass.field.classList.remove('imageit-loading');
-            }
-
-            if(this.initial){
-                html = 
-                '<div class="imageit-preview-content">' +
-                    '<a class="imageit-preview-link" href="' + this._processedFile + '" target="_blank">' +
-                        '<img class="imageit-preview-image" alt="File preview" src="' + this._processedFile + '" />' +
-                    '</a>' +
-                    '<div class="imageit-preview-text">' + 
-                        '<p><strong class="imageit-preview-help-text">' + this.descriptor + '</strong></p>' +
-                        '<hr>' +
-                        '<a href="' + this._processedFile + '" target="_blank"><p class="imageit-preview-filename">' + this.fileName + '</p></a>' +
-                    '</div>';
-                if (this.removable){ 
-                    html = html + 
-                    '<div class="imageit-toggle-hide imageit-clear-button">X</div>';
-                }
-            }else{
-                elem.classList.add('imageit-cropper');
-                html = '<div class="imageit-cropper-content">';
-                if (this.removable) html = html + '<div class="imageit-toggle-hide imageit-clear-button imageit-cancel-crop"><span>Cancel</span></div>';
-                
-                html = html + '<div class="imageit-cropper-image-container">' +
-                            '<img class="imageit-cropper-image" alt="Image crop preview" src="' + this._processedFile + '" />' + 
-                        '</div>' +
-                    '</div>';
-            }
-            html = html + 
-                '</div>';
-
-            //Render any field errors
-            if (this.errors.length > 0 ){
-                for (var i=0; i < this.errors.length; i++){
-                    let error = this.errors[i];
-                    html = html + '<div class="imageit-error">' + error + '</div>';
-                }
-            }
-            elem.innerHTML = html;
-        }else{
-            // Render undo button
-            if(this.removed){
-                //Render undo button
-                elem.innerHTML = '<div class="imageit-preview-content">' +
-                                    '<div>' + this.fileName + ' Removed!' + '</div>' +
-                                    '<div class="imageit-toggle-hide imageit-undo-button">Undo</div>' + 
-                                '</div>';
-            }else{
-                elem = false;
-            }
-        }
-        this._render(container, elem);
+    generateCropper(){
+        let html = '<div class="imageit-cropper-content">';
+        if (this.removable) html = html + '<div class="imageit-toggle-hide imageit-clear-button imageit-cancel-crop"><span>Cancel</span></div>';
+        
+        html = html + '<div class="imageit-cropper-image-container">' +
+                    '<img class="imageit-cropper-image" alt="Image crop preview" src="' + this._processedFile + '" />' + 
+                '</div>' +
+            '</div>';
+        return html
     }
 
     //Apply coordinates of crop to the relevant input fields

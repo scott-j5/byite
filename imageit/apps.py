@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ImagesConfig(AppConfig):
-    name = 'images'
+class ImageItConfig(AppConfig):
+    name = 'imageit'

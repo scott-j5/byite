@@ -3,9 +3,7 @@ from django.core.validators import RegexValidator
 from django.forms import MultiValueField, FileField, FloatField
 from django.forms.widgets import HiddenInput
 
-from . import utils
 from .widgets import ScaleItImageWidget, CropItImageWidget
-from .settings import IMAGEIT_IMAGE_PROPERTIES
 
 
 class ScaleItImageFormField(FileField):
@@ -14,42 +12,29 @@ class ScaleItImageFormField(FileField):
 
     def __init__(self, widget=None, max_length=None, allow_empty_file=False, *args, **kwargs):
         # Stop Django admin from overriding widget with default AdminFileWidget
-        # Occurs when instanctiating widgets from admin views
+        # Occurs when instantiating widgets from admin views
         # See : https://github.com/django/django/blob/master/django/contrib/admin/options.py
-        #if isinstance(widget, AdminFileWidget):
-        #    self.widget = ScaleItImageWidget
-        self.img_props = {}
-        for key, val in list(kwargs.items()):
-            if key in IMAGEIT_IMAGE_PROPERTIES:
-                self.img_props[key] = kwargs.pop(key)
-
         super(ScaleItImageFormField, self).__init__(*args, **kwargs)
+        if isinstance(widget, AdminFileWidget):
+            self.widget = ScaleItImageWidget
 
     def clean(self, data, initial=None):
-        # Data: InMemoryUploadedFile (the uploaded image)
-        # Returns a scaled InMemoryUploadedFile
-
-        data = utils.process_upload(data, self.img_props)
-        return super(ScaleItImageFormField, self).clean(data)
-
-
-
+        # If you want image in cleaned_data to be scaled/cropped
+        # It must be completed here as model.clean is completed in form.post_clean
+        # Img props will need to be passed from model.form_class
+        # Should probably validate crop inputs here
+        return super().clean(data, initial)
 
 class CropItImageFormField(MultiValueField):
     widget = CropItImageWidget(widgets=[ScaleItImageWidget, HiddenInput, HiddenInput, HiddenInput, HiddenInput,])
 
     def __init__(self, max_length=None, widget=None, **kwargs):
-        self.img_props = {}
-        for key, val in list(kwargs.items()):
-            if key in IMAGEIT_IMAGE_PROPERTIES:
-                self.img_props[key] = kwargs.pop(key)
         # Define one message for all fields.
         error_messages = {
             'incomplete': 'Missing values required for image crop (required: x, y, width, height).',
         }
         # Or define a different message for each field.
         fields = (
-            ## HEREE IS CAUSING AN ERROR. SHOULD BE SCALEITIMAGEFORMFIELD???
             ScaleItImageFormField(
                 error_messages={'incomplete': 'Please select an image to upload.'},
                 required=kwargs.get('required'),
@@ -78,22 +63,10 @@ class CropItImageFormField(MultiValueField):
         )
 
 
-    # Clean and resize image before compressing
-    def clean(self, value):
-        crop_props = {
-            'x1': float(value[1]),
-            'y1': float(value[2]),
-            'x2': float(value[3]),
-            'y2': float(value[4])
-        }
-
-        # Clean and resize image before calling self.compress
-        self.crop_props = crop_props
-        processed_value = utils.process_upload(value[0], self.img_props, self.crop_props)
-        value[0] = processed_value
-        return super(CropItImageFormField, self).clean(value)
-
+    # Compresses inputs into single file object with crop values as properties
+    # data_list: list of all cleaned input values
     def compress(self, data_list):
-        # data_list: list of all cleaned input values
-        # Return: Cleaned image for save (scaled and cropped)
-        return data_list[0]
+        img = data_list[0]
+        if img is not None and img is not False:
+            img.crop_props = {"x1": data_list[1], "y1": data_list[2],"x2": data_list[3], "y2": data_list[4]}
+        return img
