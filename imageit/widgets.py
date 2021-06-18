@@ -26,7 +26,9 @@ class CropItImageWidget(MultiWidget):
         super(CropItImageWidget, self).__init__(*args, **kwargs)
 
     def decompress(self, value):
-        return [value, 0, 0, 0, 0]
+        if value:
+            return [value, 0, 0, 0, 0]
+        return [None, 0, 0, 0, 0]
 
     class Media:
         css = {"all": ('imageit/css/imageit.css', 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.css'),}
