@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'dropzoneit',
     'projects.apps.ProjectsConfig',
     'imageit',
-    'imageit.tests',
     'storages',
     'users.apps.UsersConfig',
 ]
@@ -182,16 +181,6 @@ MEDIAFILES_LOCATION = 'media'
 DEFAULT_FILE_STORAGE = 'media_storages.MediaStorage'
 
 
-#Markdownx Settings
-MARKDOWNX_IMAGE_MAX_SIZE = {
-    'size': (1000, 1500),
-    'quality': 90
-}
-
-
-
-MARKDOWNX_MEDIA_PATH = datetime.now().strftime('blog_images/%Y/%m/%d')
-MARKDOWNX_UPLOAD_URLS_PATH = '/blogs/blog/default/image/upload/'
 
 
 DJRICHTEXTFIELD_CONFIG = {
