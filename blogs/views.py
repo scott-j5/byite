@@ -40,12 +40,12 @@ def blog_list(request):
     
     context["blogs"] = blogs
     context["tags"] = Tag.objects.all()
-    print(request.content_type)
+
     if request.content_type == 'application/json':
         response = serializers.serialize('json', blogs)
         return JsonResponse(response, safe=False)
     else:
-        paginator = Paginator(context["blogs"], 4)
+        paginator = Paginator(context["blogs"], 12)
         page_number = request.GET.get('page')
         context["page_obj"] = paginator.get_page(page_number)
 
