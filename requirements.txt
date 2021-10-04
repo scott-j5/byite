@@ -3,9 +3,11 @@ astroid==2.4.2
 boto3==1.14.55
 botocore==1.17.55
 Django==3.1.12
+django-imageit==0.0.6
 django-richtextfield==1.6
 django-storages==1.10
 docutils==0.15.2
+filetype==1.0.7
 isort==5.5.0
 jmespath==0.10.0
 lazy-object-proxy==1.4.3
