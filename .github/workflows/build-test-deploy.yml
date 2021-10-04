@@ -53,7 +53,7 @@ jobs:
       - name: Test Django=${{ matrix.django-version }}, Python=${{ matrix.python-version }}
         run: |
           python manage.py test --noinput
-
+'
   # Build job to build static files
   build_and_deploy_static:
     # Dependant on test passing
@@ -88,7 +88,7 @@ jobs:
       - name: Collect static
         run: |
           python manage.py collectstatic --noinput
-  
+' 
         
   # Job to deploy python files to server
   deploy_to_server:
