@@ -44,7 +44,7 @@ class Blog(models.Model):
         return math.ceil(len(str(self.content).split()) / 225)
 
     def __str__(self):
-        return f'{self.title}'
+        return f'{self.title}' if self.published else f'(DRAFT) - {self.title}'
 
     @staticmethod
     def dict_filter(filter_dict):
