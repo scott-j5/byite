@@ -7,7 +7,7 @@ BLOGLIST = {
 
         document.querySelector('input[name="search"]').addEventListener("keyup", BLOGLIST.searchDelay(function(e){BLOGLIST.search(e)}, 500));
         document.querySelectorAll('.tag-list').forEach(item => {
-            item.querySelectorAll('li').forEach(listItem => {
+            item.querySelectorAll('div').forEach(listItem => {
                 listItem.addEventListener("click", BLOGLIST.updateTags);
             });
         });
@@ -122,5 +122,3 @@ window.addEventListener("DOMContentLoaded", function(){
         blogList.update();
     };
 });
-
-
