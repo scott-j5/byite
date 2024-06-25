@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import FileResponse, JsonResponse
 from django.shortcuts import redirect, render
-from django.views.generic import DetailView, ListView
+from django.views.generic import DeleteView, DetailView, UpdateView, ListView
 from django.views.generic.edit import BaseFormView
 
 from .forms import BlogImageForm
@@ -21,6 +21,14 @@ class BlogDetail(DetailView):
         obj = super().get_object(**kwargs)
         obj.increment_views()
         return obj
+
+
+class BlogUpdate(UpdateView):
+    pass
+
+
+class BlogDelete(DeleteView):
+    pass
 
 
 def blog_list(request):

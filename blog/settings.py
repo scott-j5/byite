@@ -28,6 +28,9 @@ DEBUG = int(os.environ.get('DJANGO_DEBUG'))
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(',')
 
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -157,6 +160,8 @@ if not DEBUG:
 # S3 folder to upload static files to
     STATICFILES_LOCATION = 'static'
     STATICFILES_STORAGE = 'static_storages.StaticStorage'
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
 
 
 #Email settings
@@ -220,3 +225,6 @@ DJRICHTEXTFIELD_CONFIG = {
         'relative_urls': False,
     }
 }
+
+
+
